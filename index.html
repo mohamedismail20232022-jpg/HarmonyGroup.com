@@ -1,12 +1,13 @@
+    
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Harmony GROUP | هواتف ذكية واكسسوارات</title>
-    <meta name="description" content="تسوق أحدث الهواتف الذكية، الأجهزة اللوحية، والساعات الذكية بأفضل الأسعار.">
+    <title>Harmony GROUP | هواتف، لابتوبات واكسسوارات</title>
+    <meta name="description" content="تسوق أحدث الهواتف الذكية، اللابتوبات، والإكسسوارات بأفضل الأسعار.">
     <!-- Open Graph SEO -->
-    <meta property="og:title" content="Harmony GROUP | Mobile & Accessories">
+    <meta property="og:title" content="Harmony GROUP | Mobile, Laptops & Accessories">
     <meta property="og:image" content="25505.jpg">
     <meta property="og:type" content="website">
     
@@ -57,7 +58,7 @@
         /* Announcement Bar */
         .announcement-bar { background: var(--primary); color: #1F242A; font-size: 13px; font-weight: 700; text-align: center; padding: 10px 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; box-shadow: inset 0 -2px 5px rgba(0,0,0,0.06); }
 
-        /* هيدر ثابت فوق تماماً */
+        /* هيدر ثابت تماماً في أعلى الشاشة لا يتحرك مع السكرول */
         header { background: var(--white); box-shadow: 0 4px 20px rgba(0,0,0,0.08); position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; display: flex; flex-direction: column; border-bottom: 1px solid var(--border); }
         
         .header-top-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 35px; gap: 20px; width: 100%; flex-wrap: wrap; }
@@ -87,8 +88,8 @@
         .sidebar { flex: 1; min-width: 280px; background: var(--white); padding: 25px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); height: fit-content; border: 1px solid var(--border); }
         .filter-group { margin-bottom: 25px; }
         .filter-group h3 { font-size: 16px; margin-bottom: 15px; color: var(--text-dark); border-bottom: 2px solid var(--primary); display: inline-block; padding-bottom: 5px; font-weight: 700; }
-        .brand-btn { display: inline-block; padding: 8px 14px; background: var(--bg-color); border: 1px solid var(--border); border-radius: 8px; margin: 5px; cursor: pointer; transition: 0.3s; font-size: 13px; color: var(--text-dark); font-weight: 600; }
-        .brand-btn:hover, .brand-btn.active { background: var(--primary); color: #1F242A; border-color: var(--primary); }
+        .brand-btn, .category-btn { display: inline-block; padding: 8px 14px; background: var(--bg-color); border: 1px solid var(--border); border-radius: 8px; margin: 5px; cursor: pointer; transition: 0.3s; font-size: 13px; color: var(--text-dark); font-weight: 600; }
+        .brand-btn:hover, .brand-btn.active, .category-btn:hover, .category-btn.active { background: var(--primary); color: #1F242A; border-color: var(--primary); }
         .price-range { width: 100%; margin-top: 10px; accent-color: var(--primary); cursor: pointer; }
         .price-labels { display: flex; justify-content: space-between; font-weight: bold; margin-top: 10px; font-size: 14px; color: var(--primary); }
         
@@ -222,7 +223,7 @@
             <!-- Sleek Search Bar -->
             <div class="hero-search-box">
                 <i class="fas fa-search"></i>
-                <input type="text" id="searchInput" placeholder="ابحث عن موبايلك المفضّل (أبل، سامسونج، آيفون، أوبو...)...">
+                <input type="text" id="searchInput" placeholder="ابحث عن جهازك المفضّل (موبايل، لابتوب، إكسسوار...)...">
             </div>
 
             <!-- Nav Actions (Theme & Cart) -->
@@ -243,6 +244,16 @@
     <div class="main-layout">
         <aside class="sidebar">
             <div class="filter-group">
+                <h3>أقسام الموقع</h3>
+                <div id="categoryFilters">
+                    <button class="category-btn active" data-category="all">الكل</button>
+                    <button class="category-btn" data-category="mobiles">📱 هواتف ذكية</button>
+                    <button class="category-btn" data-category="accessories">🎧 إكسسوارات</button>
+                    <button class="category-btn" data-category="laptops">💻 لابتوبات</button>
+                </div>
+            </div>
+
+            <div class="filter-group">
                 <h3>الماركات</h3>
                 <div id="brandFilters">
                     <button class="brand-btn active" data-brand="all">الكل</button>
@@ -255,7 +266,6 @@
                     <button class="brand-btn" data-brand="Oppo">Oppo</button>
                     <button class="brand-btn" data-brand="Realme">Realme</button>
                     <button class="brand-btn" data-brand="Motorola">Motorola</button>
-                    <button class="brand-btn" data-brand="Red Magic">Red Magic</button>
                     <button class="brand-btn" data-brand="Vivo">Vivo</button>
                     <button class="brand-btn" data-brand="Infinix">Infinix</button>
                     <button class="brand-btn" data-brand="Google Pixel">Google Pixel</button>
@@ -278,35 +288,6 @@
                     <option value="New">جديد (متبرشم)</option>
                     <option value="Grade A">كسر زيرو (Grade A)</option>
                     <option value="Grade B">حالة متوسطة (Grade B)</option>
-                </select>
-            </div>
-            
-            <div class="filter-group">
-                <h3>المواصفات التقنية</h3>
-                <select id="ramFilter" class="form-control" style="margin-bottom: 12px;">
-                    <option value="all">كل الرامات</option>
-                    <option value="1GB">1GB RAM</option>
-                    <option value="2GB">2GB RAM</option>
-                    <option value="3GB">3GB RAM</option>
-                    <option value="4GB">4GB RAM</option>
-                    <option value="6GB">6GB RAM</option>
-                    <option value="8GB">8GB RAM</option>
-                    <option value="12GB">12GB RAM</option>
-                    <option value="16GB">16GB RAM</option>
-                    <option value="24GB">24GB RAM</option>
-                </select>
-                <select id="storageFilter" class="form-control">
-                    <option value="all">كل المساحات</option>
-                    <option value="4GB">4GB</option>
-                    <option value="8GB">8GB</option>
-                    <option value="16GB">16GB</option>
-                    <option value="32GB">32GB</option>
-                    <option value="64GB">64GB</option>
-                    <option value="128GB">128GB</option>
-                    <option value="256GB">256GB</option>
-                    <option value="512GB">512GB</option>
-                    <option value="1TB">1TB</option>
-                    <option value="2TB">2TB</option>
                 </select>
             </div>
         </aside>
@@ -421,22 +402,22 @@
         const priceRange = document.getElementById('priceRange');
         const priceVal = document.getElementById('priceVal');
         const brandBtns = document.querySelectorAll('.brand-btn');
+        const categoryBtns = document.querySelectorAll('.category-btn');
         const conditionFilter = document.getElementById('conditionFilter');
-        const ramFilter = document.getElementById('ramFilter');
-        const storageFilter = document.getElementById('storageFilter');
         const productModal = document.getElementById('productModal');
         const searchInput = document.getElementById('searchInput');
         const sortSelect = document.getElementById('sortSelect');
 
-        let currentFilters = { brand: 'all', maxPrice: 200000, condition: 'all', ram: 'all', storage: 'all', search: '' };
+        let currentFilters = { category: 'all', brand: 'all', maxPrice: 200000, condition: 'all', search: '' };
         let currentSort = 'default';
         let allProducts = [];
         let modalQty = 1;
 
-        // Fallback sample products so the page is never empty if Firebase is empty or loading
+        // Fallback sample products (Mobiles, Accessories, Laptops)
         const fallbackProducts = [
             {
                 id: 'sample_1',
+                category: 'mobiles',
                 brand: 'Apple',
                 name: 'iPhone 17 Pro Max',
                 price: 75000,
@@ -455,20 +436,40 @@
             },
             {
                 id: 'sample_2',
-                brand: 'Samsung',
-                name: 'Samsung Galaxy S25 Ultra',
-                price: 68000,
-                customTax: 10000,
+                category: 'accessories',
+                brand: 'Apple',
+                name: 'Apple AirPods Pro 2',
+                price: 9500,
+                customTax: 1500,
                 condition: 'New',
-                ram: '12GB',
-                storage: '256GB',
-                color: 'أسود فانتوم',
+                ram: '-',
+                storage: 'Case MagSafe',
+                color: 'أبيض',
                 battery: 100,
                 box: true,
                 charger: true,
-                stock: 5,
-                images: ['https://via.placeholder.com/300x300?text=Galaxy+S25+Ultra'],
-                description: 'شاشة أومولد مبهرة وكاميرا خارقة.',
+                stock: 10,
+                images: ['https://via.placeholder.com/300x300?text=AirPods+Pro+2'],
+                description: 'عزل ضوضاء فائق وصوت نقي.',
+                createdAt: { seconds: (Date.now() / 1000) - 50 }
+            },
+            {
+                id: 'sample_3',
+                category: 'laptops',
+                brand: 'Apple',
+                name: 'MacBook Pro M3 Max',
+                price: 130000,
+                customTax: 15000,
+                condition: 'New',
+                ram: '32GB',
+                storage: '1TB SSD',
+                color: 'فضي مساحي',
+                battery: 100,
+                box: true,
+                charger: true,
+                stock: 2,
+                images: ['https://via.placeholder.com/300x300?text=MacBook+Pro+M3'],
+                description: 'أقوى لابتوب للمهندسين والمصممين والمبرمجين.',
                 createdAt: { seconds: (Date.now() / 1000) - 100 }
             }
         ];
@@ -539,15 +540,14 @@
             const filtered = allProducts.filter(p => {
                 const tax = p.customTax || 0;
                 const totalP = Number(p.price) + tax;
+                const passCategory = currentFilters.category === 'all' || (p.category || 'mobiles') === currentFilters.category;
                 const passBrand = currentFilters.brand === 'all' || p.brand === currentFilters.brand;
                 const passPrice = totalP <= currentFilters.maxPrice;
                 const passCond = currentFilters.condition === 'all' || p.condition === currentFilters.condition;
-                const passRam = currentFilters.ram === 'all' || p.ram === currentFilters.ram;
-                const passStorage = currentFilters.storage === 'all' || p.storage === currentFilters.storage;
                 const passSearch = !currentFilters.search ||
                     (p.name || '').toLowerCase().includes(currentFilters.search) ||
                     (p.brand || '').toLowerCase().includes(currentFilters.search);
-                return passBrand && passPrice && passCond && passRam && passStorage && passSearch;
+                return passCategory && passBrand && passPrice && passCond && passSearch;
             });
 
             if (currentSort === 'price-asc') {
@@ -668,7 +668,7 @@
 
                     <table class="specs-table">
                         <tr><th>الحالة</th><td>${p.condition} ${p.condition === 'New' ? '(متبرشم)' : ''}</td></tr>
-                        <tr><th>الرام / المساحة</th><td>${p.ram} / ${p.storage}</td></tr>
+                        <tr><th>المواصفات</th><td>${p.ram} / ${p.storage}</td></tr>
                         <tr><th>اللون</th><td style="font-weight:bold;">${p.color || 'مش محدد'}</td></tr>
                         <tr><th>صحة البطارية</th><td style="color:var(--success); font-weight:bold;">${p.battery}%</td></tr>
                         <tr><th>العلبة الأصلية</th><td>${p.box ? '<i class="fas fa-check" style="color:var(--success)"></i> موجودة' : '<i class="fas fa-times" style="color:var(--danger)"></i> غير موجودة'}</td></tr>
@@ -703,6 +703,15 @@
 
         function closeModal() { productModal.style.display = 'none'; }
 
+        categoryBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                categoryBtns.forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                currentFilters.category = e.target.dataset.category;
+                renderProducts();
+            });
+        });
+
         brandBtns.forEach(btn => {
             btn.addEventListener('click', (e) => {
                 brandBtns.forEach(b => b.classList.remove('active'));
@@ -718,13 +727,9 @@
             renderProducts();
         });
 
-        [conditionFilter, ramFilter, storageFilter].forEach(el => {
-            el.addEventListener('change', () => {
-                currentFilters.condition = conditionFilter.value;
-                currentFilters.ram = ramFilter.value;
-                currentFilters.storage = storageFilter.value;
-                renderProducts();
-            });
+        conditionFilter.addEventListener('change', () => {
+            currentFilters.condition = conditionFilter.value;
+            renderProducts();
         });
 
         searchInput.addEventListener('input', (e) => {
@@ -784,7 +789,6 @@
         }
 
         function removeFromCart(productId) {
-            saveScale = getCart();
             saveCart(getCart().filter(i => i.id !== productId));
             renderCartDrawer();
         }
@@ -879,4 +883,3 @@
     </script>
 </body>
 </html>
-
