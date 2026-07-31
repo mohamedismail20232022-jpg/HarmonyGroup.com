@@ -48,20 +48,29 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', 'Quicksand', sans-serif; transition: background-color 0.3s, color 0.3s; }
         body { background-color: var(--bg-color); color: var(--text-dark); }
         
+        /* Announcement Bar */
+        .announcement-bar { background: var(--primary); color: #1A1A1A; font-size: 13px; font-weight: bold; text-align: center; padding: 9px 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; box-shadow: inset 0 -2px 5px rgba(0,0,0,0.05); }
+
         header { background: var(--white); box-shadow: 0 4px 20px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 1000; display: flex; flex-direction: column; }
-        .nav-container { max-width: 100%; margin: 0; padding: 0; display: flex; flex-direction: column; width: 100%; }
+        .nav-container { max-width: 100%; margin: 0; padding: 0; display: flex; flex-direction: column; width: 100%; position: relative; }
         
-        /* LOGO BOX - HEIGHT INCREASED AND LOGO RESTORED */
-        .logo-box { background: var(--logo-bg); padding: 15px 30px; border-radius: 0; display: flex; align-items: center; justify-content: flex-start; border: none; box-shadow: none; width: 100%; height: 200px; overflow: hidden; position: relative; }
+        .logo-box { background: var(--logo-bg); padding: 15px 30px; border-radius: 0; display: flex; align-items: center; justify-content: flex-start; border: none; box-shadow: none; width: 100%; height: 180px; overflow: hidden; position: relative; }
         .logo-img { height: 100%; width: auto; max-width: 100%; object-fit: contain; object-position: right center; cursor: pointer; transition: transform 0.4s ease; display: block; }
         .logo-img:hover { transform: scale(1.03); }
 
-        @media (max-width: 768px) { .logo-box { height: 120px; padding: 10px 15px; } }
+        @media (max-width: 768px) { .logo-box { height: 110px; padding: 10px 15px; } }
 
         .nav-actions { display: flex; align-items: center; gap: 20px; position: absolute; top: 50%; left: 30px; transform: translateY(-50%); z-index: 1001; }
         .nav-actions button, .theme-toggle { background: none; border: none; font-size: 24px; color: var(--secondary); cursor: pointer; transition: 0.3s; }
         .nav-actions button:hover, .theme-toggle:hover { color: var(--primary); }
         
+        /* Stylish Big Search Bar */
+        .hero-search-wrap { padding: 15px 25px; background: var(--white); border-top: 1px solid var(--border); display: flex; justify-content: center; }
+        .hero-search-box { position: relative; width: 100%; max-width: 800px; display: flex; align-items: center; }
+        .hero-search-box i { position: absolute; right: 22px; color: var(--text-light); font-size: 18px; }
+        .hero-search-box input { width: 100%; padding: 14px 52px 14px 20px; border-radius: 35px; border: 2px solid var(--border); background: var(--bg-color); color: var(--text-dark); font-size: 16px; outline: none; transition: 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+        .hero-search-box input:focus { border-color: var(--primary); box-shadow: 0 4px 25px rgba(243,166,0,0.18); background: var(--white); }
+
         .main-layout { max-width: 1400px; margin: 30px auto; display: flex; gap: 30px; padding: 0 20px; flex-wrap: wrap; }
         
         .sidebar { flex: 1; min-width: 280px; background: var(--white); padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); height: fit-content; }
@@ -80,7 +89,8 @@
         .product-img { width: 100%; height: 250px; object-fit: contain; margin-bottom: 15px; border-radius: 8px; background: transparent; }
         .product-brand { font-size: 12px; color: var(--text-light); text-transform: uppercase; font-weight: bold; }
         .product-title { font-size: 18px; font-weight: bold; color: var(--text-dark); margin: 5px 0; }
-        .product-price { font-size: 22px; font-weight: 700; color: var(--primary); margin: 10px 0; }
+        .product-price { font-size: 22px; font-weight: 700; color: var(--primary); margin: 5px 0; }
+        .quick-emi-hint { font-size: 12px; color: var(--text-light); margin-bottom: 10px; font-weight: 600; }
         .tags { display: flex; gap: 5px; margin-bottom: 15px; flex-wrap: wrap; }
         .tag { font-size: 11px; padding: 4px 8px; border-radius: 4px; background: var(--bg-color); color: var(--secondary); font-weight: bold; border: 1px solid var(--border); }
         .btn-add { background: var(--secondary); color: var(--white); border: none; padding: 12px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: auto; }
@@ -101,14 +111,15 @@
         
         .floating-whatsapp { position: fixed; bottom: 30px; right: 30px; background: #25D366; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 1000; text-decoration: none; transition: 0.3s; }
         
+        /* Back to Top Button */
+        .back-to-top { position: fixed; bottom: 30px; left: 30px; background: var(--secondary); color: white; width: 45px; height: 45px; border-radius: 50%; border: none; display: flex; justify-content: center; align-items: center; font-size: 18px; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 1000; opacity: 0; visibility: hidden; transition: 0.3s; }
+        .back-to-top.show { opacity: 1; visibility: visible; }
+        .back-to-top:hover { background: var(--primary); color: #1A1A1A; }
+
         @media (max-width: 768px) { .main-layout { flex-direction: column; } .sidebar { width: 100%; } }
 
         .nav-icon-wrap { position: relative; display: inline-flex; }
         .cart-badge { position: absolute; top: -8px; left: -10px; background: var(--primary); color: #1A1A1A; font-size: 11px; font-weight: bold; min-width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; padding: 0 3px; }
-
-        .search-bar-wrap { display: none; width: 100%; padding: 12px 20px; background: var(--white); border-top: 1px solid var(--border); }
-        .search-bar-wrap.active { display: flex; gap: 10px; }
-        .search-bar-wrap input { flex: 1; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-color); color: var(--text-dark); font-size: 15px; }
 
         .cart-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; z-index: 2100; }
         .cart-overlay.active { display: block; }
@@ -136,9 +147,6 @@
         .toast { position: fixed; bottom: 100px; right: 30px; background: var(--secondary); color: #fff; padding: 12px 20px; border-radius: 8px; font-size: 14px; z-index: 3000; opacity: 0; transform: translateY(10px); transition: 0.3s; pointer-events: none; }
         .toast.show { opacity: 1; transform: translateY(0); }
 
-        .loading-state { grid-column: 1 / -1; text-align: center; padding: 60px; color: var(--text-light); }
-        .loading-state i { font-size: 40px; margin-bottom: 15px; display: block; }
-
         .skeleton-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 15px; display: flex; flex-direction: column; }
         .skeleton-box { background: linear-gradient(90deg, var(--border) 25%, var(--bg-color) 50%, var(--border) 75%); background-size: 200% 100%; animation: skeleton-shine 1.4s infinite; border-radius: 8px; }
         .skeleton-img { width: 100%; height: 250px; margin-bottom: 15px; }
@@ -163,10 +171,17 @@
         .qty-selector span { font-size: 18px; font-weight: bold; min-width: 24px; text-align: center; }
 
         .sort-select { padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--white); color: var(--text-dark); font-size: 14px; cursor: pointer; }
-        .grid-toolbar { grid-column: 1 / -1; display: flex; justify-content: flex-end; margin-bottom: 5px; }
+        
+        .btn-share-modal { background: var(--bg-color); color: var(--text-dark); border: 1px solid var(--border); padding: 10px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.3s; }
+        .btn-share-modal:hover { background: var(--primary); color: #1A1A1A; border-color: var(--primary); }
     </style>
 </head>
 <body>
+
+    <!-- Feature 1: Announcement Marquee -->
+    <div class="announcement-bar">
+        <span>🚀 عروض حصرية لفروعنا في الرحاب والسراج مول | متاح الشحن الفوري لجميع محافظات مصر والتوصيل لحد باب البيت 📞 تواصل معنا الآن عبر الواتساب!</span>
+    </div>
 
     <header>
         <div class="nav-container">
@@ -177,7 +192,6 @@
                 <button class="theme-toggle" id="themeToggleBtn" title="تغيير الوضع المظلم/المضيء" onclick="toggleTheme()">
                     <i class="fas fa-moon" id="themeIcon"></i>
                 </button>
-                <button title="البحث" onclick="toggleSearch()"><i class="fas fa-search"></i></button>
                 <button title="عربة التسوق" onclick="openCart()">
                     <span class="nav-icon-wrap">
                         <i class="fas fa-shopping-cart"></i>
@@ -186,8 +200,13 @@
                 </button>
             </div>
         </div>
-        <div class="search-bar-wrap" id="searchBarWrap">
-            <input type="text" id="searchInput" placeholder="دور على ماركة أو موديل...">
+        
+        <!-- Feature 2: Stylish Big Search Bar -->
+        <div class="hero-search-wrap">
+            <div class="hero-search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="ابحث عن موبايلك المفضّل (أبل، سامسونج، آيفون، أوبو، ون بلس...)...">
+            </div>
         </div>
     </header>
 
@@ -202,6 +221,14 @@
                     <button class="brand-btn" data-brand="Xiaomi">Xiaomi</button>
                     <button class="brand-btn" data-brand="Honor">Honor</button>
                     <button class="brand-btn" data-brand="Huawei">Huawei</button>
+                    <button class="brand-btn" data-brand="OnePlus">OnePlus</button>
+                    <button class="brand-btn" data-brand="Oppo">Oppo</button>
+                    <button class="brand-btn" data-brand="Realme">Realme</button>
+                    <button class="brand-btn" data-brand="Motorola">Motorola</button>
+                    <button class="brand-btn" data-brand="Red Magic">Red Magic</button>
+                    <button class="brand-btn" data-brand="Vivo">Vivo</button>
+                    <button class="brand-btn" data-brand="Infinix">Infinix</button>
+                    <button class="brand-btn" data-brand="Google Pixel">Google Pixel</button>
                 </div>
             </div>
 
@@ -269,6 +296,46 @@
         </div>
     </div>
 
+    <!-- Feature 5: Trust Badges Bar -->
+    <div style="background: var(--card-bg); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 25px 20px; margin-top: 40px;">
+        <div style="max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-around; flex-wrap: wrap; gap: 25px; text-align: center;">
+            <div style="display: flex; align-items: center; gap: 12px;"><i class="fas fa-shield-alt" style="font-size: 30px; color: var(--primary);"></i><div style="text-align: right;"><h4 style="font-size: 15px; margin-bottom: 2px;">ضمان حقيقي وموثوق</h4><p style="font-size: 12px; color: var(--text-light);">أجهزة أصلية مفحوصة بالكامل</p></div></div>
+            <div style="display: flex; align-items: center; gap: 12px;"><i class="fas fa-truck-fast" style="font-size: 30px; color: var(--primary);"></i><div style="text-align: right;"><h4 style="font-size: 15px; margin-bottom: 2px;">شحن سريع وآمن</h4><p style="font-size: 12px; color: var(--text-light);">لجميع محافظات مصر</p></div></div>
+            <div style="display: flex; align-items: center; gap: 12px;"><i class="fas fa-credit-card" style="font-size: 30px; color: var(--primary);"></i><div style="text-align: right;"><h4 style="font-size: 15px; margin-bottom: 2px;">أنظمة تقسيط مريحة</h4><p style="font-size: 12px; color: var(--text-light);">تواصل معنا لاختيار نظامك</p></div></div>
+            <div style="display: flex; align-items: center; gap: 12px;"><i class="fas fa-headset" style="font-size: 30px; color: var(--primary);"></i><div style="text-align: right;"><h4 style="font-size: 15px; margin-bottom: 2px;">دعم عملاء فوري</h4><p style="font-size: 12px; color: var(--text-light);">عبر الواتساب طوال اليوم</p></div></div>
+        </div>
+    </div>
+
+    <!-- قسم فروعنا -->
+    <footer style="background: var(--white); border-top: 1px solid var(--border); padding: 50px 20px;">
+        <div style="max-width: 1400px; margin: 0 auto; display: flex; flex-direction: column; gap: 25px; text-align: center;">
+            <h3 style="color: var(--primary); font-size: 26px; margin-bottom: 5px;"><i class="fas fa-store"></i> فروعنا وتواصل معنا</h3>
+            <p style="color: var(--text-light); font-size: 15px;">زورنا في فروعنا واختار جهازك بنفسك</p>
+            <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 30px; margin-top: 15px;">
+                <!-- فرع الرحاب -->
+                <div style="background: var(--card-bg); border: 1px solid var(--border); padding: 25px; border-radius: 14px; width: 320px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: right; display: flex; flex-direction: column;">
+                    <h4 style="font-size: 20px; margin-bottom: 12px; color: var(--text-dark); display: flex; align-items: center; gap: 10px;"><i class="fas fa-map-marker-alt" style="color: var(--primary);"></i> فرع الرحاب</h4>
+                    <p style="color: var(--text-light); font-size: 14px; margin-bottom: 20px; line-height: 1.6; flex: 1;">سوق الرحاب القديم، القاهرة الجديدة، مصر</p>
+                    <a href="https://maps.app.goo.gl/6t7XtDo9iepBiXRg7?g_st=iw" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--primary); color: #1A1A1A; padding: 12px 20px; border-radius: 8px; font-weight: bold; text-decoration: none; width: 100%; transition: 0.3s;">
+                        افتح اللوكيشن على خريطة جوجل <i class="fas fa-external-link-alt"></i>
+                    </a>
+                </div>
+                <!-- فرع السراج مول -->
+                <div style="background: var(--card-bg); border: 1px solid var(--border); padding: 25px; border-radius: 14px; width: 320px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: right; display: flex; flex-direction: column;">
+                    <h4 style="font-size: 20px; margin-bottom: 12px; color: var(--text-dark); display: flex; align-items: center; gap: 10px;"><i class="fas fa-map-marker-alt" style="color: var(--primary);"></i> فرع السراج مول</h4>
+                    <p style="color: var(--text-light); font-size: 14px; margin-bottom: 20px; line-height: 1.6; flex: 1;">السراج مول، بوابة ٢ خلفي، مدينة نصر، مصر</p>
+                    <a href="https://maps.app.goo.gl/Nxb9zD7mhqurhNo77" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--primary); color: #1A1A1A; padding: 12px 20px; border-radius: 8px; font-weight: bold; text-decoration: none; width: 100%; transition: 0.3s;">
+                        افتح اللوكيشن على خريطة جوجل <i class="fas fa-external-link-alt"></i>
+                    </a>
+                </div>
+            </div>
+            <p style="color: var(--text-light); font-size: 13px; margin-top: 30px; border-top: 1px solid var(--border); padding-top: 20px;">جميع الحقوق محفوظة © Harmony GROUP 2026</p>
+        </div>
+    </footer>
+
+    <!-- Feature 3: Back to Top Button -->
+    <button class="back-to-top" id="backToTopBtn" title="الرجوع للأعلى" onclick="scrollToTop()"><i class="fas fa-arrow-up"></i></button>
+
     <!-- Modal التفاصيل -->
     <div class="modal-overlay" id="productModal">
         <div class="modal-content" id="modalContent"></div>
@@ -314,7 +381,7 @@
         }
         function updateThemeIcon(theme) {
             const icon = document.getElementById('themeIcon');
-            icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+            if(icon) icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
         }
         const savedTheme = localStorage.getItem('harmony_theme') || 'light';
         document.documentElement.setAttribute('data-theme', savedTheme);
@@ -336,6 +403,19 @@
         let allProducts = [];
         let modalQty = 1;
 
+        // Back to top scroll listener
+        window.addEventListener('scroll', () => {
+            const topBtn = document.getElementById('backToTopBtn');
+            if (window.scrollY > 300) {
+                topBtn.classList.add('show');
+            } else {
+                topBtn.classList.remove('show');
+            }
+        });
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
         function getWishlist() {
             return JSON.parse(localStorage.getItem('harmony_wishlist') || '[]');
         }
@@ -348,6 +428,16 @@
             }
             localStorage.setItem('harmony_wishlist', JSON.stringify(wl));
             renderProducts();
+        }
+
+        // Feature 4: Share Product Link Function
+        function shareProduct(name) {
+            if (navigator.share) {
+                navigator.share({ title: name, url: window.location.href }).catch(() => {});
+            } else {
+                navigator.clipboard.writeText(window.location.href);
+                showToast('تم نسخ رابط المنتج بنجاح!');
+            }
         }
 
         function renderSkeleton() {
@@ -426,6 +516,8 @@
             filtered.forEach(p => {
                 const tax = p.customTax || 0;
                 const finalTotal = Number(p.price) + tax;
+                // Feature 4: Quick EMI Estimator on Card
+                const cardInstallment = ((finalTotal * 1.15) / 12).toFixed(0);
                 const mainImg = (p.images && p.images.length > 0) ? p.images[0] : 'https://via.placeholder.com/300x300?text=No+Image';
                 const isWished = wishlist.includes(p.id);
                 const hasStockField = p.stock !== undefined && p.stock !== null && p.stock !== '';
@@ -448,6 +540,7 @@
                         <span class="tag"><i class="fas fa-star"></i> ${p.condition}</span>
                     </div>
                     <div class="product-price">${finalTotal.toLocaleString()} ج.م</div>
+                    <div class="quick-emi-hint"><i class="fas fa-credit-card"></i> قسط شهري من ${Number(cardInstallment).toLocaleString()} ج</div>
                     <button class="btn-add" data-id="${p.id}" ${isOutOfStock ? 'disabled' : ''}>${isOutOfStock ? 'غير متاح حاليًا' : 'أضف للسلة'} <i class="fas fa-cart-plus"></i></button>
                 `;
                 card.querySelector('.btn-add').addEventListener('click', (e) => {
@@ -475,8 +568,8 @@
             let galleryHTML = '';
             if (p.images && p.images.length > 1) {
                 galleryHTML = `<div style="display:flex; gap:10px; margin-top:15px; overflow-x:auto; padding-bottom:10px;">` +
-                              p.images.map(img => `<img src="${img}" onclick="document.getElementById('mainModalImg').src=this.src" style="width:70px; height:70px; object-fit:cover; border-radius:8px; border:2px solid transparent; cursor:pointer; transition:0.3s;" onmouseover="this.style.borderColor='var(--primary)'" onmouseout="this.style.borderColor='transparent'">`).join('') +
-                              `</div>`;
+                            p.images.map(img => `<img src="${img}" onclick="document.getElementById('mainModalImg').src=this.src" style="width:70px; height:70px; object-fit:cover; border-radius:8px; border:2px solid transparent; cursor:pointer; transition:0.3s;" onmouseover="this.style.borderColor='var(--primary)'" onmouseout="this.style.borderColor='transparent'">`).join('') +
+                            `</div>`;
             }
 
             document.getElementById('modalContent').innerHTML = `
@@ -510,6 +603,8 @@
                         <tr><th>الشاحن الأصلي</th><td>${p.charger ? '<i class="fas fa-check text-success"></i> موجود' : '<i class="fas fa-times text-danger"></i> غير موجود'}</td></tr>
                         <tr><th>الوصف الإضافي</th><td style="white-space: pre-wrap; line-height: 1.6;">${p.description || 'مفيش تفاصيل تانية للجهاز ده'}</td></tr>
                     </table>
+
+                    <button type="button" class="btn-share-modal" onclick="shareProduct('${p.name}')"><i class="fas fa-share-alt"></i> مشاركة رابط المنتج</button>
 
                     ${isOutOfStock ? '' : `
                     <div class="qty-selector">
@@ -560,11 +655,6 @@
             });
         });
 
-        function toggleSearch() {
-            const wrap = document.getElementById('searchBarWrap');
-            wrap.classList.toggle('active');
-            if (wrap.classList.contains('active')) searchInput.focus();
-        }
         searchInput.addEventListener('input', (e) => {
             currentFilters.search = e.target.value.trim().toLowerCase();
             renderProducts();
@@ -586,11 +676,13 @@
             const cart = getCart();
             const count = cart.reduce((sum, i) => sum + i.qty, 0);
             const badge = document.getElementById('cartBadge');
-            if (count > 0) {
-                badge.style.display = 'flex';
-                badge.textContent = count;
-            } else {
-                badge.style.display = 'none';
+            if (badge) {
+                if (count > 0) {
+                    badge.style.display = 'flex';
+                    badge.textContent = count;
+                } else {
+                    badge.style.display = 'none';
+                }
             }
         }
 
@@ -711,7 +803,8 @@
         }
 
         if (WHATSAPP_NUMBER && !WHATSAPP_NUMBER.includes('PASTE_')) {
-            document.getElementById('floatingWhatsapp').href = `https://wa.me/${WHATSAPP_NUMBER}`;
+            const whatsappBtn = document.getElementById('floatingWhatsapp');
+            if(whatsappBtn) whatsappBtn.href = `https://wa.me/${WHATSAPP_NUMBER}`;
         }
 
         updateCartBadge();
