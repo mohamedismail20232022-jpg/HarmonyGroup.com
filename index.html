@@ -14,7 +14,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- Firebase (Firestore = قاعدة البيانات الحقيقية اللي كل الزوار بيشوفوا نفس المنتجات منها) -->
+    <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
@@ -33,7 +33,6 @@
             --danger: #DC3545;
         }
 
-        /* Dark Mode Colors */
         [data-theme="dark"] {
             --primary: #F3A600;
             --secondary: #E0E0E0;
@@ -49,25 +48,22 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', 'Quicksand', sans-serif; transition: background-color 0.3s, color 0.3s; }
         body { background-color: var(--bg-color); color: var(--text-dark); }
         
-        /* Header & Nav */
         header { background: var(--white); box-shadow: 0 4px 20px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 1000; display: flex; flex-direction: column; }
         .nav-container { max-width: 100%; margin: 0; padding: 0; display: flex; flex-direction: column; width: 100%; }
         
-        /* LOGO FILLS ENTIRE HEADER - FIXED HEIGHT */
-        .logo-box { background: var(--logo-bg); padding: 0; border-radius: 0; display: block; border: none; box-shadow: none; width: 100%; height: 80px; overflow: hidden; position: relative; }
-        .logo-img { height: 300px; width: auto; max-width: 100%; object-fit: contain; object-position: right center; cursor: pointer; transition: transform 0.4s ease; display: block; position: absolute; top: 50%; transform: translateY(-50%); right: 30px; }
-        .logo-img:hover { transform: translateY(-50%) scale(1.03); }
+        /* LOGO BOX - HEIGHT INCREASED AND LOGO RESTORED */
+        .logo-box { background: var(--logo-bg); padding: 15px 30px; border-radius: 0; display: flex; align-items: center; justify-content: flex-start; border: none; box-shadow: none; width: 100%; height: 200px; overflow: hidden; position: relative; }
+        .logo-img { height: 100%; width: auto; max-width: 100%; object-fit: contain; object-position: right center; cursor: pointer; transition: transform 0.4s ease; display: block; }
+        .logo-img:hover { transform: scale(1.03); }
 
-        @media (max-width: 768px) { .logo-box { height: 65px; } .logo-img { right: 15px; } }
+        @media (max-width: 768px) { .logo-box { height: 120px; padding: 10px 15px; } }
 
         .nav-actions { display: flex; align-items: center; gap: 20px; position: absolute; top: 50%; left: 30px; transform: translateY(-50%); z-index: 1001; }
         .nav-actions button, .theme-toggle { background: none; border: none; font-size: 24px; color: var(--secondary); cursor: pointer; transition: 0.3s; }
         .nav-actions button:hover, .theme-toggle:hover { color: var(--primary); }
         
-        /* Main Layout */
         .main-layout { max-width: 1400px; margin: 30px auto; display: flex; gap: 30px; padding: 0 20px; flex-wrap: wrap; }
         
-        /* Sidebar / Filters */
         .sidebar { flex: 1; min-width: 280px; background: var(--white); padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); height: fit-content; }
         .filter-group { margin-bottom: 25px; }
         .filter-group h3 { font-size: 16px; margin-bottom: 15px; color: var(--secondary); border-bottom: 2px solid var(--primary); display: inline-block; padding-bottom: 5px; }
@@ -78,9 +74,8 @@
         
         select.form-control, .sidebar select { background: var(--white); color: var(--text-dark); border: 1px solid var(--border); }
 
-        /* Product Grid */
         .product-grid { flex: 3; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
-        .product-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: 0.3s; display: flex; flex-direction: column; cursor: pointer; }
+        .product-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: 0.3s; display: flex; flex-direction: column; cursor: pointer; position: relative; }
         .product-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.2); }
         .product-img { width: 100%; height: 250px; object-fit: contain; margin-bottom: 15px; border-radius: 8px; background: transparent; }
         .product-brand { font-size: 12px; color: var(--text-light); text-transform: uppercase; font-weight: bold; }
@@ -94,7 +89,6 @@
         .empty-state { grid-column: 1 / -1; text-align: center; padding: 50px; color: var(--text-light); }
         .empty-state i { font-size: 60px; color: var(--border); margin-bottom: 20px; }
 
-        /* Modal */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; justify-content: center; align-items: center; z-index: 2000; padding: 20px; }
         .modal-content { background: var(--white); color: var(--text-dark); width: 100%; max-width: 1000px; max-height: 90vh; overflow-y: auto; border-radius: 16px; display: flex; flex-wrap: wrap; position: relative; border: 1px solid var(--border); }
         .close-modal { position: absolute; top: 15px; left: 20px; font-size: 24px; cursor: pointer; color: var(--text-dark); z-index: 10; }
@@ -109,16 +103,13 @@
         
         @media (max-width: 768px) { .main-layout { flex-direction: column; } .sidebar { width: 100%; } }
 
-        /* Cart badge on nav icon */
         .nav-icon-wrap { position: relative; display: inline-flex; }
         .cart-badge { position: absolute; top: -8px; left: -10px; background: var(--primary); color: #1A1A1A; font-size: 11px; font-weight: bold; min-width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; padding: 0 3px; }
 
-        /* Search bar under header */
         .search-bar-wrap { display: none; width: 100%; padding: 12px 20px; background: var(--white); border-top: 1px solid var(--border); }
         .search-bar-wrap.active { display: flex; gap: 10px; }
         .search-bar-wrap input { flex: 1; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-color); color: var(--text-dark); font-size: 15px; }
 
-        /* Cart Drawer */
         .cart-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; z-index: 2100; }
         .cart-overlay.active { display: block; }
         .cart-drawer { position: fixed; top: 0; right: -420px; width: 100%; max-width: 400px; height: 100%; background: var(--white); z-index: 2200; transition: right 0.35s ease; display: flex; flex-direction: column; box-shadow: -4px 0 25px rgba(0,0,0,0.2); }
@@ -142,14 +133,12 @@
         .checkout-btn { background: #25D366; color: #fff; border: none; padding: 14px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .checkout-btn:hover { background: #1ea952; }
 
-        /* Toast */
         .toast { position: fixed; bottom: 100px; right: 30px; background: var(--secondary); color: #fff; padding: 12px 20px; border-radius: 8px; font-size: 14px; z-index: 3000; opacity: 0; transform: translateY(10px); transition: 0.3s; pointer-events: none; }
         .toast.show { opacity: 1; transform: translateY(0); }
 
         .loading-state { grid-column: 1 / -1; text-align: center; padding: 60px; color: var(--text-light); }
         .loading-state i { font-size: 40px; margin-bottom: 15px; display: block; }
 
-        /* Skeleton loader */
         .skeleton-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 15px; display: flex; flex-direction: column; }
         .skeleton-box { background: linear-gradient(90deg, var(--border) 25%, var(--bg-color) 50%, var(--border) 75%); background-size: 200% 100%; animation: skeleton-shine 1.4s infinite; border-radius: 8px; }
         .skeleton-img { width: 100%; height: 250px; margin-bottom: 15px; }
@@ -159,25 +148,20 @@
         .skeleton-btn { height: 42px; width: 100%; margin-top: auto; border-radius: 8px; }
         @keyframes skeleton-shine { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 
-        /* Stock badge */
         .stock-badge { font-size: 11px; font-weight: bold; padding: 3px 8px; border-radius: 4px; display: inline-block; margin-bottom: 6px; width: fit-content; }
         .stock-badge.in-stock { background: rgba(40,167,69,0.15); color: var(--success); }
         .stock-badge.out-stock { background: rgba(220,53,69,0.15); color: var(--danger); }
         .btn-add:disabled { opacity: 0.5; cursor: not-allowed; }
         .btn-add:disabled:hover { background: var(--secondary); color: var(--white); }
 
-        /* Wishlist heart */
         .wishlist-heart { position: absolute; top: 22px; left: 22px; font-size: 20px; color: #fff; background: rgba(0,0,0,0.35); width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 5; transition: 0.2s; }
         .wishlist-heart:hover { transform: scale(1.1); }
         .wishlist-heart.active { color: var(--danger); background: rgba(255,255,255,0.85); }
-        .product-card { position: relative; }
 
-        /* Quantity selector in modal */
         .qty-selector { display: flex; align-items: center; gap: 12px; margin: 15px 0; }
         .qty-selector button { width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-color); color: var(--text-dark); font-size: 16px; cursor: pointer; }
         .qty-selector span { font-size: 18px; font-weight: bold; min-width: 24px; text-align: center; }
 
-        /* Sort select */
         .sort-select { padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--white); color: var(--text-dark); font-size: 14px; cursor: pointer; }
         .grid-toolbar { grid-column: 1 / -1; display: flex; justify-content: flex-end; margin-bottom: 5px; }
     </style>
@@ -187,7 +171,7 @@
     <header>
         <div class="nav-container">
             <div class="logo-box">
-                <a href="#" onclick="window.location.reload();"><img src="25505.jpg" alt="Harmony Group" class="logo-img"></a>
+                <a href="#" onclick="window.location.reload();" style="display:flex; width:100%; height:100%; align-items:center; justify-content:flex-start;"><img src="25505.jpg" alt="Harmony Group" class="logo-img"></a>
             </div>
             <div class="nav-actions">
                 <button class="theme-toggle" id="themeToggleBtn" title="تغيير الوضع المظلم/المضيء" onclick="toggleTheme()">
@@ -306,9 +290,6 @@
     <a href="#" class="floating-whatsapp" title="تواصل معنا على واتساب" id="floatingWhatsapp" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i></a>
 
     <script>
-        /* ============================================================
-           1) إعدادات Firebase 
-        ============================================================ */
         const firebaseConfig = {
             apiKey: "AIzaSyDErgQEhGlYNtEUwPHY426GNeALbLBDd0M",
             authDomain: "harmonygroup-598ca.firebaseapp.com",
@@ -324,9 +305,6 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        /* ============================================================
-           2) الوضع الليلي / النهاري
-        ============================================================ */
         function toggleTheme() {
             const currentTheme = document.documentElement.getAttribute('data-theme');
             const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
@@ -342,9 +320,6 @@
         document.documentElement.setAttribute('data-theme', savedTheme);
         updateThemeIcon(savedTheme);
 
-        /* ============================================================
-           3) عناصر الصفحة
-        ============================================================ */
         const productGrid = document.getElementById('productGrid');
         const priceRange = document.getElementById('priceRange');
         const priceVal = document.getElementById('priceVal');
@@ -388,9 +363,6 @@
         }
         renderSkeleton();
 
-        /* ============================================================
-           4) جلب المنتجات لايڤ من Firestore 
-        ============================================================ */
         db.collection('products').onSnapshot((snapshot) => {
             allProducts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
             renderProducts();
@@ -533,7 +505,7 @@
                         <tr><th>الحالة</th><td>${p.condition} ${p.condition === 'New' ? '(متبرشم)' : ''}</td></tr>
                         <tr><th>الرام / المساحة</th><td>${p.ram} / ${p.storage}</td></tr>
                         <tr><th>اللون</th><td style="font-weight:bold;">${p.color || 'مش محدد'}</td></tr>
-                        <tr><th>صحة البطارية</th><td style="color:var(--success); font-weight:bold;">${p.battery || 'غير متوفر'}%</td></tr>
+                        <tr><th>صحة البطارية</th><td style="color:var(--success); font-weight:bold;">${p.battery}%</td></tr>
                         <tr><th>العلبة الأصلية</th><td>${p.box ? '<i class="fas fa-check text-success"></i> موجودة' : '<i class="fas fa-times text-danger"></i> غير موجودة'}</td></tr>
                         <tr><th>الشاحن الأصلي</th><td>${p.charger ? '<i class="fas fa-check text-success"></i> موجود' : '<i class="fas fa-times text-danger"></i> غير موجود'}</td></tr>
                         <tr><th>الوصف الإضافي</th><td style="white-space: pre-wrap; line-height: 1.6;">${p.description || 'مفيش تفاصيل تانية للجهاز ده'}</td></tr>
