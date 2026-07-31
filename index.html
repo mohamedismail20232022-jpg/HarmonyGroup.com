@@ -1,4 +1,4 @@
-   <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -148,6 +148,7 @@
         
         .stars-row { color: #ffc107; font-size: 12px; margin-bottom: 10px; display: flex; align-items: center; gap: 4px; }
         .stars-row span { color: var(--text-light); font-size: 11px; }
+        .hot-deal-badge { position: absolute; top: 22px; right: 22px; background: var(--danger); color: #fff; font-size: 10px; font-weight: 800; padding: 4px 10px; border-radius: 6px; z-index: 5; box-shadow: 0 2px 8px rgba(220,53,69,0.3); }
 
         .compare-checkbox-label { font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 6px; margin-top: 8px; cursor: pointer; color: var(--text-light); }
         .compare-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--secondary); color: #fff; padding: 15px 30px; z-index: 1500; display: none; justify-content: space-between; align-items: center; box-shadow: 0 -4px 20px rgba(0,0,0,0.2); }
@@ -254,7 +255,7 @@
         .checkout-btn { background: #25D366; color: #fff; border: none; padding: 14px; width: 100%; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(37,211,102,0.3); }
         .checkout-btn:hover { background: #1ea952; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(37,211,102,0.4); }
 
-        /* Auth Modal - نظام الحسابات المبسط */
+        /* Auth Modal */
         .auth-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 3000; }
         .auth-box { background: var(--card-bg); padding: 40px; border-radius: 16px; width: 100%; max-width: 400px; border: 1px solid var(--border); text-align: center; position: relative; }
         .auth-box h2 { margin-bottom: 20px; font-weight: 800; color: var(--text-dark); }
@@ -412,7 +413,7 @@
         <div class="modal-content" id="modalContent"></div>
     </div>
 
-    <!-- Auth Modal (Login/Signup Simulation) -->
+    <!-- Auth Modal -->
     <div class="auth-modal-overlay" id="authModal">
         <div class="auth-box">
             <i class="fas fa-times close-modal" onclick="closeAuthModal()" style="top: 15px; left: 15px;"></i>
@@ -525,6 +526,7 @@
         let compareList = [];
         let appliedDiscount = 0; 
 
+        // إرجاع كل المنتجات الـ Dummy بالكامل عشان السايت يبقى شغال زيرو إيرورز
         const fallbackProducts = [
             {
                 id: 'sample_1',
@@ -532,6 +534,7 @@
                 brand: 'Apple',
                 name: 'iPhone 17 Pro Max',
                 price: 75000,
+                oldPrice: 82000,
                 customTax: 12000,
                 condition: 'New',
                 ram: '8GB',
@@ -543,7 +546,56 @@
                 stock: 3,
                 images: ['https://via.placeholder.com/300x300?text=iPhone+17+Pro+Max'],
                 description: 'أحدث إصدار من أبل ببطارية خرافية ومعالج جبار.',
+                reviews: [
+                    { name: 'أحمد مرسي', rating: 5, comment: 'جهاز تحفة وشحن سريع جداً من فرع الرحاب!' }
+                ],
                 createdAt: { seconds: Date.now() / 1000 }
+            },
+            {
+                id: 'sample_2',
+                category: 'accessories',
+                brand: 'Apple',
+                name: 'Apple AirPods Pro 2',
+                price: 9500,
+                oldPrice: 11000,
+                customTax: 1500,
+                condition: 'New',
+                ram: '-',
+                storage: 'Case MagSafe',
+                color: 'أبيض',
+                battery: 100,
+                box: true,
+                charger: true,
+                stock: 10,
+                images: ['https://via.placeholder.com/300x300?text=AirPods+Pro+2'],
+                description: 'عزل ضوضاء فائق وصوت نقي.',
+                reviews: [
+                    { name: 'مصطفى حسين', rating: 5, comment: 'الصوت نقي جداً وعزل الضوضاء خيالي.' }
+                ],
+                createdAt: { seconds: (Date.now() / 1000) - 50 }
+            },
+            {
+                id: 'sample_3',
+                category: 'laptops',
+                brand: 'Apple',
+                name: 'MacBook Pro M3 Max',
+                price: 130000,
+                oldPrice: 145000,
+                customTax: 15000,
+                condition: 'New',
+                ram: '32GB',
+                storage: '1TB SSD',
+                color: 'فضي مساحي',
+                battery: 100,
+                box: true,
+                charger: true,
+                stock: 2,
+                images: ['https://via.placeholder.com/300x300?text=MacBook+Pro+M3'],
+                description: 'أقوى لابتوب للمهندسين والمصممين والمبرمجين.',
+                reviews: [
+                    { name: 'إبراهيم صبري', rating: 5, comment: 'الماك بوك خرافة في الشغل الثقيل.' }
+                ],
+                createdAt: { seconds: (Date.now() / 1000) - 100 }
             }
         ];
 
@@ -653,11 +705,10 @@
             productGrid.innerHTML = '';
 
             const filtered = allProducts.filter(p => {
-                const tax = p.customTax || 0;
-                const totalP = Number(p.price) + tax;
+                const basePrice = Number(p.price);
                 const passCategory = currentFilters.category === 'all' || (p.category || 'mobiles') === currentFilters.category;
                 const passBrand = currentFilters.brand === 'all' || p.brand === currentFilters.brand;
-                const passPrice = totalP <= currentFilters.maxPrice;
+                const passPrice = basePrice <= currentFilters.maxPrice;
                 const passCond = currentFilters.condition === 'all' || p.condition === currentFilters.condition;
                 const passSearch = !currentFilters.search ||
                     (p.name || '').toLowerCase().includes(currentFilters.search) ||
@@ -665,8 +716,8 @@
                 return passCategory && passBrand && passPrice && passCond && passSearch;
             });
 
-            if (currentSort === 'price-asc') { filtered.sort((a, b) => (Number(a.price) + (a.customTax || 0)) - (Number(b.price) + (b.customTax || 0))); } 
-            else if (currentSort === 'price-desc') { filtered.sort((a, b) => (Number(b.price) + (b.customTax || 0)) - (Number(a.price) + (a.customTax || 0))); } 
+            if (currentSort === 'price-asc') { filtered.sort((a, b) => Number(a.price) - Number(b.price)); } 
+            else if (currentSort === 'price-desc') { filtered.sort((a, b) => Number(b.price) - Number(a.price)); } 
             else if (currentSort === 'newest') {
                 filtered.sort((a, b) => {
                     const aTime = a.createdAt && a.createdAt.seconds ? a.createdAt.seconds : 0;
@@ -682,9 +733,8 @@
 
             const wishlist = getWishlist();
             filtered.forEach(p => {
-                const tax = p.customTax || 0;
-                const finalTotal = Number(p.price) + tax;
-                const cardInstallment = ((finalTotal * 1.15) / 12).toFixed(0);
+                const basePrice = Number(p.price);
+                const cardInstallment = ((basePrice * 1.15) / 12).toFixed(0); // القسط على السعر الأساسي عشان ميبانش الزيادة بره
                 const mainImg = (p.images && p.images.length > 0) ? p.images[0] : 'https://via.placeholder.com/300x300?text=No+Image';
                 const isWished = wishlist.includes(p.id);
                 const isCompared = compareList.includes(p.id);
@@ -715,10 +765,14 @@
                         <span class="tag"><i class="fas fa-memory"></i> ${p.ram} / ${p.storage}</span>
                         <span class="tag"><i class="fas fa-star"></i> ${p.condition}</span>
                     </div>
+                    
+                    <!-- السعر الأساسي للزبون بره من غير ضريبة -->
                     <div class="product-price">
-                        ${finalTotal.toLocaleString()} ج.م 
+                        ${basePrice.toLocaleString()} ج.م 
+                        ${p.oldPrice ? `<del style="font-size:14px; color:var(--text-light); margin-right:8px;">${Number(p.oldPrice).toLocaleString()} ج</del>` : ''}
                     </div>
-                    <div class="quick-emi-hint"><i class="fas fa-credit-card"></i> قسط شهري من ${Number(cardInstallment).toLocaleString()} ج</div>
+                    
+                    <div class="quick-emi-hint"><i class="fas fa-credit-card"></i> قسط شهري يبدأ من ${Number(cardInstallment).toLocaleString()} ج</div>
                     <label class="compare-checkbox-label" onclick="event.stopPropagation()">
                         <input type="checkbox" ${isCompared ? 'checked' : ''} onchange="toggleCompare('${p.id}', event)"> مقارنة الجهاز
                     </label>
@@ -741,7 +795,8 @@
         function openProductModal(p) {
             modalQty = 1;
             const tax = p.customTax || 0;
-            const finalPrice = Number(p.price) + tax;
+            const basePrice = Number(p.price);
+            const finalPrice = basePrice + tax;
             const stockVal = p.stock !== undefined && p.stock !== null ? Number(p.stock) : 5;
             const isOutOfStock = stockVal <= 0;
             const installment = (finalPrice * 1.15) / 12;
@@ -770,18 +825,20 @@
                 <div class="modal-details">
                     <span style="color:var(--text-light); text-transform:uppercase; font-weight:700;">${p.brand}</span>
                     <h2 style="font-size:26px; margin-bottom:10px; font-weight:800;">${p.name}</h2>
-                    <h3 style="color:var(--primary); font-size:30px; font-weight:800;">${finalPrice.toLocaleString()} ج.م</h3>
+                    
+                    <h3 style="color:var(--primary); font-size:30px; font-weight:800;">${basePrice.toLocaleString()} ج.م</h3>
 
                     <div class="tax-box">
                         <strong><i class="fas fa-info-circle"></i> تفاصيل السعر والضرائب:</strong><br>
-                        سعر الجهاز الأساسي: ${Number(p.price).toLocaleString()} ج.م<br>
-                        رسوم الجمارك وضرائب NTRA المخصصة: <b>${tax.toLocaleString()} ج.م</b>
+                        سعر الجهاز الأساسي: ${basePrice.toLocaleString()} ج.م<br>
+                        رسوم الجمارك وضرائب NTRA المخصصة: <b>${tax.toLocaleString()} ج.م</b><br>
+                        <span style="display:block; margin-top:8px; padding-top:8px; border-top:1px dashed var(--border); color:var(--danger); font-size:16px; font-weight:bold;">الإجمالي المطلوب وقت الدفع: ${finalPrice.toLocaleString()} ج.م</span>
                     </div>
 
                     <div class="installment-calc-box">
                         <strong><i class="fas fa-calculator"></i> حاسبة التقسيط الذكية:</strong><br>
                         اختر مدة التقسيط المناسبة لك:
-                        <select id="installmentMonths" onchange="updateInstallmentAmount(${p.price}, ${tax})">
+                        <select id="installmentMonths" onchange="updateInstallmentAmount(${basePrice}, ${tax})">
                             <option value="6">6 شهور</option>
                             <option value="12" selected>12 شهر</option>
                             <option value="18">18 شهر</option>
@@ -969,7 +1026,7 @@
             if (cart.length === 0) return;
             if (!WHATSAPP_NUMBER || WHATSAPP_NUMBER.includes('PASTE_')) { showToast('لازم تحط رقم الواتساب في الكود الأول'); return; }
             let message = 'طلب جديد من موقع Harmony GROUP:%0A%0A';
-            let total = 0;
+            let subtotal = 0;
             cart.forEach(item => {
                 const p = allProducts.find(prod => prod.id === item.id);
                 if (!p) return;
@@ -977,7 +1034,10 @@
                 let itemColor = p.color ? ` (اللون: ${p.color})` : '';
                 message += `- ${p.name}${itemColor} (الكمية: ${item.qty}) — ${lineTotal.toLocaleString()} ج.م%0A`;
             });
-            message += `%0Aالإجمالي الكلي: ${total.toLocaleString()} ج.م`;
+            let discountAmount = appliedDiscount < 1 ? subtotal * appliedDiscount : appliedDiscount;
+            let finalTotal = Math.max(0, subtotal - discountAmount);
+            if (discountAmount > 0) { message += `%0Aالخصم المطبق: -${discountAmount.toLocaleString()} ج.م`; }
+            message += `%0A%0Aالإجمالي الكلي بعد الخصم: ${finalTotal.toLocaleString()} ج.م`;
             window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`, '_blank');
         }
 
@@ -989,5 +1049,5 @@
         updateCartBadge();
     </script>
 </body>
-</html> 
+</html>
 
