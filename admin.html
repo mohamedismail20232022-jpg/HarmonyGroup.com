@@ -41,7 +41,7 @@
     .card h3 { margin-bottom:16px; }
     .form-group { margin-bottom:12px; }
     .form-group label { display:block; font-size:13px; margin-bottom:5px; color:#555; font-weight:bold; }
-    .form-group input, .form-group select { width:100%; padding:10px; border:1px solid var(--border); border-radius:8px; font-size:14px; }
+    .form-group input, .form-group select, .form-group textarea { width:100%; padding:10px; border:1px solid var(--border); border-radius:8px; font-size:14px; }
     .form-row { display:flex; gap:10px; }
     .form-row .form-group { flex:1; }
     .checkbox-row { display:flex; gap:20px; margin-bottom:12px; }
@@ -59,7 +59,6 @@
     .edit-btn { background:#e7f1ff; color:#0d6efd; }
     .delete-btn { background:#fdecec; color:var(--danger); }
     .empty-list { text-align:center; color:#999; padding:30px; }
-    .hint { font-size:12px; color:#888; margin-top:-6px; margin-bottom:10px; }
 
     .image-field-row { display:flex; gap:8px; align-items:center; margin-bottom:15px; flex-wrap: wrap; background: #fdfdfd; padding: 10px; border: 1px solid var(--border); border-radius: 8px;}
     .image-field-row input[type="file"] { flex:1; padding:5px; font-size:13px; border:none; background:transparent; }
@@ -96,7 +95,7 @@
             <h3 id="formTitle">إضافة منتج جديد</h3>
             <div class="form-group">
                 <label>اسم المنتج</label>
-                <input type="text" id="p_name" placeholder="مثال: Samsung Galaxy S25 Ultra - Black">
+                <input type="text" id="p_name" placeholder="مثال: Samsung Galaxy S25 Ultra">
             </div>
             <div class="form-row">
                 <div class="form-group">
@@ -118,17 +117,47 @@
                     </select>
                 </div>
             </div>
+            
+            <!-- الحقول الجديدة: اللون والوصف -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label>اللون</label>
+                    <input type="text" id="p_color" placeholder="مثال: أسود، أزرق، تيتانيوم">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>الوصف الإضافي</label>
+                <textarea id="p_description" placeholder="اكتب أي تفاصيل زيادة هنا..." rows="2" style="resize:vertical;"></textarea>
+            </div>
+
             <div class="form-row">
                 <div class="form-group">
                     <label>الرام</label>
                     <select id="p_ram">
-                        <option>8GB</option><option>12GB</option><option>16GB</option><option>24GB</option>
+                        <option>1GB</option>
+                        <option>2GB</option>
+                        <option>3GB</option>
+                        <option>4GB</option>
+                        <option>6GB</option>
+                        <option>8GB</option>
+                        <option>12GB</option>
+                        <option>16GB</option>
+                        <option>24GB</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label>المساحة</label>
                     <select id="p_storage">
-                        <option>128GB</option><option>256GB</option><option>512GB</option><option>1TB</option>
+                        <option>4GB</option>
+                        <option>8GB</option>
+                        <option>16GB</option>
+                        <option>32GB</option>
+                        <option>64GB</option>
+                        <option>128GB</option>
+                        <option>256GB</option>
+                        <option>512GB</option>
+                        <option>1TB</option>
+                        <option>2TB</option>
                     </select>
                 </div>
             </div>
@@ -207,7 +236,6 @@
         container.appendChild(row);
     }
 
-    // الدالة السحرية اللي بترفع الصورة على السحابة
     async function uploadImageToFirebase(fileInput, rowId) {
         const file = fileInput.files[0];
         if (!file) return;
@@ -263,7 +291,6 @@
         }
     }
 
-    // Start with one empty photo field
     addImageField();
 
     auth.onAuthStateChanged(user => {
@@ -301,7 +328,7 @@
         document.getElementById('productCount').textContent = productsCache.length;
         const container = document.getElementById('productListContainer');
         if (productsCache.length === 0) {
-            container.innerHTML = '<div class="empty-list">مفيش منتجات لسه. ضيف أول منتج من الفورم على الشمال.</div>';
+            container.innerHTML = '<div class="empty-list">مفيش منتجات لسه. ضيف أول منتج من الفورم على اليمين.</div>';
             return;
         }
         container.innerHTML = productsCache.map(p => {
@@ -310,7 +337,7 @@
                 <div class="product-list-item">
                     <img src="${img}" alt="">
                     <div class="info">
-                        <h4>${p.name}</h4>
+                        <h4>${p.name} ${p.color ? `(${p.color})` : ''}</h4>
                         <span>${p.brand} · ${p.ram}/${p.storage} · ${Number(p.price).toLocaleString()} ج.م</span>
                     </div>
                     <div class="actions">
@@ -329,13 +356,14 @@
             return;
         }
         
-        // هنا بياخد اللينكات السحابية اللي الكود عملها للصورة
         const images = getImageUrls();
 
         const data = {
             name,
             brand: document.getElementById('p_brand').value,
             condition: document.getElementById('p_condition').value,
+            color: document.getElementById('p_color').value.trim(),
+            description: document.getElementById('p_description').value.trim(),
             ram: document.getElementById('p_ram').value,
             storage: document.getElementById('p_storage').value,
             price: price,
@@ -367,6 +395,8 @@
         document.getElementById('p_name').value = p.name || '';
         document.getElementById('p_brand').value = p.brand || 'Apple';
         document.getElementById('p_condition').value = p.condition || 'New';
+        document.getElementById('p_color').value = p.color || '';
+        document.getElementById('p_description').value = p.description || '';
         document.getElementById('p_ram').value = p.ram || '8GB';
         document.getElementById('p_storage').value = p.storage || '128GB';
         document.getElementById('p_price').value = p.price || '';
@@ -387,7 +417,7 @@
     function resetForm() {
         editingId = null;
         document.getElementById('formTitle').textContent = 'إضافة منتج جديد';
-        ['p_name','p_price','p_tax','p_battery'].forEach(id => document.getElementById(id).value = '');
+        ['p_name','p_color','p_description','p_price','p_tax','p_battery'].forEach(id => document.getElementById(id).value = '');
         document.getElementById('p_box').checked = true;
         document.getElementById('p_charger').checked = true;
         document.getElementById('cancelEditBtn').style.display = 'none';
