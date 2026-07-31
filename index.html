@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -52,24 +53,29 @@
         .announcement-bar { background: var(--primary); color: #1A1A1A; font-size: 13px; font-weight: bold; text-align: center; padding: 9px 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; box-shadow: inset 0 -2px 5px rgba(0,0,0,0.05); }
 
         header { background: var(--white); box-shadow: 0 4px 20px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 1000; display: flex; flex-direction: column; }
-        .nav-container { max-width: 100%; margin: 0; padding: 0; display: flex; flex-direction: column; width: 100%; position: relative; }
         
-        .logo-box { background: var(--logo-bg); padding: 15px 30px; border-radius: 0; display: flex; align-items: center; justify-content: flex-start; border: none; box-shadow: none; width: 100%; height: 180px; overflow: hidden; position: relative; }
+        /* Header Top Row: Logo + Search Bar + Actions */
+        .header-top-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 30px; gap: 20px; width: 100%; flex-wrap: wrap; }
+        
+        /* LOGO BOX - UNTOUCHED & HUGE */
+        .logo-box { background: var(--logo-bg); display: flex; align-items: center; justify-content: flex-start; height: 180px; width: 280px; overflow: hidden; flex-shrink: 0; }
         .logo-img { height: 100%; width: auto; max-width: 100%; object-fit: contain; object-position: right center; cursor: pointer; transition: transform 0.4s ease; display: block; }
         .logo-img:hover { transform: scale(1.03); }
 
-        @media (max-width: 768px) { .logo-box { height: 110px; padding: 10px 15px; } }
+        @media (max-width: 768px) { 
+            .header-top-row { padding: 10px 15px; gap: 10px; }
+            .logo-box { height: 110px; width: 180px; } 
+        }
 
-        .nav-actions { display: flex; align-items: center; gap: 20px; position: absolute; top: 50%; left: 30px; transform: translateY(-50%); z-index: 1001; }
-        .nav-actions button, .theme-toggle { background: none; border: none; font-size: 24px; color: var(--secondary); cursor: pointer; transition: 0.3s; }
+        /* Compact & Sleek Top Search Bar */
+        .hero-search-box { position: relative; flex: 1; max-width: 450px; display: flex; align-items: center; margin: 0 15px; }
+        .hero-search-box i { position: absolute; right: 18px; color: var(--text-light); font-size: 16px; }
+        .hero-search-box input { width: 100%; padding: 10px 45px 10px 18px; border-radius: 25px; border: 2px solid var(--border); background: var(--bg-color); color: var(--text-dark); font-size: 14px; outline: none; transition: 0.3s; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
+        .hero-search-box input:focus { border-color: var(--primary); box-shadow: 0 4px 18px rgba(243,166,0,0.15); background: var(--white); }
+
+        .nav-actions { display: flex; align-items: center; gap: 18px; flex-shrink: 0; }
+        .nav-actions button, .theme-toggle { background: none; border: none; font-size: 22px; color: var(--secondary); cursor: pointer; transition: 0.3s; }
         .nav-actions button:hover, .theme-toggle:hover { color: var(--primary); }
-        
-        /* Stylish Big Search Bar */
-        .hero-search-wrap { padding: 15px 25px; background: var(--white); border-top: 1px solid var(--border); display: flex; justify-content: center; }
-        .hero-search-box { position: relative; width: 100%; max-width: 800px; display: flex; align-items: center; }
-        .hero-search-box i { position: absolute; right: 22px; color: var(--text-light); font-size: 18px; }
-        .hero-search-box input { width: 100%; padding: 14px 52px 14px 20px; border-radius: 35px; border: 2px solid var(--border); background: var(--bg-color); color: var(--text-dark); font-size: 16px; outline: none; transition: 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
-        .hero-search-box input:focus { border-color: var(--primary); box-shadow: 0 4px 25px rgba(243,166,0,0.18); background: var(--white); }
 
         .main-layout { max-width: 1400px; margin: 30px auto; display: flex; gap: 30px; padding: 0 20px; flex-wrap: wrap; }
         
@@ -184,10 +190,19 @@
     </div>
 
     <header>
-        <div class="nav-container">
+        <div class="header-top-row">
+            <!-- LOGO BOX (Untouched) -->
             <div class="logo-box">
                 <a href="#" onclick="window.location.reload();" style="display:flex; width:100%; height:100%; align-items:center; justify-content:flex-start;"><img src="25505.jpg" alt="Harmony Group" class="logo-img"></a>
             </div>
+
+            <!-- Sleek & Compact Search Bar at Top -->
+            <div class="hero-search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="ابحث عن موبايلك المفضّل (أبل، سامسونج، آيفون...)...">
+            </div>
+
+            <!-- Nav Actions (Theme & Cart) -->
             <div class="nav-actions">
                 <button class="theme-toggle" id="themeToggleBtn" title="تغيير الوضع المظلم/المضيء" onclick="toggleTheme()">
                     <i class="fas fa-moon" id="themeIcon"></i>
@@ -198,14 +213,6 @@
                         <span class="cart-badge" id="cartBadge" style="display:none;">0</span>
                     </span>
                 </button>
-            </div>
-        </div>
-        
-        <!-- Feature 2: Stylish Big Search Bar -->
-        <div class="hero-search-wrap">
-            <div class="hero-search-box">
-                <i class="fas fa-search"></i>
-                <input type="text" id="searchInput" placeholder="ابحث عن موبايلك المفضّل (أبل، سامسونج، آيفون، أوبو، ون بلس...)...">
             </div>
         </div>
     </header>
@@ -810,7 +817,4 @@
         updateCartBadge();
     </script>
 </body>
-</html>
-
-     
-       
+</html>       
