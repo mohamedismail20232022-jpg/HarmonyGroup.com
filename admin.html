@@ -8,11 +8,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-<!-- Firebase Core, Auth, Firestore, and Storage -->
+<!-- Firebase Core, Auth, Firestore -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
 
 <style>
     :root { 
@@ -87,13 +86,13 @@
     .empty-list { text-align:center; color:#999; padding:40px; font-weight: 600; }
 
     .image-field-row { display:flex; gap:10px; align-items:center; margin-bottom:12px; flex-wrap: wrap; background: var(--bg); padding: 12px; border: 1px solid var(--border); border-radius: 10px;}
-    .image-field-row input[type="file"] { flex:1; padding:5px; font-size:13px; border:none; background:transparent; cursor: pointer; }
+    .image-field-row input[type="file"] { flex: 1; padding:6px; font-size:13px; border:1px solid var(--border); border-radius:6px; background:var(--white); cursor: pointer; }
     .image-field-row img.thumb { width:50px; height:50px; object-fit:cover; border-radius:8px; background:var(--white); flex-shrink:0; border:1px solid var(--border); }
     .image-field-row img.thumb.hidden-thumb { display:none; }
     .remove-image-btn { width:36px; height:36px; flex-shrink:0; border:none; border-radius:8px; background:#fdecec; color:var(--danger); cursor:pointer; display: flex; align-items: center; justify-content: center; }
     .add-image-btn { width:100%; padding:12px; background:var(--bg); border:2px dashed var(--border); border-radius:10px; cursor:pointer; color:#555; font-weight:700; margin-bottom:12px; transition: 0.2s; }
     .add-image-btn:hover { background: rgba(243,166,0,0.08); border-color: var(--primary); color: var(--primary); }
-    .upload-status { font-size: 12px; font-weight: bold; width: 100%; margin-top: 5px; }
+    .upload-status { font-size: 11px; font-weight: bold; width: 100%; margin-top: 2px; }
 </style>
 </head>
 <body>
@@ -146,15 +145,24 @@
             <h3 id="formTitle">إضافة منتج جديد</h3>
             
             <div class="form-group">
+                <label>القسم الرئيسي (أين يظهر المنتج؟)</label>
+                <select id="p_category" style="border-color: var(--primary); font-weight: bold;">
+                    <option value="mobiles">📱 هواتف ذكية (Mobile Phones)</option>
+                    <option value="accessories">🎧 إكسسوارات (Accessories)</option>
+                    <option value="laptops">💻 لابتوبات (Laptops)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
                 <label>اسم المنتج</label>
-                <input type="text" id="p_name" placeholder="مثال: Samsung Galaxy S25 Ultra">
+                <input type="text" id="p_name" placeholder="مثال: Samsung Galaxy S25 Ultra أو MacBook Pro">
             </div>
             
             <div class="form-row">
                 <div class="form-group">
                     <label>الماركة (اختر أو اكتب يدوي)</label>
                     <select id="p_brand_select" onchange="document.getElementById('p_brand').value = this.value" style="margin-bottom: 6px;">
-                        <option value="">-- اختر من القائمة أو اكتب بالأسفل --</option>
+                        <option value="">-- اختر أو اكتب بالأسفل --</option>
                         <option value="Apple">Apple</option>
                         <option value="Samsung">Samsung</option>
                         <option value="Xiaomi">Xiaomi</option>
@@ -164,7 +172,6 @@
                         <option value="Oppo">Oppo</option>
                         <option value="Realme">Realme</option>
                         <option value="Motorola">Motorola</option>
-                        <option value="Red Magic">Red Magic</option>
                         <option value="Vivo">Vivo</option>
                         <option value="Infinix">Infinix</option>
                         <option value="Google Pixel">Google Pixel</option>
@@ -198,19 +205,8 @@
                     <input type="number" id="p_price" placeholder="120000">
                 </div>
                 <div class="form-group">
-                    <label>السعر القديم / قبل الخصم (اختياري)</label>
-                    <input type="number" id="p_old_price" placeholder="لإظهار عروض الشطب">
-                </div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
                     <label>الجمارك / الضرائب (ج.م)</label>
                     <input type="number" id="p_tax" placeholder="20000">
-                </div>
-                <div class="form-group">
-                    <label>كود المنتج (SKU)</label>
-                    <input type="text" id="p_sku" placeholder="مثال: HAR-S25U">
                 </div>
             </div>
             
@@ -221,30 +217,22 @@
 
             <div class="form-row">
                 <div class="form-group">
-                    <label>الرام (اختر أو اكتب يدوي)</label>
+                    <label>الرام / المواصفات (اختر أو اكتب يدوي)</label>
                     <select id="p_ram_select" onchange="document.getElementById('p_ram').value = this.value" style="margin-bottom: 6px;">
                         <option value="">-- اختر أو اكتب بالأسفل --</option>
-                        <option value="1GB">1GB</option>
-                        <option value="2GB">2GB</option>
-                        <option value="3GB">3GB</option>
                         <option value="4GB">4GB</option>
-                        <option value="6GB">6GB</option>
                         <option value="8GB">8GB</option>
                         <option value="12GB">12GB</option>
                         <option value="16GB">16GB</option>
-                        <option value="24GB">24GB</option>
+                        <option value="32GB">32GB</option>
+                        <option value="-">لايوجد / غير مخصص</option>
                     </select>
-                    <input type="text" id="p_ram" placeholder="أو اكتب الرام يدوي هنا">
+                    <input type="text" id="p_ram" placeholder="أو اكتب الرام/المواصفات يدوي">
                 </div>
                 <div class="form-group">
-                    <label>المساحة (اختر أو اكتب يدوي)</label>
+                    <label>المساحة / التخزين (اختر أو اكتب يدوي)</label>
                     <select id="p_storage_select" onchange="document.getElementById('p_storage').value = this.value" style="margin-bottom: 6px;">
                         <option value="">-- اختر أو اكتب بالأسفل --</option>
-                        <option value="4GB">4GB</option>
-                        <option value="8GB">8GB</option>
-                        <option value="16GB">16GB</option>
-                        <option value="32GB">32GB</option>
-                        <option value="64GB">64GB</option>
                         <option value="128GB">128GB</option>
                         <option value="256GB">256GB</option>
                         <option value="512GB">512GB</option>
@@ -266,7 +254,7 @@
             </div>
 
             <div class="form-group">
-                <label>صور المنتج (اختر الصور من جهازك)</label>
+                <label>صور المنتج (اختر صورة مباشرة من جهازك - لابتوب أو موبايل)</label>
                 <div id="imagesContainer"></div>
                 <button type="button" class="add-image-btn" onclick="addImageField()"><i class="fas fa-plus"></i> إضافة صورة تانية</button>
             </div>
@@ -296,11 +284,9 @@
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
-    const storage = firebase.storage();
 
     let editingId = null;
     let productsCache = [];
-
     let imageFieldCounter = 0;
 
     function addImageField(existingUrl = '') {
@@ -313,44 +299,41 @@
         
         row.innerHTML = `
             <img class="thumb ${existingUrl ? '' : 'hidden-thumb'}" src="${existingUrl}" alt="">
-            <input type="file" accept="image/*" class="p_image_file" onchange="uploadImageToFirebase(this, '${rowId}')">
+            <input type="file" accept="image/*" class="p_image_file" onchange="handleLocalImage(this, '${rowId}')">
             <input type="hidden" class="p_image_url" value="${existingUrl}">
             <button type="button" class="remove-image-btn" onclick="removeImageField('${rowId}')"><i class="fas fa-trash"></i></button>
-            <div class="upload-status" style="display: ${existingUrl ? 'none' : 'block'}; color: var(--text);">مستني تختار صورة...</div>
+            <div class="upload-status" style="display: ${existingUrl ? 'none' : 'block'}; color: var(--text);">اختر صورة من جهازك...</div>
         `;
         container.appendChild(row);
     }
 
-    async function uploadImageToFirebase(fileInput, rowId) {
+    function handleLocalImage(fileInput, rowId) {
         const file = fileInput.files[0];
         if (!file) return;
-        
+
         const row = document.getElementById(rowId);
         const thumb = row.querySelector('.thumb');
         const hiddenUrl = row.querySelector('.p_image_url');
         const status = row.querySelector('.upload-status');
 
         status.style.display = 'block';
-        status.textContent = "جاري الرفع السحابي طلقة... 🚀";
+        status.textContent = "جاري تحميل الصورة... 🚀";
         status.style.color = "var(--primary)";
-        
-        const fileRef = storage.ref('products/' + Date.now() + '_' + file.name);
-        
-        try {
-            const snapshot = await fileRef.put(file);
-            const url = await snapshot.ref.getDownloadURL();
-            
-            thumb.src = url;
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const base64Data = e.target.result;
+            thumb.src = base64Data;
             thumb.classList.remove('hidden-thumb');
-            hiddenUrl.value = url; 
-            
-            status.textContent = "الصورة اترفعت وجاهزة! ✔️";
+            hiddenUrl.value = base64Data;
+            status.textContent = "تم تحميل الصورة بنجاح! ✔️";
             status.style.color = "var(--success)";
-        } catch(error) {
-            console.error("Upload error:", error);
-            status.textContent = "حصل إيرور في الرفع!";
+        };
+        reader.onerror = function() {
+            status.textContent = "حدث خطأ أثناء قراءة الملف!";
             status.style.color = "var(--danger)";
-        }
+        };
+        reader.readAsDataURL(file);
     }
 
     function removeImageField(rowId) {
@@ -439,6 +422,7 @@
         container.innerHTML = productsCache.map(p => {
             const img = (p.images && p.images.length) ? p.images[0] : 'https://via.placeholder.com/60';
             const stockVal = p.stock !== undefined ? Number(p.stock) : 5;
+            const catName = p.category === 'accessories' ? 'إكسسوار' : (p.category === 'laptops' ? 'لابتوب' : 'موبايل');
             const stockBadge = stockVal <= 0 
                 ? '<span style="color:var(--danger); font-weight:bold;">(نفذت الكمية)</span>' 
                 : `<span style="color:var(--success); font-weight:bold;">(${stockVal} قطعة متبقية)</span>`;
@@ -446,7 +430,7 @@
                 <div class="product-list-item">
                     <img src="${img}" alt="">
                     <div class="info">
-                        <h4>${p.name} ${p.color ? `(${p.color})` : ''}</h4>
+                        <h4>[${catName}] ${p.name} ${p.color ? `(${p.color})` : ''}</h4>
                         <span>${p.brand} · ${p.ram}/${p.storage} · ${Number(p.price).toLocaleString()} ج.م — ${stockBadge}</span>
                     </div>
                     <div class="actions">
@@ -473,6 +457,7 @@
         const images = getImageUrls();
 
         const data = {
+            category: document.getElementById('p_category').value,
             name,
             brand: brand || 'غير محدد',
             condition: document.getElementById('p_condition').value,
@@ -481,10 +466,8 @@
             ram: ram || 'غير محدد',
             storage: storage || 'غير محدد',
             price: price,
-            oldPrice: Number(document.getElementById('p_old_price').value) || 0,
             stock: isNaN(stock) ? 5 : stock,
             customTax: Number(document.getElementById('p_tax').value) || 0,
-            sku: document.getElementById('p_sku').value.trim(),
             battery: Number(document.getElementById('p_battery').value) || 100,
             box: document.getElementById('p_box').checked,
             charger: document.getElementById('p_charger').checked,
@@ -509,6 +492,7 @@
         if (!p) return;
         editingId = id;
         document.getElementById('formTitle').textContent = 'تعديل منتج';
+        document.getElementById('p_category').value = p.category || 'mobiles';
         document.getElementById('p_name').value = p.name || '';
         document.getElementById('p_brand').value = p.brand || '';
         document.getElementById('p_brand_select').value = '';
@@ -519,9 +503,7 @@
         document.getElementById('p_ram').value = p.ram || '';
         document.getElementById('p_storage').value = p.storage || '';
         document.getElementById('p_price').value = p.price || '';
-        document.getElementById('p_old_price').value = p.oldPrice || '';
         document.getElementById('p_tax').value = p.customTax || 0;
-        document.getElementById('p_sku').value = p.sku || '';
         document.getElementById('p_battery').value = p.battery || 100;
         document.getElementById('p_box').checked = !!p.box;
         document.getElementById('p_charger').checked = !!p.charger;
@@ -538,7 +520,8 @@
     function resetForm() {
         editingId = null;
         document.getElementById('formTitle').textContent = 'إضافة منتج جديد';
-        ['p_name','p_brand','p_color','p_description','p_ram','p_storage','p_price','p_old_price','p_tax','p_sku','p_battery'].forEach(id => document.getElementById(id).value = '');
+        document.getElementById('p_category').value = 'mobiles';
+        ['p_name','p_brand','p_color','p_description','p_ram','p_storage','p_price','p_tax','p_battery'].forEach(id => document.getElementById(id).value = '');
         document.getElementById('p_stock').value = '5';
         document.getElementById('p_brand_select').value = '';
         document.getElementById('p_ram_select').value = '';
