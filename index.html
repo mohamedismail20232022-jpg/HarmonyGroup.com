@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -54,12 +53,12 @@
         header { background: var(--white); box-shadow: 0 4px 20px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 1000; display: flex; flex-direction: column; }
         .nav-container { max-width: 100%; margin: 0; padding: 0; display: flex; flex-direction: column; width: 100%; }
         
-        /* LOGO FILLS ENTIRE HEADER */
-        .logo-box { background: var(--logo-bg); padding: 10px 30px; border-radius: 0; display: flex; align-items: center; justify-content: flex-start; border: none; box-shadow: none; width: 100%; height: 220px; overflow: hidden; position: relative; }
-        .logo-img { height: 100%; width: auto; max-width: 100%; object-fit: contain; object-position: right center; cursor: pointer; transition: transform 0.4s ease; display: block; }
-        .logo-img:hover { transform: scale(1.03); }
+        /* LOGO FILLS ENTIRE HEADER - FIXED HEIGHT */
+        .logo-box { background: var(--logo-bg); padding: 0; border-radius: 0; display: block; border: none; box-shadow: none; width: 100%; height: 80px; overflow: hidden; position: relative; }
+        .logo-img { height: 300px; width: auto; max-width: 100%; object-fit: contain; object-position: right center; cursor: pointer; transition: transform 0.4s ease; display: block; position: absolute; top: 50%; transform: translateY(-50%); right: 30px; }
+        .logo-img:hover { transform: translateY(-50%) scale(1.03); }
 
-        @media (max-width: 768px) { .logo-box { height: 150px; padding: 8px 15px; } }
+        @media (max-width: 768px) { .logo-box { height: 65px; } .logo-img { right: 15px; } }
 
         .nav-actions { display: flex; align-items: center; gap: 20px; position: absolute; top: 50%; left: 30px; transform: translateY(-50%); z-index: 1001; }
         .nav-actions button, .theme-toggle { background: none; border: none; font-size: 24px; color: var(--secondary); cursor: pointer; transition: 0.3s; }
@@ -188,7 +187,7 @@
     <header>
         <div class="nav-container">
             <div class="logo-box">
-                <a href="#" onclick="window.location.reload();" style="display:flex; width:100%; height:100%; align-items:center; justify-content:flex-start;"><img src="25505.jpg" alt="Harmony Group" class="logo-img"></a>
+                <a href="#" onclick="window.location.reload();"><img src="25505.jpg" alt="Harmony Group" class="logo-img"></a>
             </div>
             <div class="nav-actions">
                 <button class="theme-toggle" id="themeToggleBtn" title="تغيير الوضع المظلم/المضيء" onclick="toggleTheme()">
@@ -245,6 +244,11 @@
                 <h3>المواصفات التقنية</h3>
                 <select id="ramFilter" style="width: 100%; padding: 8px; border-radius: 5px; margin-bottom: 10px;">
                     <option value="all">كل الرامات</option>
+                    <option value="1GB">1GB RAM</option>
+                    <option value="2GB">2GB RAM</option>
+                    <option value="3GB">3GB RAM</option>
+                    <option value="4GB">4GB RAM</option>
+                    <option value="6GB">6GB RAM</option>
                     <option value="8GB">8GB RAM</option>
                     <option value="12GB">12GB RAM</option>
                     <option value="16GB">16GB RAM</option>
@@ -252,10 +256,16 @@
                 </select>
                 <select id="storageFilter" style="width: 100%; padding: 8px; border-radius: 5px;">
                     <option value="all">كل المساحات</option>
+                    <option value="4GB">4GB</option>
+                    <option value="8GB">8GB</option>
+                    <option value="16GB">16GB</option>
+                    <option value="32GB">32GB</option>
+                    <option value="64GB">64GB</option>
                     <option value="128GB">128GB</option>
                     <option value="256GB">256GB</option>
                     <option value="512GB">512GB</option>
                     <option value="1TB">1TB</option>
+                    <option value="2TB">2TB</option>
                 </select>
             </div>
         </aside>
@@ -309,7 +319,6 @@
             measurementId: "G-T7TVKNKSP6"
         };
 
-        // رقم الواتساب اللي هتوصله الطلبات (بصيغة دولية بدون + أو أصفار، مثال مصر: 201001234567)
         const WHATSAPP_NUMBER = "201025925739";
 
         firebase.initializeApp(firebaseConfig);
@@ -352,9 +361,6 @@
         let allProducts = [];
         let modalQty = 1;
 
-        /* ============================================================
-           Wishlist (localStorage)
-        ============================================================ */
         function getWishlist() {
             return JSON.parse(localStorage.getItem('harmony_wishlist') || '[]');
         }
@@ -394,7 +400,6 @@
                 <div class="empty-state">
                     <i class="fas fa-triangle-exclamation"></i>
                     <h2>مفيش اتصال بقاعدة البيانات</h2>
-                    <p>تأكد إنك حطيت بيانات Firebase الصح في الكود (firebaseConfig).</p>
                 </div>`;
         });
 
@@ -432,7 +437,6 @@
                     <div class="empty-state">
                         <i class="fas fa-box-open"></i>
                         <h2>المخزن لسه فاضي يا معلم!</h2>
-                        <p>روح على لوحة التحكم (admin.html) وضيف الأجهزة بتاعتك وهتظهر هنا فورًا.</p>
                     </div>`;
                 return;
             }
@@ -442,7 +446,6 @@
                     <div class="empty-state">
                         <i class="fas fa-magnifying-glass"></i>
                         <h2>مفيش نتايج مطابقة</h2>
-                        <p>جرب تغيّر الفلاتر أو كلمة البحث.</p>
                     </div>`;
                 return;
             }
@@ -453,7 +456,6 @@
                 const finalTotal = Number(p.price) + tax;
                 const mainImg = (p.images && p.images.length > 0) ? p.images[0] : 'https://via.placeholder.com/300x300?text=No+Image';
                 const isWished = wishlist.includes(p.id);
-                // stock is optional: only show a badge if the field exists in Firestore data
                 const hasStockField = p.stock !== undefined && p.stock !== null && p.stock !== '';
                 const isOutOfStock = hasStockField && Number(p.stock) <= 0;
                 const stockBadgeHTML = hasStockField
@@ -530,9 +532,11 @@
                     <table class="specs-table">
                         <tr><th>الحالة</th><td>${p.condition} ${p.condition === 'New' ? '(متبرشم)' : ''}</td></tr>
                         <tr><th>الرام / المساحة</th><td>${p.ram} / ${p.storage}</td></tr>
-                        <tr><th>صحة البطارية</th><td style="color:var(--success); font-weight:bold;">${p.battery}%</td></tr>
+                        <tr><th>اللون</th><td style="font-weight:bold;">${p.color || 'مش محدد'}</td></tr>
+                        <tr><th>صحة البطارية</th><td style="color:var(--success); font-weight:bold;">${p.battery || 'غير متوفر'}%</td></tr>
                         <tr><th>العلبة الأصلية</th><td>${p.box ? '<i class="fas fa-check text-success"></i> موجودة' : '<i class="fas fa-times text-danger"></i> غير موجودة'}</td></tr>
                         <tr><th>الشاحن الأصلي</th><td>${p.charger ? '<i class="fas fa-check text-success"></i> موجود' : '<i class="fas fa-times text-danger"></i> غير موجود'}</td></tr>
+                        <tr><th>الوصف الإضافي</th><td style="white-space: pre-wrap; line-height: 1.6;">${p.description || 'مفيش تفاصيل تانية للجهاز ده'}</td></tr>
                     </table>
 
                     ${isOutOfStock ? '' : `
@@ -720,7 +724,8 @@
                 const unitPrice = Number(p.price) + tax;
                 const lineTotal = unitPrice * item.qty;
                 total += lineTotal;
-                message += `- ${p.name} (الكمية: ${item.qty}) — ${lineTotal.toLocaleString()} ج.م%0A`;
+                let itemColor = p.color ? ` (اللون: ${p.color})` : '';
+                message += `- ${p.name}${itemColor} (الكمية: ${item.qty}) — ${lineTotal.toLocaleString()} ج.م%0A`;
             });
             message += `%0Aالإجمالي الكلي: ${total.toLocaleString()} ج.م`;
             window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`, '_blank');
