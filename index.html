@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Harmony GROUP | هواتف، لابتوبات واكسسوارات</title>
-    <meta name="description" content="تسوق أحدث الهواتف الذكية، اللابتوبات، والإكسسوارات بأفضل الأسعار وعروض حصرية.">
+    <title>Harmony GROUP | هواتف، ماك بوك واكسسوارات</title>
+    <meta name="description" content="تسوق أحدث الهواتف الذكية، الماك بوك، الآيباد، والإكسسوارات بأفضل الأسعار وعروض حصرية.">
     
     <!-- Open Graph SEO -->
-    <meta property="og:title" content="Harmony GROUP | Mobile, Laptops & Accessories">
-    <meta property="og:description" content="تسوق أحدث الهواتف الذكية، اللابتوبات، والإكسسوارات بأفضل الأسعار وعروض حصرية.">
+    <meta property="og:title" content="Harmony GROUP | Mobile, MacBooks & Accessories">
+    <meta property="og:description" content="تسوق أحدث الهواتف الذكية، الماك بوك، الآيباد، والإكسسوارات بأفضل الأسعار وعروض حصرية.">
     <meta property="og:image" content="25505.jpg">
     <meta property="og:type" content="website">
     
@@ -279,7 +279,7 @@
 
             <div class="hero-search-box">
                 <i class="fas fa-search"></i>
-                <input type="text" id="searchInput" placeholder="ابحث عن جهازك المفضّل (موبايل، لابتوب، إكسسوار...)...">
+                <input type="text" id="searchInput" placeholder="ابحث عن جهازك المفضّل (موبايل، ماك بوك، آيباد...)...">
             </div>
 
             <div class="nav-actions">
@@ -306,7 +306,9 @@
                     <button class="category-btn active" data-category="all">الكل</button>
                     <button class="category-btn" data-category="mobiles">📱 هواتف ذكية</button>
                     <button class="category-btn" data-category="accessories">🎧 إكسسوارات</button>
-                    <button class="category-btn" data-category="laptops">💻 لابتوبات</button>
+                    <button class="category-btn" data-category="macbooks">💻 ماك بوكس</button>
+                    <button class="category-btn" data-category="ipads">🍎 آيباد</button>
+                    <button class="category-btn" data-category="tablets">📟 تابلت</button>
                 </div>
             </div>
 
@@ -526,7 +528,7 @@
         let compareList = [];
         let appliedDiscount = 0; 
 
-        // إرجاع كل المنتجات الـ Dummy بالكامل عشان السايت يبقى شغال زيرو إيرورز
+        // المنتجات الوهمية مع السيكشنز الجديدة
         const fallbackProducts = [
             {
                 id: 'sample_1',
@@ -576,7 +578,7 @@
             },
             {
                 id: 'sample_3',
-                category: 'laptops',
+                category: 'macbooks', // غيرتلك السيكشن ده عشان الماك بوك
                 brand: 'Apple',
                 name: 'MacBook Pro M3 Max',
                 price: 130000,
@@ -596,6 +598,48 @@
                     { name: 'إبراهيم صبري', rating: 5, comment: 'الماك بوك خرافة في الشغل الثقيل.' }
                 ],
                 createdAt: { seconds: (Date.now() / 1000) - 100 }
+            },
+            {
+                id: 'sample_4',
+                category: 'ipads', // ضفتلك جهاز آيباد لوز
+                brand: 'Apple',
+                name: 'iPad Pro M4',
+                price: 65000,
+                oldPrice: 70000,
+                customTax: 5000,
+                condition: 'New',
+                ram: '8GB',
+                storage: '256GB',
+                color: 'أسود فلكي',
+                battery: 100,
+                box: true,
+                charger: true,
+                stock: 5,
+                images: ['https://via.placeholder.com/300x300?text=iPad+Pro+M4'],
+                description: 'أقوى آيباد نزل السوق بشاشة OLED وحوارات متتوصقش.',
+                reviews: [],
+                createdAt: { seconds: (Date.now() / 1000) - 150 }
+            },
+            {
+                id: 'sample_5',
+                category: 'tablets', // تابلت أندرويد للسيكشن الجديد
+                brand: 'Samsung',
+                name: 'Galaxy Tab S9 Ultra',
+                price: 55000,
+                oldPrice: 60000,
+                customTax: 4000,
+                condition: 'New',
+                ram: '12GB',
+                storage: '256GB',
+                color: 'رمادي',
+                battery: 100,
+                box: true,
+                charger: true,
+                stock: 4,
+                images: ['https://via.placeholder.com/300x300?text=Tab+S9+Ultra'],
+                description: 'تابلت وحش من سامسونج للشغل الثقيل وصناع المحتوى.',
+                reviews: [],
+                createdAt: { seconds: (Date.now() / 1000) - 200 }
             }
         ];
 
