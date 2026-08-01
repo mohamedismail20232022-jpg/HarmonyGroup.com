@@ -438,7 +438,7 @@
         <div class="modal-content" id="modalContent"></div>
     </div>
 
-    <!-- نافذة الدفع السريع الاحترافية (Professional Payment Modal) -->
+    <!-- نافذة الدفع السريع الاحترافية -->
     <div class="pay-modal-overlay" id="paymentModal">
         <div class="pay-modal-box">
             <i class="fas fa-times close-modal" onclick="closePaymentModal()" style="top: 15px; left: 15px; cursor:pointer;"></i>
@@ -486,8 +486,8 @@
         };
 
         const WHATSAPP_NUMBER = "201004233826";
-        const INSTAPAY_ADDRESS = "mostafaqotp@instapay"; // اللينك المحدث بتاع إنستا باي
-        const VODAFONE_NUMBER = "01004233826"; // رقم فودافون كاش
+        const INSTAPAY_ADDRESS = "mostafaqotp@instapay"; 
+        const VODAFONE_NUMBER = "01004233826"; 
 
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
@@ -561,9 +561,9 @@
         let modalQty = 1;
         let compareList = [];
         let appliedDiscount = 0; 
-        let uploadedScreenshotName = ''; // لحتفظ باسم صورة السكرين شوت
+        let uploadedScreenshotName = ''; 
 
-        // المنتجات الوهمية مع السيكشنز الجديدة
+        // المنتجات الوهمية (Fallback Products) كاملة عشان الموقع ميبقاش فاضي أبداً
         const fallbackProducts = [
             {
                 id: 'sample_1',
@@ -583,9 +583,7 @@
                 stock: 3,
                 images: ['https://via.placeholder.com/300x300?text=iPhone+17+Pro+Max'],
                 description: 'أحدث إصدار من أبل ببطارية خرافية ومعالج جبار.',
-                reviews: [
-                    { name: 'أحمد مرسي', rating: 5, comment: 'جهاز تحفة وشحن سريع جداً من فرع الرحاب!' }
-                ],
+                reviews: [{ name: 'أحمد مرسي', rating: 5, comment: 'جهاز تحفة وشحن سريع جداً من فرع الرحاب!' }],
                 createdAt: { seconds: Date.now() / 1000 }
             },
             {
@@ -606,9 +604,7 @@
                 stock: 10,
                 images: ['https://via.placeholder.com/300x300?text=AirPods+Pro+2'],
                 description: 'عزل ضوضاء فائق وصوت نقي.',
-                reviews: [
-                    { name: 'مصطفى حسين', rating: 5, comment: 'الصوت نقي جداً وعزل الضوضاء خيالي.' }
-                ],
+                reviews: [{ name: 'مصطفى حسين', rating: 5, comment: 'الصوت نقي جداً وعزل الضوضاء خيالي.' }],
                 createdAt: { seconds: (Date.now() / 1000) - 50 }
             },
             {
@@ -629,9 +625,7 @@
                 stock: 2,
                 images: ['https://via.placeholder.com/300x300?text=MacBook+Pro+M3'],
                 description: 'أقوى لابتوب للمهندسين والمصممين والمبرمجين.',
-                reviews: [
-                    { name: 'إبراهيم صبري', rating: 5, comment: 'الماك بوك خرافة في الشغل الثقيل.' }
-                ],
+                reviews: [{ name: 'إبراهيم صبري', rating: 5, comment: 'الماك بوك خرافة في الشغل الثقيل.' }],
                 createdAt: { seconds: (Date.now() / 1000) - 100 }
             },
             {
@@ -675,6 +669,69 @@
                 description: 'تابلت وحش من سامسونج للشغل الثقيل وصناع المحتوى.',
                 reviews: [],
                 createdAt: { seconds: (Date.now() / 1000) - 200 }
+            },
+            {
+                id: 'sample_6',
+                category: 'macbooks',
+                brand: 'Apple',
+                name: 'MacBook Air M3',
+                price: 60000,
+                oldPrice: 65000,
+                customTax: 5000,
+                condition: 'New',
+                ram: '16GB',
+                storage: '512GB',
+                color: 'سماوي منتصف الليل',
+                battery: 100,
+                box: true,
+                charger: true,
+                stock: 7,
+                images: ['https://via.placeholder.com/300x300?text=MacBook+Air+M3'],
+                description: 'جهاز خفيف وعملي طحن لشغل الجامعة والبزنس.',
+                reviews: [],
+                createdAt: { seconds: (Date.now() / 1000) - 250 }
+            },
+            {
+                id: 'sample_7',
+                category: 'mobiles',
+                brand: 'Samsung',
+                name: 'Samsung Galaxy S24 Ultra',
+                price: 50000,
+                oldPrice: 55000,
+                customTax: 8000,
+                condition: 'New',
+                ram: '12GB',
+                storage: '256GB',
+                color: 'تيتانيوم أسود',
+                battery: 100,
+                box: true,
+                charger: true,
+                stock: 6,
+                images: ['https://via.placeholder.com/300x300?text=S24+Ultra'],
+                description: 'ملك الأندرويد بلا منازع والكاميرا بتاعتها حكاية.',
+                reviews: [],
+                createdAt: { seconds: (Date.now() / 1000) - 300 }
+            },
+            {
+                id: 'sample_8',
+                category: 'accessories',
+                brand: 'Apple',
+                name: 'Apple Watch Series 9',
+                price: 18000,
+                oldPrice: 20000,
+                customTax: 2500,
+                condition: 'New',
+                ram: '-',
+                storage: '45mm',
+                color: 'أسود',
+                battery: 100,
+                box: true,
+                charger: true,
+                stock: 8,
+                images: ['https://via.placeholder.com/300x300?text=Apple+Watch+9'],
+                description: 'ساعة أبل الجديدة هتابع صحتك وستايل شياكة.',
+                reviews: [],
+                createdAt: { seconds: (Date.now() / 1000) - 350 }
             }
         ];
 
@@ -757,27 +814,31 @@
             else { navigator.clipboard.writeText(window.location.href); showToast('تم نسخ رابط المنتج بنجاح!'); }
         }
 
-        function renderSkeleton() {
-            productGrid.innerHTML = Array.from({ length: 8 }).map(() => `
-                <div class="skeleton-card">
-                    <div class="skeleton-box skeleton-img"></div>
-                    <div class="skeleton-box skeleton-line short"></div>
-                    <div class="skeleton-box skeleton-line"></div>
-                    <div class="skeleton-box skeleton-line price"></div>
-                    <div class="skeleton-box skeleton-btn"></div>
-                </div>
-            `).join('');
+        // سكريبت التحميل الذكي (Smart Caching) لفتح السايت في جزء من الثانية
+        const cachedProducts = localStorage.getItem('harmony_cached_products');
+        if (cachedProducts) {
+            try {
+                allProducts = JSON.parse(cachedProducts);
+                renderProducts();
+            } catch (e) {
+                renderSkeleton();
+            }
+        } else {
+            allProducts = fallbackProducts; // افتراضي فوري
+            renderProducts();
         }
-        renderSkeleton();
 
         db.collection('products').onSnapshot((snapshot) => {
             const docs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
             allProducts = docs.length > 0 ? docs : fallbackProducts;
+            localStorage.setItem('harmony_cached_products', JSON.stringify(allProducts));
             renderProducts();
         }, (error) => {
             console.error('Firestore error, using fallback:', error);
-            allProducts = fallbackProducts;
-            renderProducts();
+            if (!allProducts.length) {
+                allProducts = fallbackProducts;
+                renderProducts();
+            }
         });
 
         function renderProducts() {
@@ -1131,7 +1192,7 @@
             const title = document.getElementById('payModalTitle');
             const body = document.getElementById('payModalBody');
             modal.style.display = 'flex';
-            uploadedScreenshotName = ''; // إعادة تعيين
+            uploadedScreenshotName = ''; 
 
             if (type === 'instapay') {
                 title.innerHTML = `<i class="fas fa-mobile-screen-button" style="color:var(--primary);"></i> الدفع عبر إنستا باي (InstaPay)`;
@@ -1237,7 +1298,7 @@
                 message += `بيانات التأكيد/الرقم: ${userNote}%0A`;
             }
             if (uploadedScreenshotName) {
-                message += `مرفق سكرين شوت الإيصال: (${uploadedScreenshotName}) — سيتم إرساله مع المتابعة%0A`;
+                message += `مرفق سكرين شوت الإيصال: (${uploadedScreenshotName}) — يرجى إرساله مع الرسالة الآن%0A`;
             }
             message += `%0Aتفاصيل الأوردر:%0A`;
 
@@ -1288,3 +1349,4 @@
     </script>
 </body>
 </html>
+
