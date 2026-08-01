@@ -147,9 +147,11 @@
             <div class="form-group">
                 <label>القسم الرئيسي (أين يظهر المنتج؟)</label>
                 <select id="p_category" style="border-color: var(--primary); font-weight: bold;">
-                    <option value="mobiles">📱 هواتف ذكية (Mobile Phones)</option>
+                    <option value="mobiles">📱 هواتف ذكية (Mobiles)</option>
+                    <option value="macbooks">💻 ماك بوكس (MacBooks)</option>
+                    <option value="ipads">🍎 آيباد (iPads)</option>
+                    <option value="tablets">📟 تابلت (Tablets)</option>
                     <option value="accessories">🎧 إكسسوارات (Accessories)</option>
-                    <option value="laptops">💻 لابتوبات (Laptops)</option>
                 </select>
             </div>
 
@@ -422,7 +424,11 @@
         container.innerHTML = productsCache.map(p => {
             const img = (p.images && p.images.length) ? p.images[0] : 'https://via.placeholder.com/60';
             const stockVal = p.stock !== undefined ? Number(p.stock) : 5;
-            const catName = p.category === 'accessories' ? 'إكسسوار' : (p.category === 'laptops' ? 'لابتوب' : 'موبايل');
+            const catName = p.category === 'accessories' ? 'إكسسوار' : 
+                            p.category === 'macbooks' ? 'ماك بوك' : 
+                            p.category === 'ipads' ? 'آيباد' : 
+                            p.category === 'tablets' ? 'تابلت' : 'موبايل';
+                            
             const stockBadge = stockVal <= 0 
                 ? '<span style="color:var(--danger); font-weight:bold;">(نفذت الكمية)</span>' 
                 : `<span style="color:var(--success); font-weight:bold;">(${stockVal} قطعة متبقية)</span>`;
@@ -534,4 +540,3 @@
 </script>
 </body>
 </html>
-
