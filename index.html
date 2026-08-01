@@ -260,7 +260,7 @@
         .checkout-btn { background: #25D366; color: #fff; border: none; padding: 14px; width: 100%; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(37,211,102,0.3); margin-bottom: 12px; }
         .checkout-btn:hover { background: #1ea952; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(37,211,102,0.4); }
 
-        /* ستايل أزرار الدفع الإلكتروني التفاعلية الجديدة */
+        /* ستايل أزرار الدفع الإلكتروني الاحترافية */
         .payment-methods-box { border-top: 1px dashed var(--border); padding-top: 15px; margin-top: 8px; text-align: center; }
         .payment-methods-box p { font-size: 13px; color: var(--text-dark); margin-bottom: 10px; font-weight: 800; }
         .payment-buttons-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
@@ -269,14 +269,14 @@
         .pay-action-btn i { font-size: 15px; color: var(--primary); }
         .pay-action-btn:hover i { color: #1F242A; }
 
-        /* ستايل نافذة تفاصيل الدفع (Payment Modal) */
+        /* ستايل نافذة تفاصيل الدفع البروفيشنال */
         .pay-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 4000; padding: 20px; }
-        .pay-modal-box { background: var(--card-bg); padding: 30px; border-radius: 16px; width: 100%; max-width: 420px; border: 1px solid var(--border); position: relative; color: var(--text-dark); box-shadow: 0 25px 50px rgba(0,0,0,0.3); }
-        .pay-modal-box h3 { margin-bottom: 15px; font-weight: 800; font-size: 20px; display: flex; align-items: center; gap: 10px; color: var(--primary); }
+        .pay-modal-box { background: var(--card-bg); padding: 30px; border-radius: 16px; width: 100%; max-width: 440px; border: 1px solid var(--border); position: relative; color: var(--text-dark); box-shadow: 0 25px 50px rgba(0,0,0,0.3); }
+        .pay-modal-box h3 { margin-bottom: 15px; font-weight: 800; font-size: 18px; display: flex; align-items: center; gap: 10px; color: var(--primary); }
         .pay-modal-box input { width: 100%; padding: 12px; margin-bottom: 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; outline: none; background: var(--bg-color); color: var(--text-dark); }
         .pay-modal-box input:focus { border-color: var(--primary); }
-        .pay-modal-submit { width: 100%; padding: 13px; background: var(--success); color: #fff; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 15px; transition: 0.3s; margin-top: 5px; }
-        .pay-modal-submit:hover { background: #218838; transform: translateY(-2px); }
+        .pay-modal-submit { width: 100%; padding: 13px; background: #25D366; color: #fff; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 15px; transition: 0.3s; margin-top: 5px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .pay-modal-submit:hover { background: #1ea952; transform: translateY(-2px); }
 
         /* Auth Modal */
         .auth-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 3000; }
@@ -438,11 +438,11 @@
         <div class="modal-content" id="modalContent"></div>
     </div>
 
-    <!-- نافذة إدخال بيانات الدفع الإلكتروني -->
+    <!-- نافذة الدفع السريع الاحترافية (Professional Payment Modal) -->
     <div class="pay-modal-overlay" id="paymentModal">
         <div class="pay-modal-box">
-            <i class="fas fa-times close-modal" onclick="closePaymentModal()" style="top: 15px; left: 15px;"></i>
-            <h3 id="payModalTitle"><i class="fas fa-credit-card"></i> إتمام الدفع</h3>
+            <i class="fas fa-times close-modal" onclick="closePaymentModal()" style="top: 15px; left: 15px; cursor:pointer;"></i>
+            <h3 id="payModalTitle"><i class="fas fa-wallet"></i> تفاصيل الدفع</h3>
             <div id="payModalBody"></div>
         </div>
     </div>
@@ -486,6 +486,8 @@
         };
 
         const WHATSAPP_NUMBER = "201004233826";
+        const INSTAPAY_ADDRESS = "mostafaqotp@instapay"; // اللينك المحدث بتاع إنستا باي
+        const VODAFONE_NUMBER = "01004233826"; // رقم فودافون كاش
 
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
@@ -559,6 +561,7 @@
         let modalQty = 1;
         let compareList = [];
         let appliedDiscount = 0; 
+        let uploadedScreenshotName = ''; // لحتفظ باسم صورة السكرين شوت
 
         // المنتجات الوهمية مع السيكشنز الجديدة
         const fallbackProducts = [
@@ -1092,15 +1095,14 @@
                 
                 <button class="checkout-btn" onclick="checkoutViaWhatsapp()"><i class="fab fa-whatsapp"></i> إتمام الطلب عبر واتساب</button>
                 
-                <!-- أزرار الدفع الإلكتروني التفاعلية -->
+                <!-- أزرار الدفع الإلكتروني الاحترافية -->
                 <div class="payment-methods-box">
-                    <p>أو الدفع الإلكتروني السريع:</p>
+                    <p>أو ادفع فوراً وحول لخدمة العملاء:</p>
                     <div class="payment-buttons-grid">
-                        <button class="pay-action-btn" onclick="openPaymentModal('visa')"><i class="fas fa-credit-card"></i> فيزا</button>
-                        <button class="pay-action-btn" onclick="openPaymentModal('mastercard')"><i class="fas fa-credit-card"></i> ماستركارد</button>
-                        <button class="pay-action-btn" onclick="openPaymentModal('fawry')"><i class="fas fa-bolt"></i> فوري باي</button>
-                        <button class="pay-action-btn" onclick="openPaymentModal('instapay')"><i class="fas fa-mobile-screen-button"></i> إنستا باي</button>
-                        <button class="pay-action-btn" onclick="openPaymentModal('vodafone')" style="grid-column: span 2;"><i class="fas fa-wallet"></i> فودافون كاش</button>
+                        <button class="pay-action-btn" onclick="openDirectPaymentModal('instapay')"><i class="fas fa-mobile-screen-button"></i> إنستا باي</button>
+                        <button class="pay-action-btn" onclick="openDirectPaymentModal('vodafone')"><i class="fas fa-wallet"></i> فودافون كاش</button>
+                        <button class="pay-action-btn" onclick="openDirectPaymentModal('fawry')"><i class="fas fa-bolt"></i> فوري باي</button>
+                        <button class="pay-action-btn" onclick="openDirectPaymentModal('card')"><i class="fas fa-credit-card"></i> فيزا / ماستر</button>
                     </div>
                 </div>
             `;
@@ -1109,48 +1111,110 @@
         function openCart() { renderCartDrawer(); document.getElementById('cartDrawer').classList.add('active'); document.getElementById('cartOverlay').classList.add('active'); }
         function closeCart() { document.getElementById('cartDrawer').classList.remove('active'); document.getElementById('cartOverlay').classList.remove('active'); }
 
-        // وظائف نوافذ الدفع الإلكتروني التفاعلية
-        function openPaymentModal(type) {
+        // نافذة عرض بيانات الدفع والتحويل المباشر مع رفع السكرين شوت
+        function openDirectPaymentModal(type) {
+            const cart = getCart();
+            if (cart.length === 0) return;
+            
+            let subtotal = 0;
+            cart.forEach(item => {
+                const p = allProducts.find(prod => prod.id === item.id);
+                if (p) {
+                    const tax = p.customTax || 0;
+                    subtotal += (Number(p.price) + tax) * item.qty;
+                }
+            });
+            let discountAmount = appliedDiscount < 1 ? subtotal * appliedDiscount : appliedDiscount;
+            let finalTotal = Math.max(0, subtotal - discountAmount);
+
             const modal = document.getElementById('paymentModal');
             const title = document.getElementById('payModalTitle');
             const body = document.getElementById('payModalBody');
             modal.style.display = 'flex';
+            uploadedScreenshotName = ''; // إعادة تعيين
 
-            if (type === 'visa' || type === 'mastercard') {
-                title.innerHTML = `<i class="fas fa-credit-card"></i> الدفع بواسطة ${type === 'visa' ? 'فيزا' : 'ماستركارد'}`;
+            if (type === 'instapay') {
+                title.innerHTML = `<i class="fas fa-mobile-screen-button" style="color:var(--primary);"></i> الدفع عبر إنستا باي (InstaPay)`;
                 body.innerHTML = `
-                    <input type="text" placeholder="رقم البطاقة (16 رقم)" maxlength="16">
-                    <div style="display:flex; gap:10px;">
-                        <input type="text" placeholder="MM/YY" maxlength="5">
-                        <input type="password" placeholder="CVV" maxlength="4">
+                    <p style="font-size:13px; color:var(--text-light); margin-bottom:8px;">المطلوب تحويله: <b style="color:var(--primary); font-size:16px;">${finalTotal.toLocaleString()} ج.م</b></p>
+                    <p style="font-size:12px; color:var(--text-light); margin-bottom:6px;">عنوان الدفع اللحظي الخاص بالموقع:</p>
+                    <div style="background:var(--bg-color); border:1px solid var(--border); padding:12px; border-radius:8px; display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                        <span style="font-weight:bold; font-size:15px; color:var(--text-dark);">${INSTAPAY_ADDRESS}</span>
+                        <button onclick="navigator.clipboard.writeText('${INSTAPAY_ADDRESS}'); showToast('تم نسخ عنوان إنستا باي بنجاح!');" style="background:var(--primary); color:#1F242A; border:none; padding:6px 12px; border-radius:6px; font-weight:bold; cursor:pointer; font-size:12px;"><i class="fas fa-copy"></i> نسخ</button>
                     </div>
-                    <input type="text" placeholder="اسم حامل البطاقة">
-                    <button class="pay-modal-submit" onclick="submitPayment('بطاقة الائتمان')">تأكيد ودفع الآن</button>
-                `;
-            } else if (type === 'instapay') {
-                title.innerHTML = `<i class="fas fa-mobile-screen-button"></i> الدفع عبر إنستا باي (InstaPay)`;
-                body.innerHTML = `
-                    <p style="font-size:13px; color:var(--text-light); margin-name:10px; margin-bottom:10px;">حول المبلغ الإجمالي على عنوان الدفع التالي:</p>
-                    <b style="color:var(--primary); display:block; font-size:16px; margin-bottom:12px; background:var(--bg-color); padding:10px; border-radius:8px; text-align:center;">harmonygroup@instapay</b>
-                    <input type="text" placeholder="اكتب اسمك أو رقمك المحول منه">
-                    <button class="pay-modal-submit" onclick="submitPayment('إنستا باي')">تم التحويل، إرسال تفاصيل الأوردر</button>
+                    
+                    <input type="text" id="payUserNote" placeholder="اكتب اسمك أو رقم هاتف التحويل للتأكيد" style="margin-bottom:10px;">
+                    
+                    <label style="display:block; font-size:12px; font-weight:700; color:var(--text-dark); margin-bottom:5px;">أرفق سكرين شوت إيصال التحويل (اختياري):</label>
+                    <input type="file" accept="image/*" id="payScreenshotFile" onchange="previewScreenshot(this)" style="padding:6px; background:var(--bg-color); border:1px solid var(--border); border-radius:8px; width:100%; margin-bottom:10px; font-size:12px; cursor:pointer;">
+                    
+                    <div id="screenshotPreviewBox" style="display:none; text-align:center; margin-bottom:12px;">
+                        <img id="screenshotImgTag" src="" alt="معاينة الإيصال" style="max-height:80px; border-radius:8px; border:1px solid var(--border);">
+                        <span id="screenshotNameText" style="display:block; font-size:11px; color:var(--success); font-weight:bold; margin-top:3px;">تم اختيار الصورة بنجاح ✔️</span>
+                    </div>
+
+                    <button class="pay-modal-submit" onclick="confirmAndSendWhatsApp('إنستا باي')"><i class="fab fa-whatsapp"></i> تم التحويل وإرفاق الإيصال، أرسل للواتساب</button>
                 `;
             } else if (type === 'vodafone') {
-                title.innerHTML = `<i class="fas fa-wallet"></i> الدفع عبر فودافون كاش`;
+                title.innerHTML = `<i class="fas fa-wallet" style="color:var(--primary);"></i> الدفع عبر فودافون كاش`;
                 body.innerHTML = `
-                    <p style="font-size:13px; color:var(--text-light); margin-bottom:10px;">حول المبلغ المحسوب على رقم المحفظة الآتي:</p>
-                    <b style="color:var(--primary); display:block; font-size:16px; margin-bottom:12px; background:var(--bg-color); padding:10px; border-radius:8px; text-align:center;">01004233826</b>
-                    <input type="text" placeholder="رقم هاتفك المحول منه المحفظة">
-                    <button class="pay-modal-submit" onclick="submitPayment('فودافون كاش')">تم التحويل، إرسال تفاصيل الأوردر</button>
+                    <p style="font-size:13px; color:var(--text-light); margin-bottom:8px;">المطلوب تحويله: <b style="color:var(--primary); font-size:16px;">${finalTotal.toLocaleString()} ج.م</b></p>
+                    <p style="font-size:12px; color:var(--text-light); margin-bottom:6px;">رقم محفظة فودافون كاش للشركة:</p>
+                    <div style="background:var(--bg-color); border:1px solid var(--border); padding:12px; border-radius:8px; display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                        <span style="font-weight:bold; font-size:16px; color:var(--text-dark);">${VODAFONE_NUMBER}</span>
+                        <button onclick="navigator.clipboard.writeText('${VODAFONE_NUMBER}'); showToast('تم نسخ رقم المحفظة بنجاح!');" style="background:var(--primary); color:#1F242A; border:none; padding:6px 12px; border-radius:6px; font-weight:bold; cursor:pointer; font-size:12px;"><i class="fas fa-copy"></i> نسخ</button>
+                    </div>
+                    <input type="text" id="payUserNote" placeholder="رقم هاتفك المحول منه المحفظة" style="margin-bottom:10px;">
+                    
+                    <label style="display:block; font-size:12px; font-weight:700; color:var(--text-dark); margin-bottom:5px;">أرفق سكرين شوت إيصال التحويل (اختياري):</label>
+                    <input type="file" accept="image/*" id="payScreenshotFile" onchange="previewScreenshot(this)" style="padding:6px; background:var(--bg-color); border:1px solid var(--border); border-radius:8px; width:100%; margin-bottom:10px; font-size:12px; cursor:pointer;">
+                    
+                    <div id="screenshotPreviewBox" style="display:none; text-align:center; margin-bottom:12px;">
+                        <img id="screenshotImgTag" src="" alt="معاينة الإيصال" style="max-height:80px; border-radius:8px; border:1px solid var(--border);">
+                        <span id="screenshotNameText" style="display:block; font-size:11px; color:var(--success); font-weight:bold; margin-top:3px;">تم اختيار الصورة بنجاح ✔️</span>
+                    </div>
+
+                    <button class="pay-modal-submit" onclick="confirmAndSendWhatsApp('فودافون كاش')"><i class="fab fa-whatsapp"></i> تم التحويل وإرفاق الإيصال، أرسل للواتساب</button>
                 `;
             } else if (type === 'fawry') {
-                title.innerHTML = `<i class="fas fa-bolt"></i> الدفع عبر فوري باي`;
+                title.innerHTML = `<i class="fas fa-bolt" style="color:var(--primary);"></i> الدفع عبر فوري باي (Fawry Pay)`;
                 body.innerHTML = `
-                    <p style="font-size:13px; color:var(--text-light); margin-bottom:10px;">رقم كود الدفع السريع الخاص بك:</p>
-                    <b style="color:var(--primary); display:block; font-size:20px; margin-bottom:12px; background:var(--bg-color); padding:10px; border-radius:8px; text-align:center; letter-spacing:2px;">98765432</b>
-                    <p style="font-size:12px; color:var(--text-light); margin-bottom:12px;">توجه لأقرب فرع فوري أو ادفع من تطبيق myFawry واضغط تأكيد.</p>
-                    <button class="pay-modal-submit" onclick="submitPayment('فوري باي')">تأكيد عملية الدفع</button>
+                    <p style="font-size:13px; color:var(--text-light); margin-bottom:8px;">المطلوب دفعه: <b style="color:var(--primary); font-size:16px;">${finalTotal.toLocaleString()} ج.م</b></p>
+                    <p style="font-size:12px; color:var(--text-light); margin-bottom:6px;">كود الدفع السريع (فوري):</p>
+                    <div style="background:var(--bg-color); border:1px solid var(--border); padding:12px; border-radius:8px; text-align:center; margin-bottom:12px;">
+                        <span style="font-weight:800; font-size:20px; color:var(--primary); letter-spacing:2px;">98765432</span>
+                    </div>
+                    <input type="text" id="payUserNote" placeholder="اسمك الكريم أو رقم هاتفك للتأكيد" style="margin-bottom:10px;">
+                    
+                    <label style="display:block; font-size:12px; font-weight:700; color:var(--text-dark); margin-bottom:5px;">أرفق سكرين شوت إيصال الدفع (اختياري):</label>
+                    <input type="file" accept="image/*" id="payScreenshotFile" onchange="previewScreenshot(this)" style="padding:6px; background:var(--bg-color); border:1px solid var(--border); border-radius:8px; width:100%; margin-bottom:10px; font-size:12px; cursor:pointer;">
+                    
+                    <div id="screenshotPreviewBox" style="display:none; text-align:center; margin-bottom:12px;">
+                        <img id="screenshotImgTag" src="" alt="معاينة الإيصال" style="max-height:80px; border-radius:8px; border:1px solid var(--border);">
+                        <span id="screenshotNameText" style="display:block; font-size:11px; color:var(--success); font-weight:bold; margin-top:3px;">تم اختيار الصورة بنجاح ✔️</span>
+                    </div>
+
+                    <button class="pay-modal-submit" onclick="confirmAndSendWhatsApp('فوري باي')"><i class="fab fa-whatsapp"></i> تم الدفع، أرسل الأوردر للواتساب</button>
                 `;
+            } else if (type === 'card') {
+                title.innerHTML = `<i class="fas fa-credit-card" style="color:var(--primary);"></i> الدفع بالبطاقة البنكية`;
+                body.innerHTML = `
+                    <p style="font-size:13px; color:var(--text-light); margin-bottom:12px;">للدفع الآمن بالفيزا أو الماستركارد مباشرة، تواصل مع خدمة العملاء للحصول على رابط دفع مؤمن:</p>
+                    <button class="pay-modal-submit" onclick="confirmAndSendWhatsApp('البطاقة البنكية')"><i class="fab fa-whatsapp"></i> اطلب رابط الدفع الفوري عبر الواتساب</button>
+                `;
+            }
+        }
+
+        function previewScreenshot(input) {
+            const file = input.files[0];
+            if (file) {
+                uploadedScreenshotName = file.name;
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('screenshotImgTag').src = e.target.result;
+                    document.getElementById('screenshotPreviewBox').style.display = 'block';
+                };
+                reader.readAsDataURL(file);
             }
         }
 
@@ -1158,19 +1222,25 @@
             document.getElementById('paymentModal').style.display = 'none';
         }
 
-        function submitPayment(methodName) {
+        function confirmAndSendWhatsApp(paymentMethod) {
+            const noteInput = document.getElementById('payUserNote');
+            const userNote = noteInput ? noteInput.value.trim() : '';
+            
             closePaymentModal();
             closeCart();
-            showToast(`تم بدء الدفع بنجاح عبر ${methodName}! 🎉`);
-            setTimeout(() => {
-                checkoutViaWhatsappWithMethod(methodName);
-            }, 1000);
-        }
 
-        function checkoutViaWhatsappWithMethod(method) {
             const cart = getCart();
             if (cart.length === 0) return;
-            let message = `طلب جديد مؤكد (طريقة الدفع: ${method}):%0A%0A`;
+
+            let message = `طلب جديد بموقع Harmony GROUP (طريقة الدفع: ${paymentMethod})%0A`;
+            if (userNote) {
+                message += `بيانات التأكيد/الرقم: ${userNote}%0A`;
+            }
+            if (uploadedScreenshotName) {
+                message += `مرفق سكرين شوت الإيصال: (${uploadedScreenshotName}) — سيتم إرساله مع المتابعة%0A`;
+            }
+            message += `%0Aتفاصيل الأوردر:%0A`;
+
             let subtotal = 0;
             cart.forEach(item => {
                 const p = allProducts.find(prod => prod.id === item.id);
@@ -1179,10 +1249,13 @@
                 let itemColor = p.color ? ` (اللون: ${p.color})` : '';
                 message += `- ${p.name}${itemColor} (الكمية: ${item.qty}) — ${lineTotal.toLocaleString()} ج.م%0A`;
             });
+
             let discountAmount = appliedDiscount < 1 ? subtotal * appliedDiscount : appliedDiscount;
             let finalTotal = Math.max(0, subtotal - discountAmount);
+
             if (discountAmount > 0) { message += `%0Aالخصم المطبق: -${discountAmount.toLocaleString()} ج.م`; }
-            message += `%0A%0Aالإجمالي الكلي المدفوع: ${finalTotal.toLocaleString()} ج.م%0Aأنا دفعت وعاوز أتابع الاستلام.`;
+            message += `%0A%0Aالإجمالي الكلي المطلوب: ${finalTotal.toLocaleString()} ج.م%0Aأنا جاهز لاستلام الأوردر.`;
+
             window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`, '_blank');
         }
 
