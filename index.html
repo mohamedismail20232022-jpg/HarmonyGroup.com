@@ -100,10 +100,11 @@
         [data-theme="dark"] .logo-img { mix-blend-mode: normal; background: #FFFFFF; padding: 8px 15px; border-radius: 14px; height: 75%; box-shadow: 0 4px 15px rgba(0,0,0,0.4); }
 
         @media (max-width: 768px) { 
-            body { padding-top: 180px; } /* تم التعديل عشان الهيدر ميعملش overlap */
-            .header-top-row { padding: 8px 15px; gap: 10px; justify-content: space-between; }
-            .logo-box { height: 60px; width: 120px; } 
-            .hero-search-box { flex: 100%; max-width: 100%; margin: 5px 0 0 0; order: 3; }
+            body { padding-top: 220px; } /* زودت المساحة عشان الهيدر كبر */
+            .header-top-row { padding: 10px 15px; gap: 10px; justify-content: space-between; }
+            .logo-box { height: 90px; width: 180px; } /* كبرت اللوجو درجتين تلاتة */
+            .hero-search-box { flex: 100%; max-width: 100%; margin: 20px 0 0 0; order: 3; } /* نزلت المستطيل سنتين لتحت */
+            
             /* تظبيط الأقسام في الموبايل عشان تظهر ومتبقاش مستخبية وتعمل سكرول بالعرض */
             .sidebar { padding: 15px; margin-bottom: 15px; }
             #categoryFilters, #brandFilters { display: flex; flex-wrap: nowrap; overflow-x: auto; padding-bottom: 10px; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; }
