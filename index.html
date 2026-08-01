@@ -100,9 +100,14 @@
         [data-theme="dark"] .logo-img { mix-blend-mode: normal; background: #FFFFFF; padding: 8px 15px; border-radius: 14px; height: 75%; box-shadow: 0 4px 15px rgba(0,0,0,0.4); }
 
         @media (max-width: 768px) { 
-            body { padding-top: 110px; }
-            .header-top-row { padding: 8px 15px; gap: 10px; }
-            .logo-box { height: 80px; width: 140px; } 
+            body { padding-top: 180px; } /* تم التعديل عشان الهيدر ميعملش overlap */
+            .header-top-row { padding: 8px 15px; gap: 10px; justify-content: space-between; }
+            .logo-box { height: 60px; width: 120px; } 
+            .hero-search-box { flex: 100%; max-width: 100%; margin: 5px 0 0 0; order: 3; }
+            /* تظبيط الأقسام في الموبايل عشان تظهر ومتبقاش مستخبية وتعمل سكرول بالعرض */
+            .sidebar { padding: 15px; margin-bottom: 15px; }
+            #categoryFilters, #brandFilters { display: flex; flex-wrap: nowrap; overflow-x: auto; padding-bottom: 10px; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; }
+            .category-btn, .brand-btn { flex-shrink: 0; white-space: nowrap; }
         }
 
         .hero-search-box { position: relative; flex: 1; max-width: 500px; display: flex; align-items: center; margin: 0 15px; }
@@ -578,7 +583,7 @@
             },
             {
                 id: 'sample_3',
-                category: 'macbooks', // غيرتلك السيكشن ده عشان الماك بوك
+                category: 'macbooks',
                 brand: 'Apple',
                 name: 'MacBook Pro M3 Max',
                 price: 130000,
@@ -601,7 +606,7 @@
             },
             {
                 id: 'sample_4',
-                category: 'ipads', // ضفتلك جهاز آيباد لوز
+                category: 'ipads',
                 brand: 'Apple',
                 name: 'iPad Pro M4',
                 price: 65000,
@@ -622,7 +627,7 @@
             },
             {
                 id: 'sample_5',
-                category: 'tablets', // تابلت أندرويد للسيكشن الجديد
+                category: 'tablets',
                 brand: 'Samsung',
                 name: 'Galaxy Tab S9 Ultra',
                 price: 55000,
@@ -778,7 +783,7 @@
             const wishlist = getWishlist();
             filtered.forEach(p => {
                 const basePrice = Number(p.price);
-                const cardInstallment = ((basePrice * 1.15) / 12).toFixed(0); // القسط على السعر الأساسي عشان ميبانش الزيادة بره
+                const cardInstallment = ((basePrice * 1.15) / 12).toFixed(0);
                 const mainImg = (p.images && p.images.length > 0) ? p.images[0] : 'https://via.placeholder.com/300x300?text=No+Image';
                 const isWished = wishlist.includes(p.id);
                 const isCompared = compareList.includes(p.id);
@@ -810,7 +815,6 @@
                         <span class="tag"><i class="fas fa-star"></i> ${p.condition}</span>
                     </div>
                     
-                    <!-- السعر الأساسي للزبون بره من غير ضريبة -->
                     <div class="product-price">
                         ${basePrice.toLocaleString()} ج.م 
                         ${p.oldPrice ? `<del style="font-size:14px; color:var(--text-light); margin-right:8px;">${Number(p.oldPrice).toLocaleString()} ج</del>` : ''}
