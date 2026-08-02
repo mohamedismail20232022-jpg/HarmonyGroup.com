@@ -226,10 +226,16 @@
         .back-to-top:hover { background: var(--primary); color: #1F242A; transform: translateY(-3px); }
 
         /* Cart Drawer */
-        .cart-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); display: none; z-index: 2100; transition: opacity 0.3s ease; }
-        .cart-overlay.active { display: block; }
+        .cart-overlay, .wishlist-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); display: none; z-index: 2100; transition: opacity 0.3s ease; }
+        .cart-overlay.active, .wishlist-overlay.active { display: block; }
+        
         .cart-drawer { position: fixed; top: 0; right: -420px; width: 100%; max-width: 400px; height: 100%; background: var(--card-bg); z-index: 2200; transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; box-shadow: -15px 0 40px rgba(0,0,0,0.2); border-left: 1px solid var(--border); }
         .cart-drawer.active { right: 0; }
+        
+        /* Wishlist Drawer */
+        .wishlist-drawer { position: fixed; top: 0; left: -420px; width: 100%; max-width: 400px; height: 100%; background: var(--card-bg); z-index: 2200; transition: left 0.4s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; box-shadow: 15px 0 40px rgba(0,0,0,0.2); border-right: 1px solid var(--border); }
+        .wishlist-drawer.active { left: 0; }
+
         .cart-header { padding: 22px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
         .cart-header h3 { font-size: 20px; font-weight: 700; }
         .cart-header .close-cart { font-size: 22px; cursor: pointer; color: var(--text-dark); transition: color 0.2s, transform 0.2s; }
@@ -313,6 +319,12 @@
                     <i class="fas fa-user"></i>
                 </button>
                 
+                <!-- زرار المفضلة الجديد في الهيدر -->
+                <button title="المفضلة" onclick="openWishlistDrawer()">
+                    <i class="fas fa-heart"></i>
+                    <span class="cart-badge" id="wishlistBadge" style="display:none; background: var(--danger); color: white;">0</span>
+                </button>
+
                 <button title="عربة التسوق" onclick="openCart()">
                     <i class="fas fa-shopping-cart"></i>
                     <span class="cart-badge" id="cartBadge" style="display:none;">0</span>
@@ -470,6 +482,16 @@
         <div class="cart-footer" id="cartFooter"></div>
     </div>
 
+    <!-- Wishlist Drawer (الدرج الخاص بالمفضلة) -->
+    <div class="wishlist-overlay" id="wishlistOverlay" onclick="closeWishlistDrawer()"></div>
+    <div class="wishlist-drawer" id="wishlistDrawer">
+        <div class="cart-header">
+            <h3 style="color: var(--danger);"><i class="fas fa-heart"></i> المفضلة</h3>
+            <i class="fas fa-times close-cart" onclick="closeWishlistDrawer()"></i>
+        </div>
+        <div class="cart-items" id="wishlistItemsContainer"></div>
+    </div>
+
     <div class="toast" id="toast"></div>
 
     <a href="https://wa.me/201004233826" class="floating-whatsapp" title="تواصل معنا على واتساب" id="floatingWhatsapp" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i></a>
@@ -563,175 +585,16 @@
         let appliedDiscount = 0; 
         let uploadedScreenshotName = ''; 
 
-        // المنتجات الوهمية (Fallback Products) كاملة عشان الموقع ميبقاش فاضي أبداً
+        // المنتجات الوهمية (Fallback Products)
         const fallbackProducts = [
             {
-                id: 'sample_1',
-                category: 'mobiles',
-                brand: 'Apple',
-                name: 'iPhone 17 Pro Max',
-                price: 75000,
-                oldPrice: 82000,
-                customTax: 12000,
-                condition: 'New',
-                ram: '8GB',
-                storage: '512GB',
-                color: 'تيتانيوم صحراوي',
-                battery: 100,
-                box: true,
-                charger: true,
-                stock: 3,
-                images: ['https://via.placeholder.com/300x300?text=iPhone+17+Pro+Max'],
-                description: 'أحدث إصدار من أبل ببطارية خرافية ومعالج جبار.',
-                reviews: [{ name: 'أحمد مرسي', rating: 5, comment: 'جهاز تحفة وشحن سريع جداً من فرع الرحاب!' }],
-                createdAt: { seconds: Date.now() / 1000 }
+                id: 'sample_1', category: 'mobiles', brand: 'Apple', name: 'iPhone 17 Pro Max', price: 75000, oldPrice: 82000, customTax: 12000, condition: 'New', ram: '8GB', storage: '512GB', color: 'تيتانيوم صحراوي', battery: 100, box: true, charger: true, stock: 3, images: ['https://via.placeholder.com/300x300?text=iPhone+17+Pro+Max'], description: 'أحدث إصدار من أبل ببطارية خرافية ومعالج جبار.', reviews: [{ name: 'أحمد مرسي', rating: 5, comment: 'جهاز تحفة وشحن سريع جداً من فرع الرحاب!' }], createdAt: { seconds: Date.now() / 1000 }
             },
             {
-                id: 'sample_2',
-                category: 'accessories',
-                brand: 'Apple',
-                name: 'Apple AirPods Pro 2',
-                price: 9500,
-                oldPrice: 11000,
-                customTax: 1500,
-                condition: 'New',
-                ram: '-',
-                storage: 'Case MagSafe',
-                color: 'أبيض',
-                battery: 100,
-                box: true,
-                charger: true,
-                stock: 10,
-                images: ['https://via.placeholder.com/300x300?text=AirPods+Pro+2'],
-                description: 'عزل ضوضاء فائق وصوت نقي.',
-                reviews: [{ name: 'مصطفى حسين', rating: 5, comment: 'الصوت نقي جداً وعزل الضوضاء خيالي.' }],
-                createdAt: { seconds: (Date.now() / 1000) - 50 }
+                id: 'sample_2', category: 'accessories', brand: 'Apple', name: 'Apple AirPods Pro 2', price: 9500, oldPrice: 11000, customTax: 1500, condition: 'New', ram: '-', storage: 'Case MagSafe', color: 'أبيض', battery: 100, box: true, charger: true, stock: 10, images: ['https://via.placeholder.com/300x300?text=AirPods+Pro+2'], description: 'عزل ضوضاء فائق وصوت نقي.', reviews: [{ name: 'مصطفى حسين', rating: 5, comment: 'الصوت نقي جداً وعزل الضوضاء خيالي.' }], createdAt: { seconds: (Date.now() / 1000) - 50 }
             },
             {
-                id: 'sample_3',
-                category: 'macbooks',
-                brand: 'Apple',
-                name: 'MacBook Pro M3 Max',
-                price: 130000,
-                oldPrice: 145000,
-                customTax: 15000,
-                condition: 'New',
-                ram: '32GB',
-                storage: '1TB SSD',
-                color: 'فضي مساحي',
-                battery: 100,
-                box: true,
-                charger: true,
-                stock: 2,
-                images: ['https://via.placeholder.com/300x300?text=MacBook+Pro+M3'],
-                description: 'أقوى لابتوب للمهندسين والمصممين والمبرمجين.',
-                reviews: [{ name: 'إبراهيم صبري', rating: 5, comment: 'الماك بوك خرافة في الشغل الثقيل.' }],
-                createdAt: { seconds: (Date.now() / 1000) - 100 }
-            },
-            {
-                id: 'sample_4',
-                category: 'ipads',
-                brand: 'Apple',
-                name: 'iPad Pro M4',
-                price: 65000,
-                oldPrice: 70000,
-                customTax: 5000,
-                condition: 'New',
-                ram: '8GB',
-                storage: '256GB',
-                color: 'أسود فلكي',
-                battery: 100,
-                box: true,
-                charger: true,
-                stock: 5,
-                images: ['https://via.placeholder.com/300x300?text=iPad+Pro+M4'],
-                description: 'أقوى آيباد نزل السوق بشاشة OLED وحوارات متتوصقش.',
-                reviews: [],
-                createdAt: { seconds: (Date.now() / 1000) - 150 }
-            },
-            {
-                id: 'sample_5',
-                category: 'tablets',
-                brand: 'Samsung',
-                name: 'Galaxy Tab S9 Ultra',
-                price: 55000,
-                oldPrice: 60000,
-                customTax: 4000,
-                condition: 'New',
-                ram: '12GB',
-                storage: '256GB',
-                color: 'رمادي',
-                battery: 100,
-                box: true,
-                charger: true,
-                stock: 4,
-                images: ['https://via.placeholder.com/300x300?text=Tab+S9+Ultra'],
-                description: 'تابلت وحش من سامسونج للشغل الثقيل وصناع المحتوى.',
-                reviews: [],
-                createdAt: { seconds: (Date.now() / 1000) - 200 }
-            },
-            {
-                id: 'sample_6',
-                category: 'macbooks',
-                brand: 'Apple',
-                name: 'MacBook Air M3',
-                price: 60000,
-                oldPrice: 65000,
-                customTax: 5000,
-                condition: 'New',
-                ram: '16GB',
-                storage: '512GB',
-                color: 'سماوي منتصف الليل',
-                battery: 100,
-                box: true,
-                charger: true,
-                stock: 7,
-                images: ['https://via.placeholder.com/300x300?text=MacBook+Air+M3'],
-                description: 'جهاز خفيف وعملي طحن لشغل الجامعة والبزنس.',
-                reviews: [],
-                createdAt: { seconds: (Date.now() / 1000) - 250 }
-            },
-            {
-                id: 'sample_7',
-                category: 'mobiles',
-                brand: 'Samsung',
-                name: 'Samsung Galaxy S24 Ultra',
-                price: 50000,
-                oldPrice: 55000,
-                customTax: 8000,
-                condition: 'New',
-                ram: '12GB',
-                storage: '256GB',
-                color: 'تيتانيوم أسود',
-                battery: 100,
-                box: true,
-                charger: true,
-                stock: 6,
-                images: ['https://via.placeholder.com/300x300?text=S24+Ultra'],
-                description: 'ملك الأندرويد بلا منازع والكاميرا بتاعتها حكاية.',
-                reviews: [],
-                createdAt: { seconds: (Date.now() / 1000) - 300 }
-            },
-            {
-                id: 'sample_8',
-                category: 'accessories',
-                brand: 'Apple',
-                name: 'Apple Watch Series 9',
-                price: 18000,
-                oldPrice: 20000,
-                customTax: 2500,
-                condition: 'New',
-                ram: '-',
-                storage: '45mm',
-                color: 'أسود',
-                battery: 100,
-                box: true,
-                charger: true,
-                stock: 8,
-                images: ['https://via.placeholder.com/300x300?text=Apple+Watch+9'],
-                description: 'ساعة أبل الجديدة هتابع صحتك وستايل شياكة.',
-                reviews: [],
-                createdAt: { seconds: (Date.now() / 1000) - 350 }
+                id: 'sample_7', category: 'mobiles', brand: 'Samsung', name: 'Samsung Galaxy S24 Ultra', price: 50000, oldPrice: 55000, customTax: 8000, condition: 'New', ram: '12GB', storage: '256GB', color: 'تيتانيوم أسود', battery: 100, box: true, charger: true, stock: 6, images: ['https://via.placeholder.com/300x300?text=S24+Ultra'], description: 'ملك الأندرويد بلا منازع والكاميرا بتاعتها حكاية.', reviews: [], createdAt: { seconds: (Date.now() / 1000) - 300 }
             }
         ];
 
@@ -742,14 +605,76 @@
         });
         function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
 
+        // ====== دوال المفضلة المكتملة ======
         function getWishlist() { return JSON.parse(localStorage.getItem('harmony_wishlist') || '[]'); }
+        
+        function updateWishlistBadge() {
+            const wl = getWishlist();
+            const badge = document.getElementById('wishlistBadge');
+            if (badge) {
+                if (wl.length > 0) {
+                    badge.style.display = 'flex';
+                    badge.textContent = wl.length;
+                } else {
+                    badge.style.display = 'none';
+                }
+            }
+        }
+
         function toggleWishlist(productId) {
             let wl = getWishlist();
-            if (wl.includes(productId)) { wl = wl.filter(id => id !== productId); } 
-            else { wl.push(productId); }
+            if (wl.includes(productId)) { 
+                wl = wl.filter(id => id !== productId); 
+            } else { 
+                wl.push(productId); 
+            }
             localStorage.setItem('harmony_wishlist', JSON.stringify(wl));
-            renderProducts();
+            
+            updateWishlistBadge(); // تحديث أيقونة الهيدر
+            renderProducts();      // تحديث زرار القلب في المنتجات
+
+            // لو درج المفضلة مفتوح، اعمله تحديث لايف
+            if (document.getElementById('wishlistDrawer').classList.contains('active')) {
+                renderWishlistDrawer();
+            }
         }
+
+        function openWishlistDrawer() {
+            renderWishlistDrawer();
+            document.getElementById('wishlistDrawer').classList.add('active');
+            document.getElementById('wishlistOverlay').classList.add('active');
+        }
+
+        function closeWishlistDrawer() {
+            document.getElementById('wishlistDrawer').classList.remove('active');
+            document.getElementById('wishlistOverlay').classList.remove('active');
+        }
+
+        function renderWishlistDrawer() {
+            const wl = getWishlist();
+            const container = document.getElementById('wishlistItemsContainer');
+            
+            if (wl.length === 0) {
+                container.innerHTML = `<div class="cart-empty"><i class="fas fa-heart-crack" style="color: var(--danger);"></i><p>مفيش منتجات في المفضلة لسه!</p></div>`;
+                return;
+            }
+
+            container.innerHTML = wl.map(id => {
+                const p = allProducts.find(prod => prod.id === id);
+                if (!p) return '';
+                const img = (p.images && p.images.length > 0) ? p.images[0] : 'https://via.placeholder.com/100';
+                return `
+                    <div class="cart-item">
+                        <img loading="lazy" src="${img}" alt="${p.name}">
+                        <div class="cart-item-info">
+                            <h4>${p.name}</h4>
+                            <div class="cart-item-price">${Number(p.price).toLocaleString()} ج.م</div>
+                        </div>
+                        <i class="fas fa-trash remove-item" onclick="toggleWishlist('${p.id}')"></i>
+                    </div>`;
+            }).join('');
+        }
+        // ===================================
 
         function toggleCompare(productId, e) {
             e.stopPropagation();
@@ -814,17 +739,17 @@
             else { navigator.clipboard.writeText(window.location.href); showToast('تم نسخ رابط المنتج بنجاح!'); }
         }
 
-        // سكريبت التحميل الذكي (Smart Caching) لفتح السايت في جزء من الثانية
         const cachedProducts = localStorage.getItem('harmony_cached_products');
         if (cachedProducts) {
             try {
                 allProducts = JSON.parse(cachedProducts);
                 renderProducts();
             } catch (e) {
-                renderSkeleton();
+                allProducts = fallbackProducts;
+                renderProducts();
             }
         } else {
-            allProducts = fallbackProducts; // افتراضي فوري
+            allProducts = fallbackProducts;
             renderProducts();
         }
 
@@ -1345,7 +1270,9 @@
             setTimeout(() => toast.classList.remove('show'), 2000);
         }
 
+        // تشغيل العدادات عند بداية تحميل الصفحة
         updateCartBadge();
+        updateWishlistBadge();
     </script>
 </body>
 </html>
