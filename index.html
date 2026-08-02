@@ -167,9 +167,17 @@
         .empty-state i { font-size: 60px; color: var(--border); margin-bottom: 20px; }
 
         @keyframes modalScaleUp { from { opacity: 0; transform: scale(0.92) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        
+        @keyframes superSwitchAnim {
+            0% { opacity: 0; transform: translateY(40px) scale(0.97); filter: blur(3px); }
+            100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+        }
+        .switch-anim {
+            animation: superSwitchAnim 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+        }
 
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.65); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); display: none; justify-content: center; align-items: center; z-index: 2000; padding: 20px; }
-        .modal-content { background: var(--card-bg); color: var(--text-dark); width: 100%; max-width: 1000px; max-height: 90vh; overflow-y: auto; border-radius: 20px; display: flex; flex-wrap: wrap; position: relative; border: 1px solid var(--border); box-shadow: 0 25px 50px rgba(0,0,0,0.25); animation: modalScaleUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .modal-content { background: var(--card-bg); color: var(--text-dark); width: 100%; max-width: 1000px; max-height: 90vh; overflow-y: auto; border-radius: 20px; display: flex; flex-wrap: wrap; position: relative; border: 1px solid var(--border); box-shadow: 0 25px 50px rgba(0,0,0,0.25); animation: modalScaleUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards; scroll-behavior: smooth; }
         .close-modal { position: absolute; top: 20px; left: 25px; font-size: 24px; cursor: pointer; color: var(--text-dark); z-index: 10; transition: color 0.2s, transform 0.2s; }
         .close-modal:hover { color: var(--primary); transform: rotate(90deg); }
         
@@ -630,10 +638,9 @@
             }
             localStorage.setItem('harmony_wishlist', JSON.stringify(wl));
             
-            updateWishlistBadge(); // تحديث أيقونة الهيدر
-            renderProducts();      // تحديث زرار القلب في المنتجات
+            updateWishlistBadge(); 
+            renderProducts();      
 
-            // لو درج المفضلة مفتوح، اعمله تحديث لايف
             if (document.getElementById('wishlistDrawer').classList.contains('active')) {
                 renderWishlistDrawer();
             }
@@ -844,7 +851,8 @@
                 `;
                 card.querySelector('.btn-add').addEventListener('click', (e) => { e.stopPropagation(); if (!isOutOfStock) addToCart(p.id); });
                 card.querySelector('.wishlist-heart').addEventListener('click', (e) => { e.stopPropagation(); toggleWishlist(p.id); });
-                card.onclick = () => openProductModal(p);
+                
+                card.onclick = () => openProductModal(p, false);
                 productGrid.appendChild(card);
             });
         }
@@ -856,7 +864,38 @@
             document.getElementById('installmentResult').textContent = `${perMonth.toFixed(0).toLocaleString()} ج.م`;
         }
 
-        function openProductModal(p) {
+        function openProductModal(p, isSwitch = false) {
+            const modal = document.getElementById('productModal');
+            const modalContent = document.getElementById('modalContent');
+            
+            modal.style.display = 'flex';
+            modalContent.scrollTop = 0;
+
+            if (isSwitch) {
+                modalContent.innerHTML = `
+                    <div style="width:100%; min-height:50vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding: 40px;">
+                        <i class="fas fa-circle-notch fa-spin" style="font-size: 60px; color: var(--primary); margin-bottom: 20px;"></i>
+                        <h2 style="font-size: 22px; font-weight: 800; color: var(--text-dark);">جاري تجهيز الموبايل الجديد...</h2>
+                        <p style="color: var(--text-light); font-size: 14px; margin-top: 10px;">ثواني والوحش هيكون قدامك 🚀</p>
+                    </div>
+                `;
+                
+                setTimeout(() => {
+                    renderModalContent(p);
+                }, 400);
+            } else {
+                renderModalContent(p);
+            }
+        }
+
+        function renderModalContent(p) {
+            const modalContent = document.getElementById('modalContent');
+            
+            modalContent.classList.remove('switch-anim');
+            void modalContent.offsetWidth; 
+            modalContent.classList.add('switch-anim');
+            modalContent.scrollTop = 0;
+
             modalQty = 1;
             const tax = p.customTax || 0;
             const basePrice = Number(p.price);
@@ -878,86 +917,125 @@
                 ? reviews.map(r => `<div class="review-item"><b>${r.name}</b> <span style="color:#ffc107;">${'★'.repeat(r.rating)}</span><p style="color:var(--text-light); margin-top:3px;">${r.comment}</p></div>`).join('')
                 : '<p style="color:var(--text-light); font-size:13px;">مفيش تقييمات لسه. كن أول واحد يكتب رأيه في الجهاز!</p>';
 
-            document.getElementById('modalContent').innerHTML = `
+            // 🔥 اللوجيك الجديد اللي بيحل أي مشكلة: دايماً بيجيب 3 اقتراحات من كل الموقع الأقرب للسعر 🔥
+            
+            // أولاً: ندور في نفس القسم بتاع المنتج الحالي
+            let similarProducts = allProducts
+                .filter(item => item.id !== p.id && item.category === p.category)
+                .sort((a, b) => Math.abs(Number(a.price) - basePrice) - Math.abs(Number(b.price) - basePrice))
+                .slice(0, 3);
+
+            // ثانياً: لو نفس القسم مفيهوش 3 منتجات، نكمل من باقي الموقع (يعني من أي قسم تاني!)
+            if (similarProducts.length < 3) {
+                const extraProducts = allProducts
+                    .filter(item => item.id !== p.id && !similarProducts.includes(item))
+                    .sort((a, b) => Math.abs(Number(a.price) - basePrice) - Math.abs(Number(b.price) - basePrice))
+                    .slice(0, 3 - similarProducts.length);
+                similarProducts = similarProducts.concat(extraProducts);
+            }
+
+            let similarHTML = '';
+            if (similarProducts.length > 0) {
+                similarHTML = `
+                    <div style="margin: 25px 0; padding: 20px; border-radius: 16px; background: var(--bg-color); border: 1px solid var(--border);">
+                        <h4 style="font-weight: 800; margin-bottom: 15px; color: var(--text-dark);"><i class="fas fa-fire" style="color: var(--primary);"></i> منتجات تانية في نفس رينج السعر</h4>
+                        <div style="display: flex; gap: 15px; overflow-x: auto; padding-bottom: 5px;">
+                            ${similarProducts.map(sim => `
+                                <div onclick="openProductModal(allProducts.find(x => x.id === '${sim.id}'), true)" style="min-width: 140px; flex: 1; background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 10px; text-align: center; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.borderColor='var(--primary)'; this.style.transform='translateY(-3px)';" onmouseout="this.style.borderColor='var(--border)'; this.style.transform='none';">
+                                    <img src="${(sim.images && sim.images.length > 0) ? sim.images[0] : 'https://via.placeholder.com/100'}" style="width: 80px; height: 80px; object-fit: contain; margin-bottom: 10px; mix-blend-mode: multiply;">
+                                    <h5 style="font-size: 13px; font-weight: 800; margin-bottom: 5px; color: var(--text-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${sim.name}</h5>
+                                    <span style="display: block; color: var(--primary); font-weight: 800; font-size: 14px;">${Number(sim.price).toLocaleString()} ج</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            modalContent.innerHTML = `
                 <i class="fas fa-times close-modal" onclick="closeModal()"></i>
-                <div class="modal-gallery">
-                    <div class="modal-img-container">
-                        <img loading="lazy" src="${mainImg}" id="mainModalImg" class="modal-main-img" alt="${p.name}">
-                    </div>
-                    ${galleryHTML}
-                </div>
-                <div class="modal-details">
-                    <span style="color:var(--text-light); text-transform:uppercase; font-weight:700;">${p.brand}</span>
-                    <h2 style="font-size:26px; margin-bottom:10px; font-weight:800;">${p.name}</h2>
-                    
-                    <h3 style="color:var(--primary); font-size:30px; font-weight:800;">${basePrice.toLocaleString()} ج.م</h3>
-
-                    <div class="tax-box">
-                        <strong><i class="fas fa-info-circle"></i> تفاصيل السعر والضرائب:</strong><br>
-                        سعر الجهاز الأساسي: ${basePrice.toLocaleString()} ج.م<br>
-                        رسوم الجمارك وضرائب NTRA المخصصة: <b>${tax.toLocaleString()} ج.م</b><br>
-                        <span style="display:block; margin-top:8px; padding-top:8px; border-top:1px dashed var(--border); color:var(--danger); font-size:16px; font-weight:bold;">الإجمالي المطلوب وقت الدفع: ${finalPrice.toLocaleString()} ج.م</span>
-                    </div>
-
-                    <div class="installment-calc-box">
-                        <strong><i class="fas fa-calculator"></i> حاسبة التقسيط الذكية:</strong><br>
-                        اختر مدة التقسيط المناسبة لك:
-                        <select id="installmentMonths" onchange="updateInstallmentAmount(${basePrice}, ${tax})">
-                            <option value="6">6 شهور</option>
-                            <option value="12" selected>12 شهر</option>
-                            <option value="18">18 شهر</option>
-                            <option value="24">24 شهر</option>
-                        </select>
-                        <div style="margin-top: 8px; font-size: 15px;">القسط الشهري المقدر: <b id="installmentResult" style="color:var(--primary); font-size:18px;">${((finalPrice * 1.15) / 12).toFixed(0).toLocaleString()} ج.م</b></div>
-                    </div>
-
-                    <table class="specs-table">
-                        <tr><th>الحالة</th><td>${p.condition} ${p.condition === 'New' ? '(متبرشم)' : ''}</td></tr>
-                        <tr><th>المواصفات</th><td>${p.ram} / ${p.storage}</td></tr>
-                        <tr><th>اللون</th><td style="font-weight:bold;">${p.color || 'مش محدد'}</td></tr>
-                        <tr><th>صحة البطارية</th><td style="color:var(--success); font-weight:bold;">${p.battery}%</td></tr>
-                        <tr><th>العلبة الأصلية</th><td>${p.box ? '<i class="fas fa-check" style="color:var(--success)"></i> موجودة' : '<i class="fas fa-times" style="color:var(--danger)"></i> غير موجودة'}</td></tr>
-                        <tr><th>الشاحن الأصلي</th><td>${p.charger ? '<i class="fas fa-check" style="color:var(--success)"></i> موجود' : '<i class="fas fa-times" style="color:var(--danger)"></i> غير موجود'}</td></tr>
-                        <tr><th>الوصف الإضافي</th><td style="white-space: pre-wrap; line-height: 1.6;">${p.description || 'مفيش تفاصيل تانية للجهاز ده'}</td></tr>
-                    </table>
-
-                    <div class="reviews-section">
-                        <h4 style="margin-bottom:10px; font-weight:800;"><i class="fas fa-comments"></i> آراء وتقييمات العملاء</h4>
-                        <div id="reviewsListContainer" style="max-height: 150px; overflow-y: auto; margin-bottom: 15px;">
-                            ${reviewsHTML}
+                <div style="display: flex; flex-wrap: wrap; width: 100%;">
+                    <div class="modal-gallery">
+                        <div class="modal-img-container">
+                            <img loading="lazy" src="${mainImg}" id="mainModalImg" class="modal-main-img" alt="${p.name}">
                         </div>
-                        <div class="review-form">
-                            <strong>اكتب تقييمك لجهازك:</strong>
-                            <input type="text" id="reviewerName" placeholder="اسمك الكريم">
-                            <select id="reviewerRating">
-                                <option value="5">⭐⭐⭐⭐⭐ (5/5 ممتاز)</option>
-                                <option value="4">⭐⭐⭐⭐ (4/5 جيد جداً)</option>
-                                <option value="3">⭐⭐⭐ (3/5 مقبول)</option>
-                                <option value="2">⭐⭐ (2/5 ضعيف)</option>
-                                <option value="1">⭐ (1/5 سيء)</option>
+                        ${galleryHTML}
+                    </div>
+                    <div class="modal-details">
+                        <span style="color:var(--text-light); text-transform:uppercase; font-weight:700;">${p.brand}</span>
+                        <h2 style="font-size:26px; margin-bottom:10px; font-weight:800;">${p.name}</h2>
+                        
+                        <h3 style="color:var(--primary); font-size:30px; font-weight:800;">${basePrice.toLocaleString()} ج.م</h3>
+
+                        <div class="tax-box">
+                            <strong><i class="fas fa-info-circle"></i> تفاصيل السعر والضرائب:</strong><br>
+                            سعر الجهاز الأساسي: ${basePrice.toLocaleString()} ج.م<br>
+                            رسوم الجمارك وضرائب NTRA المخصصة: <b>${tax.toLocaleString()} ج.م</b><br>
+                            <span style="display:block; margin-top:8px; padding-top:8px; border-top:1px dashed var(--border); color:var(--danger); font-size:16px; font-weight:bold;">الإجمالي المطلوب وقت الدفع: ${finalPrice.toLocaleString()} ج.م</span>
+                        </div>
+
+                        <div class="installment-calc-box">
+                            <strong><i class="fas fa-calculator"></i> حاسبة التقسيط الذكية:</strong><br>
+                            اختر مدة التقسيط المناسبة لك:
+                            <select id="installmentMonths" onchange="updateInstallmentAmount(${basePrice}, ${tax})">
+                                <option value="6">6 شهور</option>
+                                <option value="12" selected>12 شهر</option>
+                                <option value="18">18 شهر</option>
+                                <option value="24">24 شهر</option>
                             </select>
-                            <textarea id="reviewerComment" placeholder="اكتب تجربتك مع الجهاز بكل صراحة..." rows="2"></textarea>
-                            <button class="review-submit-btn" onclick="submitReview('${p.id}')">إرسال التقييم الآن</button>
+                            <div style="margin-top: 8px; font-size: 15px;">القسط الشهري المقدر: <b id="installmentResult" style="color:var(--primary); font-size:18px;">${((finalPrice * 1.15) / 12).toFixed(0).toLocaleString()} ج.م</b></div>
                         </div>
+
+                        <table class="specs-table">
+                            <tr><th>الحالة</th><td>${p.condition} ${p.condition === 'New' ? '(متبرشم)' : ''}</td></tr>
+                            <tr><th>المواصفات</th><td>${p.ram} / ${p.storage}</td></tr>
+                            <tr><th>اللون</th><td style="font-weight:bold;">${p.color || 'مش محدد'}</td></tr>
+                            <tr><th>صحة البطارية</th><td style="color:var(--success); font-weight:bold;">${p.battery}%</td></tr>
+                            <tr><th>العلبة الأصلية</th><td>${p.box ? '<i class="fas fa-check" style="color:var(--success)"></i> موجودة' : '<i class="fas fa-times" style="color:var(--danger)"></i> غير موجودة'}</td></tr>
+                            <tr><th>الشاحن الأصلي</th><td>${p.charger ? '<i class="fas fa-check" style="color:var(--success)"></i> موجود' : '<i class="fas fa-times" style="color:var(--danger)"></i> غير موجود'}</td></tr>
+                            <tr><th>الوصف الإضافي</th><td style="white-space: pre-wrap; line-height: 1.6;">${p.description || 'مفيش تفاصيل تانية للجهاز ده'}</td></tr>
+                        </table>
+
+                        ${similarHTML} 
+
+                        <div class="reviews-section">
+                            <h4 style="margin-bottom:10px; font-weight:800;"><i class="fas fa-comments"></i> آراء وتقييمات العملاء</h4>
+                            <div id="reviewsListContainer" style="max-height: 150px; overflow-y: auto; margin-bottom: 15px;">
+                                ${reviewsHTML}
+                            </div>
+                            <div class="review-form">
+                                <strong>اكتب تقييمك لجهازك:</strong>
+                                <input type="text" id="reviewerName" placeholder="اسمك الكريم">
+                                <select id="reviewerRating">
+                                    <option value="5">⭐⭐⭐⭐⭐ (5/5 ممتاز)</option>
+                                    <option value="4">⭐⭐⭐⭐ (4/5 جيد جداً)</option>
+                                    <option value="3">⭐⭐⭐ (3/5 مقبول)</option>
+                                    <option value="2">⭐⭐ (2/5 ضعيف)</option>
+                                    <option value="1">⭐ (1/5 سيء)</option>
+                                </select>
+                                <textarea id="reviewerComment" placeholder="اكتب تجربتك مع الجهاز بكل صراحة..." rows="2"></textarea>
+                                <button class="review-submit-btn" onclick="submitReview('${p.id}')">إرسال التقييم الآن</button>
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn-share-modal" onclick="shareProduct('${p.name}')" style="margin-top:15px;"><i class="fas fa-share-alt"></i> مشاركة رابط المنتج</button>
+
+                        ${isOutOfStock ? '' : `
+                        <div class="qty-selector">
+                            <button id="modalQtyMinus" type="button"><i class="fas fa-minus"></i></button>
+                            <span id="modalQtyVal">1</span>
+                            <button id="modalQtyPlus" type="button"><i class="fas fa-plus"></i></button>
+                        </div>`}
+                        <button class="btn-add" style="margin-top:${isOutOfStock ? '20px' : '0'};" id="modalAddBtn" ${isOutOfStock ? 'disabled' : ''}><i class="fas fa-shopping-cart"></i> ${isOutOfStock ? 'غير متاح حاليًا' : 'أضف للسلة'}</button>
                     </div>
-
-                    <button type="button" class="btn-share-modal" onclick="shareProduct('${p.name}')" style="margin-top:15px;"><i class="fas fa-share-alt"></i> مشاركة رابط المنتج</button>
-
-                    ${isOutOfStock ? '' : `
-                    <div class="qty-selector">
-                        <button id="modalQtyMinus" type="button"><i class="fas fa-minus"></i></button>
-                        <span id="modalQtyVal">1</span>
-                        <button id="modalQtyPlus" type="button"><i class="fas fa-plus"></i></button>
-                    </div>`}
-                    <button class="btn-add" style="margin-top:${isOutOfStock ? '20px' : '0'};" id="modalAddBtn" ${isOutOfStock ? 'disabled' : ''}><i class="fas fa-shopping-cart"></i> ${isOutOfStock ? 'غير متاح حاليًا' : 'أضف للسلة'}</button>
                 </div>
             `;
+            
             if (!isOutOfStock) {
                 document.getElementById('modalQtyMinus').addEventListener('click', () => { if (modalQty > 1) modalQty--; document.getElementById('modalQtyVal').textContent = modalQty; });
                 document.getElementById('modalQtyPlus').addEventListener('click', () => { modalQty++; document.getElementById('modalQtyVal').textContent = modalQty; });
                 document.getElementById('modalAddBtn').addEventListener('click', () => addToCart(p.id, modalQty));
             }
-            productModal.style.display = 'flex';
         }
 
         async function submitReview(productId) {
@@ -978,12 +1056,12 @@
                     document.getElementById('reviewerName').value = '';
                     document.getElementById('reviewerComment').value = '';
                     const updatedP = { id: doc.id, ...doc.data(), reviews: currentReviews };
-                    openProductModal(updatedP);
+                    openProductModal(updatedP, false);
                 }
             } catch (err) { console.error(err); alert('حصل إيرور أثناء إرسال التقييم: ' + err.message); }
         }
 
-        function closeModal() { productModal.style.display = 'none'; }
+        function closeModal() { document.getElementById('productModal').style.display = 'none'; }
 
         categoryBtns.forEach(btn => {
             btn.addEventListener('click', (e) => {
@@ -1276,4 +1354,3 @@
     </script>
 </body>
 </html>
-
