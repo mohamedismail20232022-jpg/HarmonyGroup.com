@@ -763,7 +763,7 @@
                 const stockVal = p.stock !== undefined && p.stock !== null ? Number(p.stock) : 5;
                 const stockBadgeHTML = stockVal <= 3 
                     ? `<span class="stock-badge low-stock"><i class="fas fa-fire"></i> إلحق باقي ${stockVal} قطع فقط!</span>` 
-                    : `<span class="stock-badge in-stock"><i class="fas fa-circle-check"></i> متوفر</span>`;
+                    : `<span class="stock-badge in-stock"><i class="fas fa-circle-check"></i> متوفر (${stockVal} قطع)</span>`;
 
                 const reviews = p.reviews || [];
                 const avgRating = reviews.length > 0 ? (reviews.reduce((sum, r) => sum + Number(r.rating), 0) / reviews.length).toFixed(1) : '5.0';
@@ -841,6 +841,7 @@
             modalContent.scrollTop = 0;
 
             modalQty = 1;
+            const maxStock = p.stock !== undefined && p.stock !== null ? Number(p.stock) : 5;
             const tax = p.customTax || 0;
             const basePrice = Number(p.price);
             const finalPrice = basePrice + tax;
@@ -896,7 +897,6 @@
                 `;
             }
 
-            // 🔥 الكود الذكي الجديد: بنعرض صف البطارية لو الموبايل آيفون فقط 🔥
             const brandLower = (p.brand || '').toLowerCase();
             const isApplePhone = (p.category === 'mobiles' && (brandLower.includes('apple') || brandLower.includes('iphone') || brandLower.includes('آيفون') || brandLower.includes('ايفون')));
             const batteryRowHTML = isApplePhone && p.battery ? `<tr><th>صحة البطارية</th><td style="color:var(--success); font-weight:bold;">${p.battery}%</td></tr>` : '';
@@ -914,6 +914,10 @@
                         <span style="color:var(--text-light); text-transform:uppercase; font-weight:700;">${p.brand}</span>
                         <h2 style="font-size:26px; margin-bottom:10px; font-weight:800;">${p.name}</h2>
                         <h3 style="color:var(--primary); font-size:30px; font-weight:800;">${basePrice.toLocaleString()} ج.م</h3>
+
+                        <div style="font-size: 12px; color: ${maxStock > 0 ? 'var(--success)' : 'var(--danger)'}; font-weight: bold; margin-bottom: 10px;">
+                            <i class="fas fa-boxes-stacked"></i> المتاح في المخزن حالياً: ${maxStock} قطعة
+                        </div>
 
                         <div class="tax-box">
                             <strong><i class="fas fa-info-circle"></i> تفاصيل السعر والضرائب:</strong><br>
@@ -978,8 +982,23 @@
                 </div>
             `;
             
-            document.getElementById('modalQtyMinus').addEventListener('click', () => { if (modalQty > 1) modalQty--; document.getElementById('modalQtyVal').textContent = modalQty; });
-            document.getElementById('modalQtyPlus').addEventListener('click', () => { modalQty++; document.getElementById('modalQtyVal').textContent = modalQty; });
+            // 🔥 حماية زرار الناقص والزائد في المودال عشان ميعديش المخزن الحقيقي 🔥
+            document.getElementById('modalQtyMinus').addEventListener('click', () => { 
+                if (modalQty > 1) {
+                    modalQty--; 
+                    document.getElementById('modalQtyVal').textContent = modalQty; 
+                }
+            });
+
+            document.getElementById('modalQtyPlus').addEventListener('click', () => { 
+                if (modalQty < maxStock) {
+                    modalQty++; 
+                    document.getElementById('modalQtyVal').textContent = modalQty; 
+                } else {
+                    showToast(`يا هندسة، أقصى كمية متوفرة في المخزن هي ${maxStock} قطع فقط!`);
+                }
+            });
+
             document.getElementById('modalAddBtn').addEventListener('click', () => addToCart(p.id, modalQty));
         }
 
@@ -1035,17 +1054,50 @@
             if (badge) { if (count > 0) { badge.style.display = 'flex'; badge.textContent = count; } else { badge.style.display = 'none'; } }
         }
 
+        // 🔥 الحماية الكاملة وقت الإضافة للسلة بناءً على المخزن الحقيقي 🔥
         function addToCart(productId, qty = 1) {
-            const cart = getCart(); const existing = cart.find(i => i.id === productId);
-            if (existing) { existing.qty += qty; } else { cart.push({ id: productId, qty: qty }); }
-            saveCart(cart); showToast('تمت الإضافة للعربة');
+            const product = allProducts.find(p => p.id === productId);
+            if (!product) return;
+
+            const maxStock = product.stock !== undefined && product.stock !== null ? Number(product.stock) : 5;
+            const cart = getCart(); 
+            const existing = cart.find(i => i.id === productId);
+            const currentCartQty = existing ? existing.qty : 0;
+
+            if ((currentCartQty + qty) > maxStock) {
+                showToast(`عذراً! الكمية المطلوبة غير متوفرة بالكامل. المتاح في المخزن: ${maxStock} فقط.`);
+                return;
+            }
+
+            if (existing) { 
+                existing.qty += qty; 
+            } else { 
+                cart.push({ id: productId, qty: qty }); 
+            }
+            saveCart(cart); 
+            showToast('تمت الإضافة للعربة بنجاح ✔️');
         }
 
+        // 🔥 حماية عربة التسوق لو حب يزود من جوه الدرج 🔥
         function changeQty(productId, delta) {
-            const cart = getCart(); const item = cart.find(i => i.id === productId);
+            const cart = getCart(); 
+            const item = cart.find(i => i.id === productId);
             if (!item) return;
+
+            const product = allProducts.find(p => p.id === productId);
+            const maxStock = product && product.stock !== undefined ? Number(product.stock) : 5;
+
+            if (delta > 0 && (item.qty + delta) > maxStock) {
+                showToast(`عذراً، لا يمكن تجاوز الكمية المتوفرة بالمخزن (${maxStock} قطع).`);
+                return;
+            }
+
             item.qty += delta;
-            if (item.qty <= 0) { saveCart(cart.filter(i => i.id !== productId)); } else { saveCart(cart); }
+            if (item.qty <= 0) { 
+                saveCart(cart.filter(i => i.id !== productId)); 
+            } else { 
+                saveCart(cart); 
+            }
             renderCartDrawer();
         }
 
