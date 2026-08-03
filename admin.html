@@ -197,12 +197,21 @@
                 </div>
                 <div class="form-group">
                     <label>الحالة</label>
-                    <select id="p_condition">
+                    <!-- 🔥 هنا تم إضافة Grade C وخانة الكتابة اليدوية للحالة 🔥 -->
+                    <select id="p_condition" onchange="checkConditionCustom()">
                         <option value="New">جديد (متبرشم)</option>
                         <option value="Grade A">Grade A (كسر زيرو)</option>
                         <option value="Grade B">Grade B (متوسط)</option>
+                        <option value="Grade C">Grade C (حالة تعبانة)</option>
+                        <option value="custom">✍️ كتابة حالة مخصصة...</option>
                     </select>
                 </div>
+            </div>
+
+            <!-- 🔥 خانة كتابة الحالة المزاجية/المخصصة 🔥 -->
+            <div class="form-group" id="customConditionGroup" style="display: none;">
+                <label>اكتب حالة الجهاز بمزاجك:</label>
+                <input type="text" id="p_custom_condition" placeholder="مثال: خربوش بسيط، شاشة مغيرودة...">
             </div>
             
             <div class="form-group">
@@ -312,6 +321,18 @@
     let imageFieldCounter = 0;
 
     let currentStockDetails = { rehab: 0, serag1: 0, serag2: 0, serag3: 0 };
+
+    // 🔥 مراقبة ظهور خانة الكتابة المخصصة للحالة 🔥
+    function checkConditionCustom() {
+        const condSelect = document.getElementById('p_condition').value;
+        const customGroup = document.getElementById('customConditionGroup');
+        if (condSelect === 'custom') {
+            customGroup.style.display = 'block';
+        } else {
+            customGroup.style.display = 'none';
+            document.getElementById('p_custom_condition').value = '';
+        }
+    }
 
     function checkBatteryVisibility() {
         const cat = document.getElementById('p_category').value;
@@ -553,18 +574,24 @@
         const batteryGroup = document.getElementById('batteryGroup');
         const finalBattery = batteryGroup.style.display === 'block' && batteryInput ? Number(batteryInput) : null;
 
+        // 🔥 معالجة الحالة لو مخصصة أو من القائمة 🔥
+        let conditionVal = document.getElementById('p_condition').value;
+        if (conditionVal === 'custom') {
+            conditionVal = document.getElementById('p_custom_condition').value.trim() || 'مخصص';
+        }
+
         const data = {
             category: document.getElementById('p_category').value,
             name,
             brand: brand || 'غير محدد',
-            condition: document.getElementById('p_condition').value,
+            condition: conditionVal, // 🔥 تسطيب الحالة سواء جاهزة أو مكتوبة بمزاجك 🔥
             color: document.getElementById('p_color').value.trim(),
             description: document.getElementById('p_description').value.trim(),
             ram: ram || 'غير محدد',
             storage: storage || 'غير محدد',
             price: price,
-            stockDetails: currentStockDetails, // 🔥 دي اللي بتظبط رصيد كل فرع 🔥
-            stock: totalStock,                 // 🔥 دي الإجمالي اللي الموقع بيفلتر بيه 🔥
+            stockDetails: currentStockDetails,
+            stock: totalStock,
             customTax: Number(document.getElementById('p_tax').value) || 0,
             battery: finalBattery,
             box: document.getElementById('p_box').checked,
@@ -579,7 +606,7 @@
 
         promise.then(() => {
             resetForm();
-            alert('عاش يا بطل! تم الحفظ وتحديث المخزن لكل الفروع بنجاح.');
+            alert('عاش يا بطل! تم الحفظ وتحديث المخزن بكل الفروع بنجاح.');
         }).catch(err => {
             alert('حصل خطأ: ' + err.message);
         });
@@ -594,7 +621,20 @@
         document.getElementById('p_name').value = p.name || '';
         document.getElementById('p_brand').value = p.brand || '';
         document.getElementById('p_brand_select').value = '';
-        document.getElementById('p_condition').value = p.condition || 'New';
+        
+        // التعامل مع الحالة في التعديل (لو كانت من القائمة أو مكتوبة يدوي)
+        const condSelect = document.getElementById('p_condition');
+        const predefinedConditions = ['New', 'Grade A', 'Grade B', 'Grade C'];
+        if (predefinedConditions.includes(p.condition)) {
+            condSelect.value = p.condition;
+            document.getElementById('customConditionGroup').style.display = 'none';
+            document.getElementById('p_custom_condition').value = '';
+        } else {
+            condSelect.value = 'custom';
+            document.getElementById('customConditionGroup').style.display = 'block';
+            document.getElementById('p_custom_condition').value = p.condition || '';
+        }
+
         document.getElementById('p_color').value = p.color || '';
         document.getElementById('p_description').value = p.description || '';
         document.getElementById('p_ram').value = p.ram || '';
@@ -632,8 +672,14 @@
         editingId = null;
         document.getElementById('formTitle').textContent = 'إضافة منتج جديد';
         document.getElementById('p_category').value = 'mobiles';
-        ['p_name','p_brand','p_color','p_description','p_ram','p_storage','p_price','p_tax','p_battery'].forEach(id => document.getElementById(id).value = '');
+        ['p_name','p_brand','p_color','p_description','p_ram','p_storage','p_price','p_tax','p_battery','p_custom_condition'].forEach(id => {
+            const el = document.getElementById(id);
+            if(el) el.value = '';
+        });
         
+        document.getElementById('p_condition').value = 'New';
+        document.getElementById('customConditionGroup').style.display = 'none';
+
         currentStockDetails = { rehab: 0, serag1: 0, serag2: 0, serag3: 0 };
         document.getElementById('p_active_branch').value = 'rehab'; 
         switchBranch();
