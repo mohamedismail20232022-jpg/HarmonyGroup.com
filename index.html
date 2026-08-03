@@ -6,43 +6,15 @@
     <title>Harmony GROUP | هواتف، ماك بوك واكسسوارات</title>
     <meta name="description" content="تسوق أحدث الهواتف الذكية، الماك بوك، الآيباد، والإكسسوارات بأفضل الأسعار وعروض حصرية.">
     
-    <!-- Open Graph SEO -->
-    <meta property="og:title" content="Harmony GROUP | Mobile, MacBooks & Accessories">
-    <meta property="og:description" content="تسوق أحدث الهواتف الذكية، الماك بوك، الآيباد، والإكسسوارات بأفضل الأسعار وعروض حصرية.">
-    <meta property="og:image" content="25505.jpg">
-    <meta property="og:type" content="website">
-    
-    <!-- JSON-LD Schema Markup للـ SEO والـ Sitelinks في جوجل -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "WebSite",
       "name": "Harmony GROUP",
-      "url": "https://harmonygroup.com/",
-      "potentialAction": {
-        "@type": "SearchAction",
-        "target": "https://harmonygroup.com/?search={search_term_string}",
-        "query-input": "required name=search_term_string"
-      }
-    }
-    </script>
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "LocalBusiness",
-      "name": "Harmony GROUP",
-      "image": "25505.jpg",
-      "telephone": "+201004233826",
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "سوق الرحاب القديم",
-        "addressLocality": "القاهرة الجديدة",
-        "addressCountry": "EG"
-      }
+      "url": "https://harmonygroup.com/"
     }
     </script>
 
-    <!-- Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -208,12 +180,8 @@
         .stock-badge { font-size: 11px; font-weight: 700; padding: 5px 10px; border-radius: 6px; display: inline-flex; align-items: center; gap: 5px; margin-bottom: 8px; width: fit-content; }
         .stock-badge.in-stock { background: rgba(40,167,69,0.12); color: var(--success); }
         .stock-badge.low-stock { background: var(--warning-bg); color: var(--warning-text); animation: pulse-badge 1.8s infinite; }
-        .stock-badge.out-stock { background: rgba(220,53,69,0.12); color: var(--danger); }
         
         @keyframes pulse-badge { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.03); opacity: 0.85; } 100% { transform: scale(1); opacity: 1; } }
-
-        .btn-add:disabled { opacity: 0.5; cursor: not-allowed; }
-        .btn-add:disabled:hover { background: var(--secondary); color: var(--btn-text); transform: none; }
 
         .wishlist-heart { position: absolute; top: 22px; left: 22px; font-size: 20px; color: #fff; background: rgba(0,0,0,0.35); width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 5; transition: all 0.2s ease; }
         .wishlist-heart:hover { transform: scale(1.15); }
@@ -327,7 +295,6 @@
                     <i class="fas fa-user"></i>
                 </button>
                 
-                <!-- زرار المفضلة الجديد في الهيدر -->
                 <button title="المفضلة" onclick="openWishlistDrawer()">
                     <i class="fas fa-heart"></i>
                     <span class="cart-badge" id="wishlistBadge" style="display:none; background: var(--danger); color: white;">0</span>
@@ -445,6 +412,15 @@
                         افتح اللوكيشن على خريطة جوجل <i class="fas fa-external-link-alt"></i>
                     </a>
                 </div>
+                
+                <!-- 🔥 فرع ماتريكس الجديد أهو اتضاف واترص مع إخواته 🔥 -->
+                <div style="background: var(--bg-color); border: 1px solid var(--border); padding: 30px; border-radius: 16px; width: 340px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); text-align: right; display: flex; flex-direction: column;">
+                    <h4 style="font-size: 20px; margin-bottom: 12px; color: var(--text-dark); display: flex; align-items: center; gap: 10px; font-weight: 700;"><i class="fas fa-map-marker-alt" style="color: var(--primary);"></i> فرع ماتريكس</h4>
+                    <p style="color: var(--text-light); font-size: 14px; margin-bottom: 20px; line-height: 1.6; flex: 1;">السراج مول 3، مدينة نصر، مصر</p>
+                    <a href="https://maps.google.com/maps/place//data=!4m2!3m1!1s0x14583fa1c4e738ed:0xc2188abfe1bfb7fe?entry=s&sa=X&ved=1t:8290&hl=en-gb&ictx=111" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--primary); color: #1F242A; padding: 12px 20px; border-radius: 10px; font-weight: 700; text-decoration: none; width: 100%; transition: 0.3s;">
+                        افتح اللوكيشن على خريطة جوجل <i class="fas fa-external-link-alt"></i>
+                    </a>
+                </div>
             </div>
             <p style="color: var(--text-light); font-size: 13px; margin-top: 40px; border-top: 1px solid var(--border); padding-top: 25px;">جميع الحقوق محفوظة © Harmony GROUP 2026</p>
         </div>
@@ -490,7 +466,7 @@
         <div class="cart-footer" id="cartFooter"></div>
     </div>
 
-    <!-- Wishlist Drawer (الدرج الخاص بالمفضلة) -->
+    <!-- Wishlist Drawer -->
     <div class="wishlist-overlay" id="wishlistOverlay" onclick="closeWishlistDrawer()"></div>
     <div class="wishlist-drawer" id="wishlistDrawer">
         <div class="cart-header">
@@ -593,19 +569,6 @@
         let appliedDiscount = 0; 
         let uploadedScreenshotName = ''; 
 
-        // المنتجات الوهمية (Fallback Products)
-        const fallbackProducts = [
-            {
-                id: 'sample_1', category: 'mobiles', brand: 'Apple', name: 'iPhone 17 Pro Max', price: 75000, oldPrice: 82000, customTax: 12000, condition: 'New', ram: '8GB', storage: '512GB', color: 'تيتانيوم صحراوي', battery: 100, box: true, charger: true, stock: 3, images: ['https://via.placeholder.com/300x300?text=iPhone+17+Pro+Max'], description: 'أحدث إصدار من أبل ببطارية خرافية ومعالج جبار.', reviews: [{ name: 'أحمد مرسي', rating: 5, comment: 'جهاز تحفة وشحن سريع جداً من فرع الرحاب!' }], createdAt: { seconds: Date.now() / 1000 }
-            },
-            {
-                id: 'sample_2', category: 'accessories', brand: 'Apple', name: 'Apple AirPods Pro 2', price: 9500, oldPrice: 11000, customTax: 1500, condition: 'New', ram: '-', storage: 'Case MagSafe', color: 'أبيض', battery: 100, box: true, charger: true, stock: 10, images: ['https://via.placeholder.com/300x300?text=AirPods+Pro+2'], description: 'عزل ضوضاء فائق وصوت نقي.', reviews: [{ name: 'مصطفى حسين', rating: 5, comment: 'الصوت نقي جداً وعزل الضوضاء خيالي.' }], createdAt: { seconds: (Date.now() / 1000) - 50 }
-            },
-            {
-                id: 'sample_7', category: 'mobiles', brand: 'Samsung', name: 'Samsung Galaxy S24 Ultra', price: 50000, oldPrice: 55000, customTax: 8000, condition: 'New', ram: '12GB', storage: '256GB', color: 'تيتانيوم أسود', battery: 100, box: true, charger: true, stock: 6, images: ['https://via.placeholder.com/300x300?text=S24+Ultra'], description: 'ملك الأندرويد بلا منازع والكاميرا بتاعتها حكاية.', reviews: [], createdAt: { seconds: (Date.now() / 1000) - 300 }
-            }
-        ];
-
         window.addEventListener('scroll', () => {
             const topBtn = document.getElementById('backToTopBtn');
             if (window.scrollY > 300) { topBtn.classList.add('show'); } 
@@ -613,7 +576,6 @@
         });
         function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
 
-        // ====== دوال المفضلة المكتملة ======
         function getWishlist() { return JSON.parse(localStorage.getItem('harmony_wishlist') || '[]'); }
         
         function updateWishlistBadge() {
@@ -681,7 +643,6 @@
                     </div>`;
             }).join('');
         }
-        // ===================================
 
         function toggleCompare(productId, e) {
             e.stopPropagation();
@@ -738,7 +699,7 @@
                 </div>
             `;
             document.getElementById('modalContent').innerHTML = tableHTML;
-            productModal.style.display = 'flex';
+            document.getElementById('productModal').style.display = 'flex';
         }
 
         function shareProduct(name) {
@@ -746,29 +707,16 @@
             else { navigator.clipboard.writeText(window.location.href); showToast('تم نسخ رابط المنتج بنجاح!'); }
         }
 
-        const cachedProducts = localStorage.getItem('harmony_cached_products');
-        if (cachedProducts) {
-            try {
-                allProducts = JSON.parse(cachedProducts);
-                renderProducts();
-            } catch (e) {
-                allProducts = fallbackProducts;
-                renderProducts();
-            }
-        } else {
-            allProducts = fallbackProducts;
-            renderProducts();
-        }
-
         db.collection('products').onSnapshot((snapshot) => {
             const docs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            allProducts = docs.length > 0 ? docs : fallbackProducts;
+            allProducts = docs;
             localStorage.setItem('harmony_cached_products', JSON.stringify(allProducts));
             renderProducts();
         }, (error) => {
-            console.error('Firestore error, using fallback:', error);
-            if (!allProducts.length) {
-                allProducts = fallbackProducts;
+            console.error('Firestore error:', error);
+            const cachedProducts = localStorage.getItem('harmony_cached_products');
+            if (cachedProducts) {
+                allProducts = JSON.parse(cachedProducts);
                 renderProducts();
             }
         });
@@ -777,6 +725,9 @@
             productGrid.innerHTML = '';
 
             const filtered = allProducts.filter(p => {
+                const stockVal = p.stock !== undefined && p.stock !== null ? Number(p.stock) : 5;
+                if (stockVal <= 0) return false; 
+
                 const basePrice = Number(p.price);
                 const passCategory = currentFilters.category === 'all' || (p.category || 'mobiles') === currentFilters.category;
                 const passBrand = currentFilters.brand === 'all' || p.brand === currentFilters.brand;
@@ -798,8 +749,8 @@
                 });
             }
 
-            if (allProducts.length === 0 || filtered.length === 0) {
-                productGrid.innerHTML = `<div class="empty-state"><i class="fas fa-magnifying-glass"></i><h2>مفيش نتايج مطابقة</h2></div>`;
+            if (filtered.length === 0) {
+                productGrid.innerHTML = `<div class="empty-state"><i class="fas fa-magnifying-glass"></i><h2>مفيش نتايج أو الكمية خلصت!</h2></div>`;
                 return;
             }
 
@@ -812,11 +763,9 @@
                 const isCompared = compareList.includes(p.id);
                 
                 const stockVal = p.stock !== undefined && p.stock !== null ? Number(p.stock) : 5;
-                const isOutOfStock = stockVal <= 0;
-                let stockBadgeHTML = '';
-                if (isOutOfStock) { stockBadgeHTML = `<span class="stock-badge out-stock"><i class="fas fa-circle-xmark"></i> نفذت الكمية</span>`; } 
-                else if (stockVal <= 3) { stockBadgeHTML = `<span class="stock-badge low-stock"><i class="fas fa-fire"></i> باقي ${stockVal} قطع فقط!</span>`; } 
-                else { stockBadgeHTML = `<span class="stock-badge in-stock"><i class="fas fa-circle-check"></i> متوفر</span>`; }
+                let stockBadgeHTML = stockVal <= 3 
+                    ? `<span class="stock-badge low-stock"><i class="fas fa-fire"></i> إلحق باقي ${stockVal} قطع فقط!</span>` 
+                    : `<span class="stock-badge in-stock"><i class="fas fa-circle-check"></i> متوفر</span>`;
 
                 const reviews = p.reviews || [];
                 const avgRating = reviews.length > 0 ? (reviews.reduce((sum, r) => sum + Number(r.rating), 0) / reviews.length).toFixed(1) : '5.0';
@@ -847,9 +796,9 @@
                     <label class="compare-checkbox-label" onclick="event.stopPropagation()">
                         <input type="checkbox" ${isCompared ? 'checked' : ''} onchange="toggleCompare('${p.id}', event)"> مقارنة الجهاز
                     </label>
-                    <button class="btn-add" data-id="${p.id}" ${isOutOfStock ? 'disabled' : ''}>${isOutOfStock ? 'غير متاح حاليًا' : 'أضف للسلة'} <i class="fas fa-cart-plus"></i></button>
+                    <button class="btn-add" data-id="${p.id}">أضف للسلة <i class="fas fa-cart-plus"></i></button>
                 `;
-                card.querySelector('.btn-add').addEventListener('click', (e) => { e.stopPropagation(); if (!isOutOfStock) addToCart(p.id); });
+                card.querySelector('.btn-add').addEventListener('click', (e) => { e.stopPropagation(); addToCart(p.id); });
                 card.querySelector('.wishlist-heart').addEventListener('click', (e) => { e.stopPropagation(); toggleWishlist(p.id); });
                 
                 card.onclick = () => openProductModal(p, false);
@@ -879,10 +828,7 @@
                         <p style="color: var(--text-light); font-size: 14px; margin-top: 10px;">ثواني والوحش هيكون قدامك 🚀</p>
                     </div>
                 `;
-                
-                setTimeout(() => {
-                    renderModalContent(p);
-                }, 400);
+                setTimeout(() => { renderModalContent(p); }, 400);
             } else {
                 renderModalContent(p);
             }
@@ -900,8 +846,6 @@
             const tax = p.customTax || 0;
             const basePrice = Number(p.price);
             const finalPrice = basePrice + tax;
-            const stockVal = p.stock !== undefined && p.stock !== null ? Number(p.stock) : 5;
-            const isOutOfStock = stockVal <= 0;
             const installment = (finalPrice * 1.15) / 12;
             const mainImg = (p.images && p.images.length > 0) ? p.images[0] : 'https://via.placeholder.com/300x300';
 
@@ -917,28 +861,33 @@
                 ? reviews.map(r => `<div class="review-item"><b>${r.name}</b> <span style="color:#ffc107;">${'★'.repeat(r.rating)}</span><p style="color:var(--text-light); margin-top:3px;">${r.comment}</p></div>`).join('')
                 : '<p style="color:var(--text-light); font-size:13px;">مفيش تقييمات لسه. كن أول واحد يكتب رأيه في الجهاز!</p>';
 
-            // 🔥 اللوجيك الجديد اللي بيحل أي مشكلة: دايماً بيجيب 3 اقتراحات من كل الموقع الأقرب للسعر 🔥
-            
-            // أولاً: ندور في نفس القسم بتاع المنتج الحالي
-            let similarProducts = allProducts
-                .filter(item => item.id !== p.id && item.category === p.category)
-                .sort((a, b) => Math.abs(Number(a.price) - basePrice) - Math.abs(Number(b.price) - basePrice))
-                .slice(0, 3);
+            const minAllowedPrice = basePrice - 5000;
+            const maxAllowedPrice = basePrice + 5000;
 
-            // ثانياً: لو نفس القسم مفيهوش 3 منتجات، نكمل من باقي الموقع (يعني من أي قسم تاني!)
+            const availableProducts = allProducts.filter(item => {
+                if (item.id === p.id) return false;
+                const itemStock = item.stock !== undefined && item.stock !== null ? Number(item.stock) : 5;
+                if (itemStock <= 0) return false; 
+                return true;
+            });
+
+            const sortedByClosestPrice = availableProducts.sort((a, b) => 
+                Math.abs(Number(a.price) - basePrice) - Math.abs(Number(b.price) - basePrice)
+            );
+
+            let similarProducts = sortedByClosestPrice.filter(item => item.category === p.category).slice(0, 3);
+
             if (similarProducts.length < 3) {
-                const extraProducts = allProducts
-                    .filter(item => item.id !== p.id && !similarProducts.includes(item))
-                    .sort((a, b) => Math.abs(Number(a.price) - basePrice) - Math.abs(Number(b.price) - basePrice))
-                    .slice(0, 3 - similarProducts.length);
-                similarProducts = similarProducts.concat(extraProducts);
+                const diff = 3 - similarProducts.length;
+                const otherCategories = sortedByClosestPrice.filter(item => item.category !== p.category).slice(0, diff);
+                similarProducts = similarProducts.concat(otherCategories);
             }
 
             let similarHTML = '';
             if (similarProducts.length > 0) {
                 similarHTML = `
                     <div style="margin: 25px 0; padding: 20px; border-radius: 16px; background: var(--bg-color); border: 1px solid var(--border);">
-                        <h4 style="font-weight: 800; margin-bottom: 15px; color: var(--text-dark);"><i class="fas fa-fire" style="color: var(--primary);"></i> منتجات تانية في نفس رينج السعر</h4>
+                        <h4 style="font-weight: 800; margin-bottom: 15px; color: var(--text-dark);"><i class="fas fa-fire" style="color: var(--primary);"></i> منتجات تانية متوفرة في نفس رينج السعر</h4>
                         <div style="display: flex; gap: 15px; overflow-x: auto; padding-bottom: 5px;">
                             ${similarProducts.map(sim => `
                                 <div onclick="openProductModal(allProducts.find(x => x.id === '${sim.id}'), true)" style="min-width: 140px; flex: 1; background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 10px; text-align: center; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.borderColor='var(--primary)'; this.style.transform='translateY(-3px)';" onmouseout="this.style.borderColor='var(--border)'; this.style.transform='none';">
@@ -964,7 +913,6 @@
                     <div class="modal-details">
                         <span style="color:var(--text-light); text-transform:uppercase; font-weight:700;">${p.brand}</span>
                         <h2 style="font-size:26px; margin-bottom:10px; font-weight:800;">${p.name}</h2>
-                        
                         <h3 style="color:var(--primary); font-size:30px; font-weight:800;">${basePrice.toLocaleString()} ج.م</h3>
 
                         <div class="tax-box">
@@ -1020,22 +968,19 @@
 
                         <button type="button" class="btn-share-modal" onclick="shareProduct('${p.name}')" style="margin-top:15px;"><i class="fas fa-share-alt"></i> مشاركة رابط المنتج</button>
 
-                        ${isOutOfStock ? '' : `
                         <div class="qty-selector">
                             <button id="modalQtyMinus" type="button"><i class="fas fa-minus"></i></button>
                             <span id="modalQtyVal">1</span>
                             <button id="modalQtyPlus" type="button"><i class="fas fa-plus"></i></button>
-                        </div>`}
-                        <button class="btn-add" style="margin-top:${isOutOfStock ? '20px' : '0'};" id="modalAddBtn" ${isOutOfStock ? 'disabled' : ''}><i class="fas fa-shopping-cart"></i> ${isOutOfStock ? 'غير متاح حاليًا' : 'أضف للسلة'}</button>
+                        </div>
+                        <button class="btn-add" id="modalAddBtn">أضف للسلة <i class="fas fa-cart-plus"></i></button>
                     </div>
                 </div>
             `;
             
-            if (!isOutOfStock) {
-                document.getElementById('modalQtyMinus').addEventListener('click', () => { if (modalQty > 1) modalQty--; document.getElementById('modalQtyVal').textContent = modalQty; });
-                document.getElementById('modalQtyPlus').addEventListener('click', () => { modalQty++; document.getElementById('modalQtyVal').textContent = modalQty; });
-                document.getElementById('modalAddBtn').addEventListener('click', () => addToCart(p.id, modalQty));
-            }
+            document.getElementById('modalQtyMinus').addEventListener('click', () => { if (modalQty > 1) modalQty--; document.getElementById('modalQtyVal').textContent = modalQty; });
+            document.getElementById('modalQtyPlus').addEventListener('click', () => { modalQty++; document.getElementById('modalQtyVal').textContent = modalQty; });
+            document.getElementById('modalAddBtn').addEventListener('click', () => addToCart(p.id, modalQty));
         }
 
         async function submitReview(productId) {
@@ -1159,7 +1104,6 @@
                 
                 <button class="checkout-btn" onclick="checkoutViaWhatsapp()"><i class="fab fa-whatsapp"></i> إتمام الطلب عبر واتساب</button>
                 
-                <!-- أزرار الدفع الإلكتروني الاحترافية -->
                 <div class="payment-methods-box">
                     <p>أو ادفع فوراً وحول لخدمة العملاء:</p>
                     <div class="payment-buttons-grid">
@@ -1175,7 +1119,58 @@
         function openCart() { renderCartDrawer(); document.getElementById('cartDrawer').classList.add('active'); document.getElementById('cartOverlay').classList.add('active'); }
         function closeCart() { document.getElementById('cartDrawer').classList.remove('active'); document.getElementById('cartOverlay').classList.remove('active'); }
 
-        // نافذة عرض بيانات الدفع والتحويل المباشر مع رفع السكرين شوت
+        async function processOrderAndDeductStock() {
+            const cart = getCart();
+            if (cart.length === 0) return;
+
+            for (let item of cart) {
+                const productRef = db.collection('products').doc(item.id);
+                try {
+                    await db.runTransaction(async (transaction) => {
+                        const doc = await transaction.get(productRef);
+                        if (!doc.exists) return;
+
+                        let p = doc.data();
+                        let qtyToDeduct = item.qty;
+                        
+                        let b_rehab = p.stockDetails?.rehab || (p.stockDetails ? 0 : (p.stock || 0));
+                        let b_s1 = p.stockDetails?.serag1 || 0;
+                        let b_s2 = p.stockDetails?.serag2 || 0;
+                        let b_s3 = p.stockDetails?.serag3 || 0;
+
+                        if (b_rehab >= qtyToDeduct) { b_rehab -= qtyToDeduct; qtyToDeduct = 0; }
+                        else { qtyToDeduct -= b_rehab; b_rehab = 0; }
+
+                        if (qtyToDeduct > 0) {
+                            if (b_s1 >= qtyToDeduct) { b_s1 -= qtyToDeduct; qtyToDeduct = 0; }
+                            else { qtyToDeduct -= b_s1; b_s1 = 0; }
+                        }
+                        if (qtyToDeduct > 0) {
+                            if (b_s2 >= qtyToDeduct) { b_s2 -= qtyToDeduct; qtyToDeduct = 0; }
+                            else { qtyToDeduct -= b_s2; b_s2 = 0; }
+                        }
+                        if (qtyToDeduct > 0) {
+                            if (b_s3 >= qtyToDeduct) { b_s3 -= qtyToDeduct; qtyToDeduct = 0; }
+                            else { qtyToDeduct -= b_s3; b_s3 = 0; }
+                        }
+
+                        let newTotal = b_rehab + b_s1 + b_s2 + b_s3;
+
+                        // 🛑 بدل ما نمسح الموبايل خالص ونضيعه من الكنترول بانل، هنصفره عشان يظهرك بالأحمر هناك 🛑
+                        transaction.update(productRef, {
+                            stock: newTotal < 0 ? 0 : newTotal,
+                            stockDetails: { rehab: b_rehab, serag1: b_s1, serag2: b_s2, serag3: b_s3 }
+                        });
+                    });
+                } catch (error) {
+                    console.error("حصل خطأ في تحديث المخزن: ", error);
+                }
+            }
+            
+            saveCart([]); 
+            renderCartDrawer();
+        }
+
         function openDirectPaymentModal(type) {
             const cart = getCart();
             if (cart.length === 0) return;
@@ -1320,7 +1315,9 @@
             if (discountAmount > 0) { message += `%0Aالخصم المطبق: -${discountAmount.toLocaleString()} ج.م`; }
             message += `%0A%0Aالإجمالي الكلي المطلوب: ${finalTotal.toLocaleString()} ج.م%0Aأنا جاهز لاستلام الأوردر.`;
 
-            window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`, '_blank');
+            processOrderAndDeductStock().then(() => {
+                window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`, '_blank');
+            });
         }
 
         function checkoutViaWhatsapp() {
@@ -1340,7 +1337,10 @@
             let finalTotal = Math.max(0, subtotal - discountAmount);
             if (discountAmount > 0) { message += `%0Aالخصم المطبق: -${discountAmount.toLocaleString()} ج.م`; }
             message += `%0A%0Aالإجمالي الكلي بعد الخصم: ${finalTotal.toLocaleString()} ج.م`;
-            window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`, '_blank');
+            
+            processOrderAndDeductStock().then(() => {
+                window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`, '_blank');
+            });
         }
 
         function showToast(msg) {
@@ -1348,7 +1348,6 @@
             setTimeout(() => toast.classList.remove('show'), 2000);
         }
 
-        // تشغيل العدادات عند بداية تحميل الصفحة
         updateCartBadge();
         updateWishlistBadge();
     </script>
