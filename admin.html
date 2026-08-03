@@ -71,7 +71,6 @@
     .cancel-edit { width:100%; padding:11px; background:transparent; border:1px solid var(--border); border-radius:10px; cursor:pointer; margin-top:10px; display:none; font-weight: 700; color: var(--danger); transition: 0.2s; }
     .cancel-edit:hover { background: rgba(220,53,69,0.05); }
 
-    /* 🔥 تنسيق العناصر اللي خلصانة 🔥 */
     .product-list-item { display:flex; gap:15px; align-items:center; padding:15px; border:1px solid var(--border); border-radius:12px; margin-bottom:12px; background: var(--white); transition: 0.2s; }
     .product-list-item.out-of-stock { background: #fff5f5; border-color: var(--danger); opacity: 0.85; }
     
@@ -97,7 +96,6 @@
     .add-image-btn:hover { background: rgba(243,166,0,0.08); border-color: var(--primary); color: var(--primary); }
     .upload-status { font-size: 11px; font-weight: bold; width: 100%; margin-top: 2px; }
 
-    /* Branch selector styling */
     .branch-selector-box { background: rgba(243, 166, 0, 0.1); padding: 18px; border-radius: 12px; border: 2px solid var(--primary); margin-bottom: 20px; }
     .branch-selector-box label { color: var(--primary); font-size: 15px; font-weight: 800; display: block; margin-bottom: 8px; }
     .branch-selector-box select { width: 100%; padding: 12px; font-size: 15px; font-weight: bold; border-radius: 8px; border: 1px solid var(--primary); outline: none; background: #fff; cursor: pointer; }
@@ -123,7 +121,6 @@
         <button class="logout-btn" onclick="doLogout()"><i class="fas fa-sign-out-alt"></i> خروج</button>
     </header>
 
-    <!-- Analytics Dashboard Cards -->
     <div class="stats-container">
         <div class="stat-card">
             <i class="fas fa-boxes-stacked"></i>
@@ -162,7 +159,6 @@
                 </select>
             </div>
 
-            <!-- 🔥 هنا ضفنا onchange للقسم عشان نراقب البطارية 🔥 -->
             <div class="form-group">
                 <label>القسم الرئيسي (أين يظهر المنتج؟)</label>
                 <select id="p_category" onchange="checkBatteryVisibility()" style="border-color: var(--border); font-weight: bold;">
@@ -182,7 +178,6 @@
             <div class="form-row">
                 <div class="form-group">
                     <label>الماركة (اختر أو اكتب يدوي)</label>
-                    <!-- 🔥 هنا ضفنا onchange للماركة عشان نراقب البطارية 🔥 -->
                     <select id="p_brand_select" onchange="document.getElementById('p_brand').value = this.value; checkBatteryVisibility();" style="margin-bottom: 6px;">
                         <option value="">-- اختر أو اكتب بالأسفل --</option>
                         <option value="Apple">Apple</option>
@@ -198,7 +193,6 @@
                         <option value="Infinix">Infinix</option>
                         <option value="Google Pixel">Google Pixel</option>
                     </select>
-                    <!-- 🔥 هنا ضفنا oninput لليدوي عشان نراقب البطارية 🔥 -->
                     <input type="text" id="p_brand" placeholder="أو اكتب اسم الماركة يدوي هنا" oninput="checkBatteryVisibility()">
                 </div>
                 <div class="form-group">
@@ -271,7 +265,6 @@
                 </div>
             </div>
 
-            <!-- 🔥 دي خانة البطارية اللي بتظهر وتختفي أوتوماتيك 🔥 -->
             <div class="form-group" id="batteryGroup" style="display: none; background: #fffcf5; padding: 12px; border: 1px dashed var(--primary); border-radius: 8px;">
                 <label style="color: var(--primary); font-weight: bold;"><i class="fas fa-battery-three-quarters"></i> صحة البطارية (%) - للآيفون فقط</label>
                 <input type="number" id="p_battery" placeholder="100" min="0" max="100">
@@ -320,20 +313,18 @@
 
     let currentStockDetails = { rehab: 0, serag1: 0, serag2: 0, serag3: 0 };
 
-    // 🔥 دي الفانكشن المسؤولة عن إظهار وإخفاء البطارية بناءً على المدخلات 🔥
     function checkBatteryVisibility() {
         const cat = document.getElementById('p_category').value;
         const brand = document.getElementById('p_brand').value.toLowerCase();
         const batteryGroup = document.getElementById('batteryGroup');
         const batteryInput = document.getElementById('p_battery');
 
-        // لو قسم الموبايلات، والماركة فيها كلمة أبل أو ايفون، اظهر الخانة
         if (cat === 'mobiles' && (brand === 'apple' || brand.includes('iphone') || brand.includes('ايفون') || brand.includes('آيفون'))) {
             batteryGroup.style.display = 'block';
-            if (!batteryInput.value) batteryInput.value = '100'; // حط 100 افتراضي لو فاضي
+            if (!batteryInput.value) batteryInput.value = '100';
         } else {
             batteryGroup.style.display = 'none';
-            batteryInput.value = ''; // فضيها عشان متبعتش داتا للمخزن
+            batteryInput.value = '';
         }
     }
 
@@ -433,7 +424,7 @@
             document.getElementById('loginWrap').style.display = 'none';
             document.getElementById('adminPanel').style.display = 'block';
             loadProducts();
-            checkBatteryVisibility(); // أول ما يفتح يتأكد من حالة الخانة
+            checkBatteryVisibility();
         } else {
             document.getElementById('loginWrap').style.display = 'flex';
             document.getElementById('adminPanel').style.display = 'none';
@@ -558,8 +549,6 @@
         }
         
         const images = getImageUrls();
-        
-        // جلب قيمة البطارية بس لو الديف باين وظاهر للآيفون
         const batteryInput = document.getElementById('p_battery').value;
         const batteryGroup = document.getElementById('batteryGroup');
         const finalBattery = batteryGroup.style.display === 'block' && batteryInput ? Number(batteryInput) : null;
@@ -574,10 +563,10 @@
             ram: ram || 'غير محدد',
             storage: storage || 'غير محدد',
             price: price,
-            stockDetails: currentStockDetails,
-            stock: totalStock,
+            stockDetails: currentStockDetails, // 🔥 دي اللي بتظبط رصيد كل فرع 🔥
+            stock: totalStock,                 // 🔥 دي الإجمالي اللي الموقع بيفلتر بيه 🔥
             customTax: Number(document.getElementById('p_tax').value) || 0,
-            battery: finalBattery, // هيبعت القيمة لو ايفون.. وهيبعتها null لو أي حاجة تانية
+            battery: finalBattery,
             box: document.getElementById('p_box').checked,
             charger: document.getElementById('p_charger').checked,
             images: images,
@@ -590,7 +579,7 @@
 
         promise.then(() => {
             resetForm();
-            alert('عاش يا بطل! تم الحفظ وتسجيل الرصيد بنجاح.');
+            alert('عاش يا بطل! تم الحفظ وتحديث المخزن لكل الفروع بنجاح.');
         }).catch(err => {
             alert('حصل خطأ: ' + err.message);
         });
@@ -615,7 +604,6 @@
         document.getElementById('p_box').checked = !!p.box;
         document.getElementById('p_charger').checked = !!p.charger;
 
-        // هنعبي داتا البطارية لو موجودة
         if (p.battery) document.getElementById('p_battery').value = p.battery;
         else document.getElementById('p_battery').value = '';
 
@@ -631,10 +619,7 @@
 
         setImageUrls(p.images || []);
         document.getElementById('cancelEditBtn').style.display = 'block';
-        
-        // لازم نشغل الفانكشن دي بعد ما عبينا الداتا عشان تتأكد تظهر خانة البطارية ولا تخفيها
         checkBatteryVisibility();
-        
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
@@ -661,8 +646,7 @@
         document.getElementById('p_charger').checked = true;
         document.getElementById('cancelEditBtn').style.display = 'none';
         setImageUrls([]);
-        
-        checkBatteryVisibility(); // نظبط الرؤية للخانة بعد الريسيت
+        checkBatteryVisibility();
     }
 </script>
 </body>
