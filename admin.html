@@ -152,22 +152,30 @@
             <div class="branch-selector-box">
                 <label><i class="fas fa-location-dot"></i> بتسجل البضاعة دي لفرع إيه دلوقتي؟</label>
                 <select id="p_active_branch" onchange="switchBranch()">
-                    <option value="rehab">فرع الرحاب</option>
-                    <option value="serag1">فرع السراج مول 1 (مصطفى)</option>
-                    <option value="serag2">فرع السراج مول 2 (سبعاوي)</option>
-                    <option value="serag3">فرع السراج مول 3 (ماتريكس)</option>
+                    <option value="rehab">فرع الرحاب (مؤمن)</option>
+                    <option value="serag1">محل هارموني جروب 1 (مصطفى)</option>
+                    <option value="serag2">محل هارموني جروب 2 (سبعاوي)</option>
+                    <option value="serag3">محل هارموني فون 3 (ماتريكس)</option>
                 </select>
             </div>
 
+            <!-- 🔥 القسم الرئيسي مع الخيار السادس (قسم / منتج جديد) 🔥 -->
             <div class="form-group">
                 <label>القسم الرئيسي (أين يظهر المنتج؟)</label>
-                <select id="p_category" onchange="checkBatteryVisibility()" style="border-color: var(--border); font-weight: bold;">
+                <select id="p_category" onchange="checkCategoryCustom(); checkBatteryVisibility();" style="border-color: var(--border); font-weight: bold;">
                     <option value="mobiles">📱 هواتف ذكية (Mobiles)</option>
                     <option value="macbooks">💻 ماك بوكس (MacBooks)</option>
                     <option value="ipads">🍎 آيباد (iPads)</option>
                     <option value="tablets">📟 تابلت (Tablets)</option>
                     <option value="accessories">🎧 إكسسوارات (Accessories)</option>
+                    <option value="custom_cat">✨ قسم / منتج جديد (اكتب بمزاجك)...</option>
                 </select>
+            </div>
+
+            <!-- 🔥 خانة كتابة القسم الجديد 🔥 -->
+            <div class="form-group" id="customCategoryGroup" style="display: none;">
+                <label style="color: var(--primary);">اكتب اسم القسم أو المنتج الجديد:</label>
+                <input type="text" id="p_custom_category" placeholder="مثال: ساعات ذكية، لابتوبات، سماعات...">
             </div>
 
             <div class="form-group">
@@ -197,7 +205,6 @@
                 </div>
                 <div class="form-group">
                     <label>الحالة</label>
-                    <!-- 🔥 هنا تم إضافة Grade C وخانة الكتابة اليدوية للحالة 🔥 -->
                     <select id="p_condition" onchange="checkConditionCustom()">
                         <option value="New">جديد (متبرشم)</option>
                         <option value="Grade A">Grade A (كسر زيرو)</option>
@@ -208,7 +215,6 @@
                 </div>
             </div>
 
-            <!-- 🔥 خانة كتابة الحالة المزاجية/المخصصة 🔥 -->
             <div class="form-group" id="customConditionGroup" style="display: none;">
                 <label>اكتب حالة الجهاز بمزاجك:</label>
                 <input type="text" id="p_custom_condition" placeholder="مثال: خربوش بسيط، شاشة مغيرودة...">
@@ -322,7 +328,18 @@
 
     let currentStockDetails = { rehab: 0, serag1: 0, serag2: 0, serag3: 0 };
 
-    // 🔥 مراقبة ظهور خانة الكتابة المخصصة للحالة 🔥
+    // 🔥 مراقبة اختيار القسم المخصص 🔥
+    function checkCategoryCustom() {
+        const catSelect = document.getElementById('p_category').value;
+        const customCatGroup = document.getElementById('customCategoryGroup');
+        if (catSelect === 'custom_cat') {
+            customCatGroup.style.display = 'block';
+        } else {
+            customCatGroup.style.display = 'none';
+            document.getElementById('p_custom_category').value = '';
+        }
+    }
+
     function checkConditionCustom() {
         const condSelect = document.getElementById('p_condition').value;
         const customGroup = document.getElementById('customConditionGroup');
@@ -515,10 +532,7 @@
 
         container.innerHTML = sortedProducts.map(p => {
             const img = (p.images && p.images.length) ? p.images[0] : 'https://via.placeholder.com/60';
-            const catName = p.category === 'accessories' ? 'إكسسوار' : 
-                            p.category === 'macbooks' ? 'ماك بوك' : 
-                            p.category === 'ipads' ? 'آيباد' : 
-                            p.category === 'tablets' ? 'تابلت' : 'موبايل';
+            const catName = p.category;
                             
             const b_rehab = p.stockDetails?.rehab || (p.stockDetails ? 0 : (p.stock || 0));
             const b_s1 = p.stockDetails?.serag1 || 0;
@@ -534,10 +548,10 @@
             const branchBreakdown = `
                 <div style="font-size:11.5px; margin-top:8px; color:#444; background:#fff8e1; padding:8px 10px; border-radius:8px; border:1px dashed var(--primary); display:inline-block; font-weight:600;">
                     <i class="fas fa-store" style="color:var(--primary);"></i> 
-                    الرحاب: <b style="color:var(--text);">${b_rehab}</b> | 
-                    سراج 1: <b style="color:var(--text);">${b_s1}</b> | 
-                    سراج 2: <b style="color:var(--text);">${b_s2}</b> | 
-                    سراج 3: <b style="color:var(--text);">${b_s3}</b>
+                    فرع الرحاب (مؤمن): <b style="color:var(--text);">${b_rehab}</b> | 
+                    هارموني 1 (مصطفى): <b style="color:var(--text);">${b_s1}</b> | 
+                    هارموني 2 (سبعاوي): <b style="color:var(--text);">${b_s2}</b> | 
+                    هارموني فون 3 (ماتريكس): <b style="color:var(--text);">${b_s3}</b>
                 </div>`;
 
             return `
@@ -574,17 +588,22 @@
         const batteryGroup = document.getElementById('batteryGroup');
         const finalBattery = batteryGroup.style.display === 'block' && batteryInput ? Number(batteryInput) : null;
 
-        // 🔥 معالجة الحالة لو مخصصة أو من القائمة 🔥
         let conditionVal = document.getElementById('p_condition').value;
         if (conditionVal === 'custom') {
             conditionVal = document.getElementById('p_custom_condition').value.trim() || 'مخصص';
         }
 
+        // 🔥 معالجة القسم (لو مخصص ياخده من خانة الكتابة الحرة) 🔥
+        let categoryVal = document.getElementById('p_category').value;
+        if (categoryVal === 'custom_cat') {
+            categoryVal = document.getElementById('p_custom_category').value.trim() || 'other';
+        }
+
         const data = {
-            category: document.getElementById('p_category').value,
+            category: categoryVal,
             name,
             brand: brand || 'غير محدد',
-            condition: conditionVal, // 🔥 تسطيب الحالة سواء جاهزة أو مكتوبة بمزاجك 🔥
+            condition: conditionVal,
             color: document.getElementById('p_color').value.trim(),
             description: document.getElementById('p_description').value.trim(),
             ram: ram || 'غير محدد',
@@ -617,12 +636,24 @@
         if (!p) return;
         editingId = id;
         document.getElementById('formTitle').textContent = 'تعديل منتج (تحديث الأرصدة)';
-        document.getElementById('p_category').value = p.category || 'mobiles';
+        
+        // التعامل مع القسم (لو أساسي أو مخصص)
+        const catSelect = document.getElementById('p_category');
+        const standardCats = ['mobiles', 'macbooks', 'ipads', 'tablets', 'accessories'];
+        if (standardCats.includes(p.category)) {
+            catSelect.value = p.category;
+            document.getElementById('customCategoryGroup').style.display = 'none';
+            document.getElementById('p_custom_category').value = '';
+        } else {
+            catSelect.value = 'custom_cat';
+            document.getElementById('customCategoryGroup').style.display = 'block';
+            document.getElementById('p_custom_category').value = p.category || '';
+        }
+
         document.getElementById('p_name').value = p.name || '';
         document.getElementById('p_brand').value = p.brand || '';
         document.getElementById('p_brand_select').value = '';
         
-        // التعامل مع الحالة في التعديل (لو كانت من القائمة أو مكتوبة يدوي)
         const condSelect = document.getElementById('p_condition');
         const predefinedConditions = ['New', 'Grade A', 'Grade B', 'Grade C'];
         if (predefinedConditions.includes(p.condition)) {
@@ -672,7 +703,9 @@
         editingId = null;
         document.getElementById('formTitle').textContent = 'إضافة منتج جديد';
         document.getElementById('p_category').value = 'mobiles';
-        ['p_name','p_brand','p_color','p_description','p_ram','p_storage','p_price','p_tax','p_battery','p_custom_condition'].forEach(id => {
+        document.getElementById('customCategoryGroup').style.display = 'none';
+
+        ['p_name','p_brand','p_color','p_description','p_ram','p_storage','p_price','p_tax','p_battery','p_custom_condition','p_custom_category'].forEach(id => {
             const el = document.getElementById(id);
             if(el) el.value = '';
         });
