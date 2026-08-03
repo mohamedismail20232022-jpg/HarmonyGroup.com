@@ -56,7 +56,8 @@
     @media (max-width:900px) { .container { grid-template-columns:1fr; } }
 
     .card { background:var(--white); border-radius:16px; padding:25px; box-shadow:0 4px 20px rgba(0,0,0,0.03); border: 1px solid var(--border); }
-    .card h3 { margin-bottom:20px; font-weight: 800; font-size: 18px; color: var(--text); }
+    .card h3 { margin-bottom:20px; font-weight: 800; font-size: 18px; color: var(--text); display: flex; justify-content: space-between; align-items: center; }
+    
     .form-group { margin-bottom:15px; }
     .form-group label { display:block; font-size:13px; margin-bottom:6px; color:#555; font-weight:700; }
     .form-group input, .form-group select, .form-group textarea { width:100%; padding:11px; border:1px solid var(--border); border-radius:8px; font-size:14px; outline: none; background: var(--bg); color: var(--text); transition: 0.2s; }
@@ -71,8 +72,15 @@
     .cancel-edit { width:100%; padding:11px; background:transparent; border:1px solid var(--border); border-radius:10px; cursor:pointer; margin-top:10px; display:none; font-weight: 700; color: var(--danger); transition: 0.2s; }
     .cancel-edit:hover { background: rgba(220,53,69,0.05); }
 
-    .product-list-item { display:flex; gap:15px; align-items:center; padding:15px; border:1px solid var(--border); border-radius:12px; margin-bottom:12px; background: var(--white); transition: 0.2s; }
+    /* شريط البحث في لوحة التحكم */
+    .admin-search-box { position: relative; margin-bottom: 15px; }
+    .admin-search-box input { width: 100%; padding: 10px 15px 10px 40px; border-radius: 10px; border: 1px solid var(--border); background: var(--bg); font-size: 14px; outline: none; }
+    .admin-search-box input:focus { border-color: var(--primary); background: #fff; }
+    .admin-search-box i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--text-light); }
+
+    .product-list-item { display:flex; gap:15px; align-items:center; padding:15px; border:1px solid var(--border); border-radius:12px; margin-bottom:12px; background: var(--white); transition: 0.2s; position: relative; }
     .product-list-item.out-of-stock { background: #fff5f5; border-color: var(--danger); opacity: 0.85; }
+    .product-list-item.pinned-item { border: 2px solid var(--primary); background: #fffdf5; }
     
     .product-list-item:hover { border-color: var(--primary); box-shadow: 0 4px 12px rgba(0,0,0,0.03); opacity: 1; }
     .product-list-item img { width:60px; height:60px; object-fit:contain; background:var(--bg); border-radius:8px; padding: 4px; border: 1px solid var(--border); }
@@ -81,6 +89,12 @@
     .product-list-item .info span { font-size:13px; color:#6C757D; font-weight: 600; }
     .product-list-item .actions { display:flex; gap:8px; align-items: center; }
     .product-list-item .actions button { width:36px; height:36px; border-radius:8px; border:none; cursor:pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+    
+    /* زرار الـ Pin */
+    .pin-btn { background: #f1f3f5; color: #adb5bd; }
+    .pin-btn.pinned { background: var(--primary); color: #1F242A; box-shadow: 0 2px 8px rgba(243,166,0,0.4); }
+    .pin-btn:hover { transform: scale(1.1); }
+
     .edit-btn { background:#e7f1ff; color:#0d6efd; }
     .edit-btn:hover { background: #0d6efd; color: #fff; }
     .delete-btn { background:#fdecec; color:var(--danger); }
@@ -159,7 +173,6 @@
                 </select>
             </div>
 
-            <!-- 🔥 القسم الرئيسي مع الخيار السادس (قسم / منتج جديد) 🔥 -->
             <div class="form-group">
                 <label>القسم الرئيسي (أين يظهر المنتج؟)</label>
                 <select id="p_category" onchange="checkCategoryCustom(); checkBatteryVisibility();" style="border-color: var(--border); font-weight: bold;">
@@ -172,7 +185,6 @@
                 </select>
             </div>
 
-            <!-- 🔥 خانة كتابة القسم الجديد 🔥 -->
             <div class="form-group" id="customCategoryGroup" style="display: none;">
                 <label style="color: var(--primary);">اكتب اسم القسم أو المنتج الجديد:</label>
                 <input type="text" id="p_custom_category" placeholder="مثال: ساعات ذكية، لابتوبات، سماعات...">
@@ -301,7 +313,16 @@
         </div>
 
         <div class="card">
-            <h3>المنتجات الحالية (<span id="productCount">0</span>)</h3>
+            <h3>
+                المنتجات الحالية (<span id="productCount">0</span>)
+            </h3>
+            
+            <!-- 🔥 شريط البحث السريع في لوحة التحكم 🔥 -->
+            <div class="admin-search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="adminSearchInput" oninput="renderList()" placeholder="ابحث بسرعة عن أي منتج في المخزن لتعديله...">
+            </div>
+
             <div id="productListContainer"></div>
         </div>
     </div>
@@ -328,7 +349,6 @@
 
     let currentStockDetails = { rehab: 0, serag1: 0, serag2: 0, serag3: 0 };
 
-    // 🔥 مراقبة اختيار القسم المخصص 🔥
     function checkCategoryCustom() {
         const catSelect = document.getElementById('p_category').value;
         const customCatGroup = document.getElementById('customCategoryGroup');
@@ -514,15 +534,43 @@
         document.getElementById('statOutStock').textContent = outStock;
     }
 
+    // 🔥 دالة التثبيت (Pin / Unpin) للمنتجات الهامة 🔥
+    function togglePin(id, event) {
+        event.stopPropagation();
+        const productRef = db.collection('products').doc(id);
+        const product = productsCache.find(p => p.id === id);
+        if (!product) return;
+
+        const newPinnedState = !product.isPinned;
+        productRef.update({ isPinned: newPinnedState }).then(() => {
+            loadProducts();
+        });
+    }
+
+    // 🔥 دالة العرض المحدثة مع شريط البحث وترتيب الـ Pin 🔥
     function renderList() {
-        document.getElementById('productCount').textContent = productsCache.length;
+        const searchVal = document.getElementById('adminSearchInput').value.trim().toLowerCase();
+        
+        const filtered = productsCache.filter(p => {
+            if (!searchVal) return true;
+            return (p.name || '').toLowerCase().includes(searchVal) || 
+                   (p.brand || '').toLowerCase().includes(searchVal) ||
+                   (p.category || '').toLowerCase().includes(searchVal);
+        });
+
+        document.getElementById('productCount').textContent = filtered.length;
         const container = document.getElementById('productListContainer');
-        if (productsCache.length === 0) {
-            container.innerHTML = '<div class="empty-list">مفيش منتجات لسه. ضيف أول منتج من الفورم على اليمين.</div>';
+        
+        if (filtered.length === 0) {
+            container.innerHTML = '<div class="empty-list">مفيش منتجات مطابقة للبحث أو المخزن فاضي.</div>';
             return;
         }
 
-        const sortedProducts = [...productsCache].sort((a, b) => {
+        // ترتيب المنتجات: المثبت أولاً (Pinned)، وبعدين المتاح، وبعدين اللي خلصان
+        const sortedProducts = [...filtered].sort((a, b) => {
+            if (a.isPinned && !b.isPinned) return -1;
+            if (!a.isPinned && b.isPinned) return 1;
+
             const stockA = a.stock !== undefined ? Number(a.stock) : 5;
             const stockB = b.stock !== undefined ? Number(b.stock) : 5;
             if (stockA <= 0 && stockB > 0) return 1;
@@ -542,20 +590,22 @@
 
             const isOut = stockVal <= 0;
             const stockBadge = isOut 
-                ? '<span style="color:var(--danger); font-weight:bold;">(مخفي من الموقع - نفذت الكمية)</span>' 
-                : `<span style="color:var(--success); font-weight:bold;">(${stockVal} إجمالي المخزن)</span>`;
+                ? '<span style="color:var(--danger); font-weight:bold; font-size: 13px;">(مخفي من الموقع - نفذت الكمية)</span>' 
+                : `<span style="color:var(--success); font-weight:bold; font-size: 13px;">(${stockVal} قطعة إجمالي)</span>`;
             
             const branchBreakdown = `
-                <div style="font-size:11.5px; margin-top:8px; color:#444; background:#fff8e1; padding:8px 10px; border-radius:8px; border:1px dashed var(--primary); display:inline-block; font-weight:600;">
-                    <i class="fas fa-store" style="color:var(--primary);"></i> 
-                    فرع الرحاب (مؤمن): <b style="color:var(--text);">${b_rehab}</b> | 
-                    هارموني 1 (مصطفى): <b style="color:var(--text);">${b_s1}</b> | 
-                    هارموني 2 (سبعاوي): <b style="color:var(--text);">${b_s2}</b> | 
-                    هارموني فون 3 (ماتريكس): <b style="color:var(--text);">${b_s3}</b>
+                <div style="font-size:12.5px; margin-top:10px; color:#333; background:#faf7f0; padding:10px 14px; border-radius:10px; border:1px solid #f3d18c; display:flex; flex-wrap:wrap; gap:12px; font-weight:700; box-shadow: 0 2px 5px rgba(0,0,0,0.02);">
+                    <span><i class="fas fa-store" style="color:var(--primary);"></i> فرع الرحاب (مؤمن): <b style="color:var(--text); font-size:14px;">${b_rehab}</b></span>
+                    <span><i class="fas fa-store" style="color:var(--primary);"></i> هارموني 1 (مصطفى): <b style="color:var(--text); font-size:14px;">${b_s1}</b></span>
+                    <span><i class="fas fa-store" style="color:var(--primary);"></i> هارموني 2 (سبعاوي): <b style="color:var(--text); font-size:14px;">${b_s2}</b></span>
+                    <span><i class="fas fa-store" style="color:var(--primary);"></i> هارموني فون 3 (ماتريكس): <b style="color:var(--text); font-size:14px;">${b_s3}</b></span>
                 </div>`;
 
+            const isPinnedClass = p.isPinned ? 'pinned' : '';
+            const isPinnedContainerClass = p.isPinned ? 'pinned-item' : '';
+
             return `
-                <div class="product-list-item ${isOut ? 'out-of-stock' : ''}">
+                <div class="product-list-item ${isOut ? 'out-of-stock' : ''} ${isPinnedContainerClass}">
                     <img src="${img}" alt="">
                     <div class="info">
                         <h4>[${catName}] ${p.name} ${p.color ? `(${p.color})` : ''}</h4>
@@ -563,8 +613,10 @@
                         ${branchBreakdown}
                     </div>
                     <div class="actions">
-                        <button class="edit-btn" onclick="editProduct('${p.id}')"><i class="fas fa-pen"></i></button>
-                        <button class="delete-btn" onclick="deleteProduct('${p.id}')"><i class="fas fa-trash"></i></button>
+                        <!-- 🔥 زرار الـ Pin المخصص 🔥 -->
+                        <button class="pin-btn ${isPinnedClass}" onclick="togglePin('${p.id}', event)" title="تثبيت المنتج في أعلى القائمة"><i class="fas fa-thumbtack"></i></button>
+                        <button class="edit-btn" onclick="editProduct('${p.id}')" title="تعديل المنتج"><i class="fas fa-pen"></i></button>
+                        <button class="delete-btn" onclick="deleteProduct('${p.id}')" title="حذف المنتج"><i class="fas fa-trash"></i></button>
                     </div>
                 </div>`;
         }).join('');
@@ -593,7 +645,6 @@
             conditionVal = document.getElementById('p_custom_condition').value.trim() || 'مخصص';
         }
 
-        // 🔥 معالجة القسم (لو مخصص ياخده من خانة الكتابة الحرة) 🔥
         let categoryVal = document.getElementById('p_category').value;
         if (categoryVal === 'custom_cat') {
             categoryVal = document.getElementById('p_custom_category').value.trim() || 'other';
@@ -637,7 +688,6 @@
         editingId = id;
         document.getElementById('formTitle').textContent = 'تعديل منتج (تحديث الأرصدة)';
         
-        // التعامل مع القسم (لو أساسي أو مخصص)
         const catSelect = document.getElementById('p_category');
         const standardCats = ['mobiles', 'macbooks', 'ipads', 'tablets', 'accessories'];
         if (standardCats.includes(p.category)) {
