@@ -126,7 +126,6 @@
         .product-brand { font-size: 12px; color: var(--text-light); text-transform: uppercase; font-weight: bold; letter-spacing: 0.5px; }
         .product-title { font-size: 18px; font-weight: 700; color: var(--text-dark); margin: 6px 0; }
         .product-price { font-size: 22px; font-weight: 800; color: var(--primary); margin: 5px 0; }
-        .quick-emi-hint { font-size: 12px; color: var(--text-light); margin-bottom: 12px; font-weight: 600; }
         
         .tags { display: flex; gap: 6px; margin-bottom: 10px; flex-wrap: wrap; }
         .tag { font-size: 11px; padding: 5px 10px; border-radius: 6px; background: var(--bg-color); color: var(--text-dark); font-weight: 600; border: 1px solid var(--border); }
@@ -163,8 +162,7 @@
         .specs-table th, .specs-table td { padding: 12px; border-bottom: 1px solid var(--border); text-align: right; font-size: 14px; }
         .specs-table th { color: var(--text-light); font-weight: 600; width: 35%; }
         
-        .tax-box, .installment-box { background: var(--bg-color); border: 1px solid var(--border); padding: 15px; border-radius: 12px; margin-top: 15px; font-size: 14px; color: var(--text-dark); }
-        .installment-calc-box select { margin-top: 8px; padding: 8px; border-radius: 6px; border: 1px solid var(--border); width: 100%; background: var(--white); color: var(--text-dark); }
+        .tax-box { background: var(--bg-color); border: 1px solid var(--border); padding: 15px; border-radius: 12px; margin-top: 15px; font-size: 14px; color: var(--text-dark); }
         
         .reviews-section { margin-top: 25px; background: var(--bg-color); border: 1px solid var(--border); padding: 20px; border-radius: 14px; }
         .review-item { padding: 10px 0; border-bottom: 1px dashed var(--border); font-size: 13px; }
@@ -755,7 +753,6 @@
             const wishlist = getWishlist();
             filtered.forEach(p => {
                 const basePrice = Number(p.price);
-                const cardInstallment = ((basePrice * 1.15) / 12).toFixed(0);
                 const mainImg = (p.images && p.images.length > 0) ? p.images[0] : 'https://via.placeholder.com/300x300?text=No+Image';
                 const isWished = wishlist.includes(p.id);
                 const isCompared = compareList.includes(p.id);
@@ -790,7 +787,6 @@
                         ${p.oldPrice ? `<del style="font-size:14px; color:var(--text-light); margin-right:8px;">${Number(p.oldPrice).toLocaleString()} ج</del>` : ''}
                     </div>
                     
-                    <div class="quick-emi-hint"><i class="fas fa-credit-card"></i> قسط شهري يبدأ من ${Number(cardInstallment).toLocaleString()} ج</div>
                     <label class="compare-checkbox-label" onclick="event.stopPropagation()">
                         <input type="checkbox" ${isCompared ? 'checked' : ''} onchange="toggleCompare('${p.id}', event)"> مقارنة الجهاز
                     </label>
@@ -802,13 +798,6 @@
                 card.onclick = () => openProductModal(p, false);
                 productGrid.appendChild(card);
             });
-        }
-
-        function updateInstallmentAmount(basePrice, tax) {
-            const months = Number(document.getElementById('installmentMonths').value);
-            const totalWithInterest = (basePrice + tax) * 1.15;
-            const perMonth = totalWithInterest / months;
-            document.getElementById('installmentResult').textContent = `${perMonth.toFixed(0).toLocaleString()} ج.م`;
         }
 
         function openProductModal(p, isSwitch = false) {
@@ -845,7 +834,6 @@
             const tax = p.customTax || 0;
             const basePrice = Number(p.price);
             const finalPrice = basePrice + tax;
-            const installment = (finalPrice * 1.15) / 12;
             const mainImg = (p.images && p.images.length > 0) ? p.images[0] : 'https://via.placeholder.com/300x300';
 
             let galleryHTML = '';
@@ -926,18 +914,6 @@
                             <span style="display:block; margin-top:8px; padding-top:8px; border-top:1px dashed var(--border); color:var(--danger); font-size:16px; font-weight:bold;">الإجمالي المطلوب وقت الدفع: ${finalPrice.toLocaleString()} ج.م</span>
                         </div>
 
-                        <div class="installment-calc-box">
-                            <strong><i class="fas fa-calculator"></i> حاسبة التقسيط الذكية:</strong><br>
-                            اختر مدة التقسيط المناسبة لك:
-                            <select id="installmentMonths" onchange="updateInstallmentAmount(${basePrice}, ${tax})">
-                                <option value="6">6 شهور</option>
-                                <option value="12" selected>12 شهر</option>
-                                <option value="18">18 شهر</option>
-                                <option value="24">24 شهر</option>
-                            </select>
-                            <div style="margin-top: 8px; font-size: 15px;">القسط الشهري المقدر: <b id="installmentResult" style="color:var(--primary); font-size:18px;">${((finalPrice * 1.15) / 12).toFixed(0).toLocaleString()} ج.م</b></div>
-                        </div>
-
                         <table class="specs-table">
                             <tr><th>الحالة</th><td>${p.condition} ${p.condition === 'New' ? '(متبرشم)' : ''}</td></tr>
                             <tr><th>المواصفات</th><td>${p.ram} / ${p.storage}</td></tr>
@@ -982,7 +958,6 @@
                 </div>
             `;
             
-            // 🔥 حماية زرار الناقص والزائد في المودال عشان ميعديش المخزن الحقيقي 🔥
             document.getElementById('modalQtyMinus').addEventListener('click', () => { 
                 if (modalQty > 1) {
                     modalQty--; 
@@ -1054,7 +1029,6 @@
             if (badge) { if (count > 0) { badge.style.display = 'flex'; badge.textContent = count; } else { badge.style.display = 'none'; } }
         }
 
-        // 🔥 الحماية الكاملة وقت الإضافة للسلة بناءً على المخزن الحقيقي 🔥
         function addToCart(productId, qty = 1) {
             const product = allProducts.find(p => p.id === productId);
             if (!product) return;
@@ -1078,7 +1052,6 @@
             showToast('تمت الإضافة للعربة بنجاح ✔️');
         }
 
-        // 🔥 حماية عربة التسوق لو حب يزود من جوه الدرج 🔥
         function changeQty(productId, delta) {
             const cart = getCart(); 
             const item = cart.find(i => i.id === productId);
