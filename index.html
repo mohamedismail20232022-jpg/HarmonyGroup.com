@@ -106,6 +106,14 @@
         select.form-control, .sidebar select { background: var(--bg-color); color: var(--text-dark); border: 1px solid var(--border); padding: 10px; border-radius: 8px; width: 100%; outline: none; font-size: 14px; cursor: pointer; }
 
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(25px); } to { opacity: 1; transform: translateY(0); } }
+        
+        @keyframes superSwitchAnim {
+            0% { opacity: 0; transform: translateY(40px) scale(0.97); filter: blur(3px); }
+            100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+        }
+        .switch-anim {
+            animation: superSwitchAnim 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+        }
 
         .product-grid { flex: 3; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; }
         .product-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; cursor: pointer; position: relative; animation: fadeInUp 0.5s ease forwards; }
@@ -125,7 +133,6 @@
         
         .stars-row { color: #ffc107; font-size: 12px; margin-bottom: 10px; display: flex; align-items: center; gap: 4px; }
         .stars-row span { color: var(--text-light); font-size: 11px; }
-        .hot-deal-badge { position: absolute; top: 22px; right: 22px; background: var(--danger); color: #fff; font-size: 10px; font-weight: 800; padding: 4px 10px; border-radius: 6px; z-index: 5; box-shadow: 0 2px 8px rgba(220,53,69,0.3); }
 
         .compare-checkbox-label { font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 6px; margin-top: 8px; cursor: pointer; color: var(--text-light); }
         .compare-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--secondary); color: #fff; padding: 15px 30px; z-index: 1500; display: none; justify-content: space-between; align-items: center; box-shadow: 0 -4px 20px rgba(0,0,0,0.2); }
@@ -139,14 +146,6 @@
         .empty-state i { font-size: 60px; color: var(--border); margin-bottom: 20px; }
 
         @keyframes modalScaleUp { from { opacity: 0; transform: scale(0.92) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
-        
-        @keyframes superSwitchAnim {
-            0% { opacity: 0; transform: translateY(40px) scale(0.97); filter: blur(3px); }
-            100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
-        }
-        .switch-anim {
-            animation: superSwitchAnim 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
-        }
 
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.65); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); display: none; justify-content: center; align-items: center; z-index: 2000; padding: 20px; }
         .modal-content { background: var(--card-bg); color: var(--text-dark); width: 100%; max-width: 1000px; max-height: 90vh; overflow-y: auto; border-radius: 20px; display: flex; flex-wrap: wrap; position: relative; border: 1px solid var(--border); box-shadow: 0 25px 50px rgba(0,0,0,0.25); animation: modalScaleUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards; scroll-behavior: smooth; }
@@ -413,7 +412,6 @@
                     </a>
                 </div>
                 
-                <!-- 🔥 فرع ماتريكس الجديد أهو اتضاف واترص مع إخواته 🔥 -->
                 <div style="background: var(--bg-color); border: 1px solid var(--border); padding: 30px; border-radius: 16px; width: 340px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); text-align: right; display: flex; flex-direction: column;">
                     <h4 style="font-size: 20px; margin-bottom: 12px; color: var(--text-dark); display: flex; align-items: center; gap: 10px; font-weight: 700;"><i class="fas fa-map-marker-alt" style="color: var(--primary);"></i> فرع ماتريكس</h4>
                     <p style="color: var(--text-light); font-size: 14px; margin-bottom: 20px; line-height: 1.6; flex: 1;">السراج مول 3، مدينة نصر، مصر</p>
@@ -763,7 +761,7 @@
                 const isCompared = compareList.includes(p.id);
                 
                 const stockVal = p.stock !== undefined && p.stock !== null ? Number(p.stock) : 5;
-                let stockBadgeHTML = stockVal <= 3 
+                const stockBadgeHTML = stockVal <= 3 
                     ? `<span class="stock-badge low-stock"><i class="fas fa-fire"></i> إلحق باقي ${stockVal} قطع فقط!</span>` 
                     : `<span class="stock-badge in-stock"><i class="fas fa-circle-check"></i> متوفر</span>`;
 
@@ -824,7 +822,7 @@
                 modalContent.innerHTML = `
                     <div style="width:100%; min-height:50vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding: 40px;">
                         <i class="fas fa-circle-notch fa-spin" style="font-size: 60px; color: var(--primary); margin-bottom: 20px;"></i>
-                        <h2 style="font-size: 22px; font-weight: 800; color: var(--text-dark);">جاري تجهيز الموبايل الجديد...</h2>
+                        <h2 style="font-size: 22px; font-weight: 800; color: var(--text-dark);">جاري تجهيز المنتج الجديد...</h2>
                         <p style="color: var(--text-light); font-size: 14px; margin-top: 10px;">ثواني والوحش هيكون قدامك 🚀</p>
                     </div>
                 `;
@@ -860,9 +858,6 @@
             const reviewsHTML = reviews.length > 0 
                 ? reviews.map(r => `<div class="review-item"><b>${r.name}</b> <span style="color:#ffc107;">${'★'.repeat(r.rating)}</span><p style="color:var(--text-light); margin-top:3px;">${r.comment}</p></div>`).join('')
                 : '<p style="color:var(--text-light); font-size:13px;">مفيش تقييمات لسه. كن أول واحد يكتب رأيه في الجهاز!</p>';
-
-            const minAllowedPrice = basePrice - 5000;
-            const maxAllowedPrice = basePrice + 5000;
 
             const availableProducts = allProducts.filter(item => {
                 if (item.id === p.id) return false;
@@ -901,6 +896,11 @@
                 `;
             }
 
+            // 🔥 الكود الذكي الجديد: بنعرض صف البطارية لو الموبايل آيفون فقط 🔥
+            const brandLower = (p.brand || '').toLowerCase();
+            const isApplePhone = (p.category === 'mobiles' && (brandLower.includes('apple') || brandLower.includes('iphone') || brandLower.includes('آيفون') || brandLower.includes('ايفون')));
+            const batteryRowHTML = isApplePhone && p.battery ? `<tr><th>صحة البطارية</th><td style="color:var(--success); font-weight:bold;">${p.battery}%</td></tr>` : '';
+
             modalContent.innerHTML = `
                 <i class="fas fa-times close-modal" onclick="closeModal()"></i>
                 <div style="display: flex; flex-wrap: wrap; width: 100%;">
@@ -938,7 +938,7 @@
                             <tr><th>الحالة</th><td>${p.condition} ${p.condition === 'New' ? '(متبرشم)' : ''}</td></tr>
                             <tr><th>المواصفات</th><td>${p.ram} / ${p.storage}</td></tr>
                             <tr><th>اللون</th><td style="font-weight:bold;">${p.color || 'مش محدد'}</td></tr>
-                            <tr><th>صحة البطارية</th><td style="color:var(--success); font-weight:bold;">${p.battery}%</td></tr>
+                            ${batteryRowHTML}
                             <tr><th>العلبة الأصلية</th><td>${p.box ? '<i class="fas fa-check" style="color:var(--success)"></i> موجودة' : '<i class="fas fa-times" style="color:var(--danger)"></i> غير موجودة'}</td></tr>
                             <tr><th>الشاحن الأصلي</th><td>${p.charger ? '<i class="fas fa-check" style="color:var(--success)"></i> موجود' : '<i class="fas fa-times" style="color:var(--danger)"></i> غير موجود'}</td></tr>
                             <tr><th>الوصف الإضافي</th><td style="white-space: pre-wrap; line-height: 1.6;">${p.description || 'مفيش تفاصيل تانية للجهاز ده'}</td></tr>
@@ -1156,7 +1156,6 @@
 
                         let newTotal = b_rehab + b_s1 + b_s2 + b_s3;
 
-                        // 🛑 بدل ما نمسح الموبايل خالص ونضيعه من الكنترول بانل، هنصفره عشان يظهرك بالأحمر هناك 🛑
                         transaction.update(productRef, {
                             stock: newTotal < 0 ? 0 : newTotal,
                             stockDetails: { rehab: b_rehab, serag1: b_s1, serag2: b_s2, serag3: b_s3 }
