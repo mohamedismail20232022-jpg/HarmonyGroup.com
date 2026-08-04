@@ -714,6 +714,22 @@
                                 <th>الرام والمساحة</th>
                                 ${selectedProducts.map(p => `<td>${p.ram} / ${p.storage}</td>`).join('')}
                             </tr>
+                            <tr>
+                                <th>الكاميرات 📸</th>
+                                ${selectedProducts.map(p => `<td dir="ltr" style="font-weight:bold; color:var(--primary);">${p.camera || '-'}</td>`).join('')}
+                            </tr>
+                            <tr>
+                                <th>البروسيسور 🚀</th>
+                                ${selectedProducts.map(p => `<td dir="ltr" style="font-weight:bold; color:var(--danger);">${p.processor || '-'}</td>`).join('')}
+                            </tr>
+                            <tr>
+                                <th>خامة الظهر 📱</th>
+                                ${selectedProducts.map(p => `<td>${p.materialBack || '-'}</td>`).join('')}
+                            </tr>
+                            <tr>
+                                <th>خامة الحواف 🛡️</th>
+                                ${selectedProducts.map(p => `<td>${p.materialFrame || '-'}</td>`).join('')}
+                            </tr>
                         </table>
                     </div>
                 </div>
