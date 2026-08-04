@@ -69,7 +69,7 @@
         .logo-box { background: transparent; display: flex; align-items: center; justify-content: flex-start; height: 120px; width: 220px; overflow: hidden; flex-shrink: 0; }
         .logo-img { height: 100%; width: auto; max-width: 100%; object-fit: contain; object-position: right center; cursor: pointer; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); display: block; mix-blend-mode: multiply; }
         .logo-img:hover { transform: scale(1.05); }
-        [data-theme="dark"] .logo-img { mix-blend-mode: normal; background: #FFFFFF; padding: 8px 15px; border-radius: 14px; height: 75%; box-shadow: 0 4px 15px rgba(0,0,0,0.4); }
+        [data-theme="dark"] .logo-img { mix-blend-mode: normal; background: rgba(255, 255, 255, 0.05); padding: 10px; border-radius: 12px; box-shadow: inset 0 0 10px rgba(0,0,0,0.05); height: 75%; }
 
         @media (max-width: 768px) { 
             body { padding-top: 220px; }
@@ -121,7 +121,7 @@
         
         .product-img { width: 100%; height: 230px; object-fit: contain; margin-bottom: 15px; border-radius: 10px; background: transparent; transition: transform 0.4s ease; mix-blend-mode: multiply; }
         .product-card:hover .product-img { transform: scale(1.05); }
-        [data-theme="dark"] .product-img { mix-blend-mode: normal; background: #FFFFFF; padding: 15px; border-radius: 12px; box-shadow: inset 0 0 10px rgba(0,0,0,0.05); }
+        [data-theme="dark"] .product-img { mix-blend-mode: normal; background: rgba(255, 255, 255, 0.05); padding: 10px; border-radius: 12px; box-shadow: inset 0 0 10px rgba(0,0,0,0.05); }
 
         .product-brand { font-size: 12px; color: var(--text-light); text-transform: uppercase; font-weight: bold; letter-spacing: 0.5px; }
         .product-title { font-size: 18px; font-weight: 700; color: var(--text-dark); margin: 6px 0; }
@@ -154,7 +154,7 @@
         .modal-gallery { flex: 1; min-width: 300px; padding: 40px 20px 20px 20px; background: var(--bg-color); text-align: center; border-top-right-radius: 20px; border-bottom-right-radius: 20px; display: flex; flex-direction: column; justify-content: flex-start; align-items: center; }
         .modal-img-container { width: 100%; display: flex; align-items: flex-start; justify-content: center; margin-bottom: 15px; }
         .modal-main-img { max-width: 100%; height: auto; max-height: 350px; object-fit: contain; display: block; mix-blend-mode: multiply; }
-        [data-theme="dark"] .modal-main-img { mix-blend-mode: normal; background: #FFFFFF; padding: 20px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
+        [data-theme="dark"] .modal-main-img { mix-blend-mode: normal; background: rgba(255, 255, 255, 0.05); padding: 10px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
         
         .modal-details { flex: 1; min-width: 300px; padding: 35px; }
         
@@ -217,7 +217,7 @@
         .cart-item { display: flex; gap: 15px; padding: 15px 0; border-bottom: 1px solid var(--border); align-items: center; }
         
         .cart-item img { width: 65px; height: 65px; object-fit: contain; border-radius: 8px; background: var(--bg-color); padding: 5px; border: 1px solid var(--border); mix-blend-mode: multiply; }
-        [data-theme="dark"] .cart-item img { mix-blend-mode: normal; background: #FFFFFF; }
+        [data-theme="dark"] .cart-item img { mix-blend-mode: normal; background: rgba(255, 255, 255, 0.05); }
 
         .cart-item-info { flex: 1; }
         .cart-item-info h4 { font-size: 14px; margin-bottom: 4px; font-weight: 700; }
@@ -265,6 +265,30 @@
         .auth-box input:focus { border-color: var(--primary); }
         .auth-box button { width: 100%; padding: 13px; background: var(--primary); color: #1F242A; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 16px; transition: 0.3s; }
         .auth-box button:hover { background: var(--primary-hover); transform: translateY(-2px); }
+
+        /* ستايل الـ Toast */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--secondary);
+            color: var(--btn-text);
+            padding: 12px 25px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 700;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            z-index: 5000;
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: none;
+            border: 1px solid var(--primary);
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
     </style>
 </head>
 <body>
@@ -410,7 +434,6 @@
                     </a>
                 </div>
                 
-                <!-- 🔥 تم تحديث اسم الفرع والعنوان واللوكيشن المظبوط لفرع ماتريكس هنا 🔥 -->
                 <div style="background: var(--bg-color); border: 1px solid var(--border); padding: 30px; border-radius: 16px; width: 340px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); text-align: right; display: flex; flex-direction: column;">
                     <h4 style="font-size: 20px; margin-bottom: 12px; color: var(--text-dark); display: flex; align-items: center; gap: 10px; font-weight: 700;"><i class="fas fa-map-marker-alt" style="color: var(--primary);"></i> فرع ماتريكس</h4>
                     <p style="color: var(--text-light); font-size: 14px; margin-bottom: 20px; line-height: 1.6; flex: 1;">السراج مول، بوابة 2 خلفي، مدينة نصر، مصر</p>
@@ -1145,57 +1168,6 @@
         function openCart() { renderCartDrawer(); document.getElementById('cartDrawer').classList.add('active'); document.getElementById('cartOverlay').classList.add('active'); }
         function closeCart() { document.getElementById('cartDrawer').classList.remove('active'); document.getElementById('cartOverlay').classList.remove('active'); }
 
-        async function processOrderAndDeductStock() {
-            const cart = getCart();
-            if (cart.length === 0) return;
-
-            for (let item of cart) {
-                const productRef = db.collection('products').doc(item.id);
-                try {
-                    await db.runTransaction(async (transaction) => {
-                        const doc = await transaction.get(productRef);
-                        if (!doc.exists) return;
-
-                        let p = doc.data();
-                        let qtyToDeduct = item.qty;
-                        
-                        let b_rehab = p.stockDetails?.rehab || (p.stockDetails ? 0 : (p.stock || 0));
-                        let b_s1 = p.stockDetails?.serag1 || 0;
-                        let b_s2 = p.stockDetails?.serag2 || 0;
-                        let b_s3 = p.stockDetails?.serag3 || 0;
-
-                        if (b_rehab >= qtyToDeduct) { b_rehab -= qtyToDeduct; qtyToDeduct = 0; }
-                        else { qtyToDeduct -= b_rehab; b_rehab = 0; }
-
-                        if (qtyToDeduct > 0) {
-                            if (b_s1 >= qtyToDeduct) { b_s1 -= qtyToDeduct; qtyToDeduct = 0; }
-                            else { qtyToDeduct -= b_s1; b_s1 = 0; }
-                        }
-                        if (qtyToDeduct > 0) {
-                            if (b_s2 >= qtyToDeduct) { b_s2 -= qtyToDeduct; qtyToDeduct = 0; }
-                            else { qtyToDeduct -= b_s2; b_s2 = 0; }
-                        }
-                        if (qtyToDeduct > 0) {
-                            if (b_s3 >= qtyToDeduct) { b_s3 -= qtyToDeduct; qtyToDeduct = 0; }
-                            else { qtyToDeduct -= b_s3; b_s3 = 0; }
-                        }
-
-                        let newTotal = b_rehab + b_s1 + b_s2 + b_s3;
-
-                        transaction.update(productRef, {
-                            stock: newTotal < 0 ? 0 : newTotal,
-                            stockDetails: { rehab: b_rehab, serag1: b_s1, serag2: b_s2, serag3: b_s3 }
-                        });
-                    });
-                } catch (error) {
-                    console.error("حصل خطأ في تحديث المخزن: ", error);
-                }
-            }
-            
-            saveCart([]); 
-            renderCartDrawer();
-        }
-
         function openDirectPaymentModal(type) {
             const cart = getCart();
             if (cart.length === 0) return;
@@ -1283,8 +1255,8 @@
             } else if (type === 'card') {
                 title.innerHTML = `<i class="fas fa-credit-card" style="color:var(--primary);"></i> الدفع بالبطاقة البنكية`;
                 body.innerHTML = `
-                    <p style="font-size:13px; color:var(--text-light); margin-bottom:12px;">للدفع الآمن بالفيزا أو الماستركارد مباشرة، تواصل مع خدمة العملاء للحصول على رابط دفع مؤمن:</p>
-                    <button class="pay-modal-submit" onclick="confirmAndSendWhatsApp('البطاقة البنكية')"><i class="fab fa-whatsapp"></i> اطلب رابط الدفع الفوري عبر الواتساب</button>
+                    <p style="font-size:13px; color:var(--text-light); margin-bottom:12px;">للدفع الآمن بالفيزا أو الماستركارد، السيستم هينقلك لبوابة الدفع المشفرة لإتمام العملية:</p>
+                    <button class="pay-modal-submit" onclick="checkoutViaPaymentGateway()"><i class="fas fa-lock"></i> ادفع دلوقتي بأمان</button>
                 `;
             }
         }
@@ -1340,9 +1312,10 @@
             if (discountAmount > 0) { message += `%0Aالخصم المطبق: -${discountAmount.toLocaleString()} ج.م`; }
             message += `%0A%0Aالإجمالي الكلي المطلوب: ${finalTotal.toLocaleString()} ج.م%0Aأنا جاهز لاستلام الأوردر.`;
 
-            processOrderAndDeductStock().then(() => {
-                window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`, '_blank');
-            });
+            // إرسال للواتساب ومسح السلة بدون أي خصم عبيط للمخزن من هنا
+            saveCart([]); 
+            renderCartDrawer();
+            window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`, '_blank');
         }
 
         function checkoutViaWhatsapp() {
@@ -1363,9 +1336,65 @@
             if (discountAmount > 0) { message += `%0Aالخصم المطبق: -${discountAmount.toLocaleString()} ج.م`; }
             message += `%0A%0Aالإجمالي الكلي بعد الخصم: ${finalTotal.toLocaleString()} ج.م`;
             
-            processOrderAndDeductStock().then(() => {
-                window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`, '_blank');
-            });
+            // إرسال للواتساب ومسح السلة بدون أي خصم عبيط للمخزن من هنا
+            saveCart([]); 
+            renderCartDrawer();
+            window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`, '_blank');
+        }
+
+        async function checkoutViaPaymentGateway() {
+            const cart = getCart();
+            if (cart.length === 0) return;
+            
+            showToast('جاري تحويلك لبوابة الدفع الآمنة... ثواني يا هندسة');
+
+            let subtotal = 0;
+            const cartItemsForGateway = cart.map(item => {
+                const p = allProducts.find(prod => prod.id === item.id);
+                if (!p) return null;
+                const tax = p.customTax || 0; 
+                const unitPrice = Number(p.price) + tax; 
+                subtotal += unitPrice * item.qty;
+                return {
+                    id: p.id,
+                    name: p.name,
+                    qty: item.qty,
+                    price: unitPrice
+                };
+            }).filter(item => item !== null);
+
+            let discountAmount = appliedDiscount < 1 ? subtotal * appliedDiscount : appliedDiscount;
+            let finalTotal = Math.max(0, subtotal - discountAmount);
+
+            try {
+                // الكود ده بيروح يكلم بوابة الدفع، حط الـ API بتاعك هنا
+                const response = await fetch('https://api.yourpaymentgateway.com/create-order', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer YOUR_PUBLIC_API_KEY'
+                    },
+                    body: JSON.stringify({
+                        amount_cents: finalTotal * 100, 
+                        currency: "EGP",
+                        cart_items: cartItemsForGateway
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.payment_url) {
+                    saveCart([]); 
+                    renderCartDrawer();
+                    window.location.href = data.payment_url;
+                } else {
+                    showToast('حصل مشكلة في توليد رابط الدفع، جرب تاني!');
+                }
+
+            } catch (error) {
+                console.error('Error during checkout:', error);
+                showToast('مشكلة في الاتصال ببوابة الدفع!');
+            }
         }
 
         function showToast(msg) {
