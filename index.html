@@ -621,7 +621,7 @@
             localStorage.setItem('harmony_wishlist', JSON.stringify(wl));
             
             updateWishlistBadge(); 
-            renderProducts();      
+            renderProducts();    
 
             if (document.getElementById('wishlistDrawer').classList.contains('active')) {
                 renderWishlistDrawer();
@@ -913,6 +913,11 @@
             const isApplePhone = (p.category === 'mobiles' && (brandLower.includes('apple') || brandLower.includes('iphone') || brandLower.includes('آيفون') || brandLower.includes('ايفون')));
             const batteryRowHTML = isApplePhone && p.battery ? `<tr><th>صحة البطارية</th><td style="color:var(--success); font-weight:bold;">${p.battery}%</td></tr>` : '';
 
+            const cameraRow = (p.camera && p.camera !== 'غير محدد') ? `<tr><th>الكاميرات 📸</th><td dir="ltr" style="text-align: right; font-weight: bold; color: var(--primary);">${p.camera}</td></tr>` : '';
+            const processorRow = (p.processor && p.processor !== 'غير محدد') ? `<tr><th>البروسيسور 🚀</th><td dir="ltr" style="text-align: right; font-weight: bold; color: var(--danger);">${p.processor}</td></tr>` : '';
+            const materialBackRow = (p.materialBack && p.materialBack !== 'غير محدد') ? `<tr><th>خامة الظهر 📱</th><td style="font-weight: bold;">${p.materialBack}</td></tr>` : '';
+            const materialFrameRow = (p.materialFrame && p.materialFrame !== 'غير محدد') ? `<tr><th>خامة الحواف (الفريم) 🛡️</th><td style="font-weight: bold;">${p.materialFrame}</td></tr>` : '';
+
             modalContent.innerHTML = `
                 <i class="fas fa-times close-modal" onclick="closeModal()"></i>
                 <div style="display: flex; flex-wrap: wrap; width: 100%;">
@@ -941,7 +946,11 @@
                         <table class="specs-table">
                             <tr><th>الحالة</th><td>${p.condition} ${p.condition === 'New' ? '(متبرشم)' : ''}</td></tr>
                             <tr><th>المواصفات</th><td>${p.ram} / ${p.storage}</td></tr>
+                            ${processorRow}
+                            ${cameraRow}
                             <tr><th>اللون</th><td style="font-weight:bold;">${p.color || 'مش محدد'}</td></tr>
+                            ${materialBackRow}
+                            ${materialFrameRow}
                             ${batteryRowHTML}
                             <tr><th>العلبة الأصلية</th><td>${p.box ? '<i class="fas fa-check" style="color:var(--success)"></i> موجودة' : '<i class="fas fa-times" style="color:var(--danger)"></i> غير موجودة'}</td></tr>
                             <tr><th>الشاحن الأصلي</th><td>${p.charger ? '<i class="fas fa-check" style="color:var(--success)"></i> موجود' : '<i class="fas fa-times" style="color:var(--danger)"></i> غير موجود'}</td></tr>
