@@ -264,6 +264,7 @@
                 <textarea id="p_description" placeholder="اكتب أي تفاصيل زيادة هنا..." rows="2" style="resize:vertical;"></textarea>
             </div>
 
+            <!-- 🔥 الإضافات الجديدة للرام، التخزين، الكاميرا والبروسيسور والخامات 🔥 -->
             <div class="form-row">
                 <div class="form-group">
                     <label>الرام / المواصفات (اختر أو اكتب يدوي)</label>
@@ -291,6 +292,32 @@
                     <input type="text" id="p_storage" placeholder="أو اكتب المساحة يدوي هنا">
                 </div>
             </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>الكاميرات (بالميجا بيكسل)</label>
+                    <input type="text" id="p_camera" placeholder="مثال: خلفية 200MP + 50MP / أمامية 12MP">
+                </div>
+                <div class="form-group">
+                    <label>البروسيسور (المعالج)</label>
+                    <input type="text" id="p_processor" placeholder="مثال: Snapdragon 8 Gen 3 أو A18 Pro">
+                </div>
+            </div>
+
+            <div style="background: #fdfdfd; padding: 15px; border-radius: 10px; border: 1px solid var(--border); margin-bottom: 15px;">
+                <label style="color: var(--primary); font-weight: 800; display: block; margin-bottom: 10px;"><i class="fas fa-tools"></i> الخامات المستخدمة في التصنيع</label>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>الظهر مصنوع من إيه؟</label>
+                        <input type="text" id="p_material_back" placeholder="مثال: زجاج، بلاستيك، تيتانيوم، جلد...">
+                    </div>
+                    <div class="form-group">
+                        <label>الحواف (الفريم) مصنوعة من إيه؟</label>
+                        <input type="text" id="p_material_frame" placeholder="مثال: ألومنيوم، تيتانيوم، بلاستيك...">
+                    </div>
+                </div>
+            </div>
+            <!-- 🔥 نهاية الإضافات الجديدة 🔥 -->
 
             <div class="form-group" id="batteryGroup" style="display: none; background: #fffcf5; padding: 12px; border: 1px dashed var(--primary); border-radius: 8px;">
                 <label style="color: var(--primary); font-weight: bold;"><i class="fas fa-battery-three-quarters"></i> صحة البطارية (%) - للآيفون فقط</label>
@@ -534,7 +561,6 @@
         document.getElementById('statOutStock').textContent = outStock;
     }
 
-    // 🔥 دالة التثبيت (Pin / Unpin) للمنتجات الهامة 🔥
     function togglePin(id, event) {
         event.stopPropagation();
         const productRef = db.collection('products').doc(id);
@@ -547,7 +573,6 @@
         });
     }
 
-    // 🔥 دالة العرض المحدثة مع شريط البحث وترتيب الـ Pin 🔥
     function renderList() {
         const searchVal = document.getElementById('adminSearchInput').value.trim().toLowerCase();
         
@@ -566,7 +591,6 @@
             return;
         }
 
-        // ترتيب المنتجات: المثبت أولاً (Pinned)، وبعدين المتاح، وبعدين اللي خلصان
         const sortedProducts = [...filtered].sort((a, b) => {
             if (a.isPinned && !b.isPinned) return -1;
             if (!a.isPinned && b.isPinned) return 1;
@@ -613,7 +637,6 @@
                         ${branchBreakdown}
                     </div>
                     <div class="actions">
-                        <!-- 🔥 زرار الـ Pin المخصص 🔥 -->
                         <button class="pin-btn ${isPinnedClass}" onclick="togglePin('${p.id}', event)" title="تثبيت المنتج في أعلى القائمة"><i class="fas fa-thumbtack"></i></button>
                         <button class="edit-btn" onclick="editProduct('${p.id}')" title="تعديل المنتج"><i class="fas fa-pen"></i></button>
                         <button class="delete-btn" onclick="deleteProduct('${p.id}')" title="حذف المنتج"><i class="fas fa-trash"></i></button>
@@ -629,6 +652,12 @@
         const ram = document.getElementById('p_ram').value.trim();
         const storage = document.getElementById('p_storage').value.trim();
         const totalStock = Number(document.getElementById('p_total_qty').value) || 0;
+
+        // 🔥 جبنالك القيم الجديدة هنا 🔥
+        const camera = document.getElementById('p_camera').value.trim();
+        const processor = document.getElementById('p_processor').value.trim();
+        const materialBack = document.getElementById('p_material_back').value.trim();
+        const materialFrame = document.getElementById('p_material_frame').value.trim();
 
         if (!name || !price) {
             alert('لازم تكتب اسم المنتج والسعر على الأقل');
@@ -659,6 +688,13 @@
             description: document.getElementById('p_description').value.trim(),
             ram: ram || 'غير محدد',
             storage: storage || 'غير محدد',
+            
+            // 🔥 ضفنا البيانات الجديدة للرفع على الداتا بيز 🔥
+            camera: camera || 'غير محدد',
+            processor: processor || 'غير محدد',
+            materialBack: materialBack || 'غير محدد',
+            materialFrame: materialFrame || 'غير محدد',
+
             price: price,
             stockDetails: currentStockDetails,
             stock: totalStock,
@@ -720,6 +756,13 @@
         document.getElementById('p_description').value = p.description || '';
         document.getElementById('p_ram').value = p.ram || '';
         document.getElementById('p_storage').value = p.storage || '';
+        
+        // 🔥 بنرجع القيم الجديدة في التعديل 🔥
+        document.getElementById('p_camera').value = p.camera || '';
+        document.getElementById('p_processor').value = p.processor || '';
+        document.getElementById('p_material_back').value = p.materialBack || '';
+        document.getElementById('p_material_frame').value = p.materialFrame || '';
+
         document.getElementById('p_price').value = p.price || '';
         document.getElementById('p_tax').value = p.customTax || 0;
         document.getElementById('p_box').checked = !!p.box;
@@ -755,7 +798,8 @@
         document.getElementById('p_category').value = 'mobiles';
         document.getElementById('customCategoryGroup').style.display = 'none';
 
-        ['p_name','p_brand','p_color','p_description','p_ram','p_storage','p_price','p_tax','p_battery','p_custom_condition','p_custom_category'].forEach(id => {
+        // 🔥 ضفنا الأيديهات الجديدة هنا عشان تفضي الخانات لما تكنسل أو تخلص حفظ 🔥
+        ['p_name','p_brand','p_color','p_description','p_ram','p_storage','p_price','p_tax','p_battery','p_custom_condition','p_custom_category', 'p_camera', 'p_processor', 'p_material_back', 'p_material_frame'].forEach(id => {
             const el = document.getElementById(id);
             if(el) el.value = '';
         });
