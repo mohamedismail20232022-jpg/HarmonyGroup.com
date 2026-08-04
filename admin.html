@@ -264,7 +264,6 @@
                 <textarea id="p_description" placeholder="اكتب أي تفاصيل زيادة هنا..." rows="2" style="resize:vertical;"></textarea>
             </div>
 
-            <!-- 🔥 الإضافات الجديدة للرام، التخزين، الكاميرا والبروسيسور والخامات 🔥 -->
             <div class="form-row">
                 <div class="form-group">
                     <label>الرام / المواصفات (اختر أو اكتب يدوي)</label>
@@ -317,7 +316,6 @@
                     </div>
                 </div>
             </div>
-            <!-- 🔥 نهاية الإضافات الجديدة 🔥 -->
 
             <div class="form-group" id="batteryGroup" style="display: none; background: #fffcf5; padding: 12px; border: 1px dashed var(--primary); border-radius: 8px;">
                 <label style="color: var(--primary); font-weight: bold;"><i class="fas fa-battery-three-quarters"></i> صحة البطارية (%) - للآيفون فقط</label>
@@ -330,7 +328,7 @@
             </div>
 
             <div class="form-group">
-                <label>صور المنتج (اختر صورة مباشرة من جهازك - لابتوب أو موبايل)</label>
+                <label>صور المنتج (تقدر ترفع أكتر من صورة دلوقتي من غير ما الكود يهنج)</label>
                 <div id="imagesContainer"></div>
                 <button type="button" class="add-image-btn" onclick="addImageField()"><i class="fas fa-plus"></i> إضافة صورة تانية</button>
             </div>
@@ -344,7 +342,6 @@
                 المنتجات الحالية (<span id="productCount">0</span>)
             </h3>
             
-            <!-- 🔥 شريط البحث السريع في لوحة التحكم 🔥 -->
             <div class="admin-search-box">
                 <i class="fas fa-search"></i>
                 <input type="text" id="adminSearchInput" oninput="renderList()" placeholder="ابحث بسرعة عن أي منتج في المخزن لتعديله...">
@@ -450,6 +447,7 @@
         container.appendChild(row);
     }
 
+    // هنا كود الضغط الإسرائيلي الجبار اللي هيظبطلك الأداء
     function handleLocalImage(fileInput, rowId) {
         const file = fileInput.files[0];
         if (!file) return;
@@ -460,22 +458,54 @@
         const status = row.querySelector('.upload-status');
 
         status.style.display = 'block';
-        status.textContent = "جاري تحميل الصورة... 🚀";
+        status.textContent = "جاري فرم وضغط الصورة يا بطل... 🚀";
         status.style.color = "var(--primary)";
 
         const reader = new FileReader();
         reader.onload = function(e) {
-            const base64Data = e.target.result;
-            thumb.src = base64Data;
-            thumb.classList.remove('hidden-thumb');
-            hiddenUrl.value = base64Data;
-            status.textContent = "تم تحميل الصورة بنجاح! ✔️";
-            status.style.color = "var(--success)";
+            const img = new Image();
+            img.src = e.target.result;
+            
+            img.onload = function() {
+                const canvas = document.createElement('canvas');
+                const MAX_WIDTH = 800; 
+                const MAX_HEIGHT = 800; 
+                let width = img.width;
+                let height = img.height;
+
+                if (width > height) {
+                    if (width > MAX_WIDTH) {
+                        height *= MAX_WIDTH / width;
+                        width = MAX_WIDTH;
+                    }
+                } else {
+                    if (height > MAX_HEIGHT) {
+                        width *= MAX_HEIGHT / height;
+                        height = MAX_HEIGHT;
+                    }
+                }
+                canvas.width = width;
+                canvas.height = height;
+                
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+
+                const compressedBase64 = canvas.toDataURL('image/jpeg', 0.6);
+
+                thumb.src = compressedBase64;
+                thumb.classList.remove('hidden-thumb');
+                hiddenUrl.value = compressedBase64; 
+
+                status.textContent = "تم الضغط والرفع بنجاح يا كبير! ✔️";
+                status.style.color = "var(--success)";
+            };
         };
+        
         reader.onerror = function() {
-            status.textContent = "حدث خطأ أثناء قراءة الملف!";
+            status.textContent = "حصلت مصيبة في قراءة الملف!";
             status.style.color = "var(--danger)";
         };
+        
         reader.readAsDataURL(file);
     }
 
@@ -653,14 +683,13 @@
         const storage = document.getElementById('p_storage').value.trim();
         const totalStock = Number(document.getElementById('p_total_qty').value) || 0;
 
-        // 🔥 جبنالك القيم الجديدة هنا 🔥
         const camera = document.getElementById('p_camera').value.trim();
         const processor = document.getElementById('p_processor').value.trim();
         const materialBack = document.getElementById('p_material_back').value.trim();
         const materialFrame = document.getElementById('p_material_frame').value.trim();
 
         if (!name || !price) {
-            alert('لازم تكتب اسم المنتج والسعر على الأقل');
+            alert('لازم تكتب اسم المنتج والسعر على الأقل يا هندسة');
             return;
         }
         
@@ -689,7 +718,6 @@
             ram: ram || 'غير محدد',
             storage: storage || 'غير محدد',
             
-            // 🔥 ضفنا البيانات الجديدة للرفع على الداتا بيز 🔥
             camera: camera || 'غير محدد',
             processor: processor || 'غير محدد',
             materialBack: materialBack || 'غير محدد',
@@ -757,7 +785,6 @@
         document.getElementById('p_ram').value = p.ram || '';
         document.getElementById('p_storage').value = p.storage || '';
         
-        // 🔥 بنرجع القيم الجديدة في التعديل 🔥
         document.getElementById('p_camera').value = p.camera || '';
         document.getElementById('p_processor').value = p.processor || '';
         document.getElementById('p_material_back').value = p.materialBack || '';
@@ -798,7 +825,6 @@
         document.getElementById('p_category').value = 'mobiles';
         document.getElementById('customCategoryGroup').style.display = 'none';
 
-        // 🔥 ضفنا الأيديهات الجديدة هنا عشان تفضي الخانات لما تكنسل أو تخلص حفظ 🔥
         ['p_name','p_brand','p_color','p_description','p_ram','p_storage','p_price','p_tax','p_battery','p_custom_condition','p_custom_category', 'p_camera', 'p_processor', 'p_material_back', 'p_material_frame'].forEach(id => {
             const el = document.getElementById(id);
             if(el) el.value = '';
